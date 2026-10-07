@@ -1,5 +1,11 @@
 # Verification record
 
+## Sharper cashier screen typography — 2026-10-07
+
+- Replaced the cashier's Noto Sans Thai Looped stack with native Tahoma first and self-hosted Sarabun Regular/Medium/Bold for devices without Tahoma. Included the original font license and pinned source provenance; font binaries are unmodified. Menu names now use 19 px desktop / 18 px tablet and mobile with bold weight and 30/28 px line boxes. Category/action labels and cart names are stronger; availability text is 14 px and darker.
+- Chrome's platform-font inspection confirmed that Thai menu glyphs actually render with native Tahoma. Forced Sarabun fallback also rendered from the supplied font files. Reviewed desktop/mobile/payment and fallback screenshots. Six native-font viewport checks (320–1920 px), four fallback widths, category selection, cart highlighting and cashier dialogs passed. TypeScript passed. Browser checks created no sales, catalog updates or print jobs.
+- Changes are scoped to screen typography; receipt and A4 font styles retain their own definitions. Deployment checks include all three Sarabun font assets.
+
 ## Department of Corrections cashier colors — 2026-10-07
 
 - Inspected the rendered Department of Corrections homepage at `https://main.correct.go.th/` after the supplied `correction.go.th` address did not resolve. Adapted its underlying red `#a92928`, maroon `#520000` / `#711b1b`, gold `#f0a726`, white and neutral grey to the cashier header, category rail, menu cards, cart and dialogs. The reference currently applies a page-wide grayscale filter; the POS uses its underlying brand palette.

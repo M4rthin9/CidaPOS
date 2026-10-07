@@ -1,8 +1,22 @@
 /* Cashier palette adapted from main.correct.go.th: red #a92928, maroon #520000, gold #f0a726. Printed documents keep their own styles. */
 @font-face {
-  font-family: 'Noto Sans Thai Looped';
-  src: url('/fonts/NotoSansThaiLooped.ttf') format('truetype');
-  font-weight: 100 900;
+  font-family: 'Sarabun';
+  src: url('/fonts/Sarabun-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Sarabun';
+  src: url('/fonts/Sarabun-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Sarabun';
+  src: url('/fonts/Sarabun-Bold.ttf') format('truetype');
+  font-weight: 700;
   font-style: normal;
   font-display: swap;
 }
@@ -17,8 +31,9 @@
     --category-color: #a92928;
     background: #f6f6f6;
     color: var(--text);
-    font-family: 'Noto Sans Thai Looped', 'Noto Sans Thai', Tahoma, Arial, sans-serif;
+    font-family: Tahoma, 'Sarabun', Arial, sans-serif;
     font-size: 16px;
+    font-weight: 400;
     line-height: 1.65;
     letter-spacing: normal;
   }
@@ -64,7 +79,7 @@
     transition: background .15s, border-color .15s;
   }
   .pos-shell .category-button > svg { flex-shrink: 0; color: #8d3630; }
-  .pos-shell .category-button span { font-size: 15px; line-height: 1.6; }
+  .pos-shell .category-button span { font-size: 16px; font-weight: 700; line-height: 1.6; }
   .pos-shell .category-button small { color: #72625c; font-size: 12px; }
   .pos-shell .category-button:hover { background: #faf2ef; }
   .pos-shell .category-button.selected { background: #fbeceb; border-left-color: var(--menu-accent, var(--category-color)); color: #711b1b; }
@@ -98,7 +113,7 @@
   .pos-shell input:focus, .pos-shell select:focus { box-shadow: 0 0 0 3px #a9292818; }
   .pos-shell .search-box input:focus { box-shadow: none; }
   .pos-shell .pos-tools { padding: 0 0 18px; border-bottom: 1px solid #e6dbd5; margin-bottom: 22px; }
-  .pos-shell .pos-tools .secondary { border-radius: 10px; padding: 10px 16px; font-size: 15px; box-shadow: 0 2px 6px #33333305; }
+  .pos-shell .pos-tools .secondary { border-radius: 10px; padding: 10px 16px; font-size: 16px; font-weight: 700; box-shadow: 0 2px 6px #33333305; }
   .pos-shell .pos-menu-tool { background: #fbeceb; border-color: #edc6c0; color: #8e2924; }
   .pos-shell .pos-menu-tool:hover:enabled { background: #f5d8d2; }
   .pos-shell .pos-report-tool { background: #fff4dc; border-color: #ecd6a9; color: #78521b; }
@@ -114,8 +129,8 @@
   .pos-shell .favorite-star { color: #91651b; background: #fff0cf; padding: 4px; width: 25px; height: 25px; border-radius: 8px; }
   .pos-shell .product-count { background: #a92928; min-width: 30px; height: 30px; font-size: 14px; border: 2px solid #fff; box-shadow: 0 2px 6px #a9292820; }
   .pos-shell .product-content { padding: 14px; }
-  .pos-shell .product-content h3 { font-size: 18px; font-weight: 600; line-height: 1.65; min-height: 58px; color: #333333; }
-  .pos-shell .availability { color: #665b58; font-size: 12px; margin: 6px 0 10px; }
+  .pos-shell .product-content h3 { font-size: 19px; font-weight: 700; line-height: 30px; min-height: 60px; color: #202020; }
+  .pos-shell .availability { color: #514843; font-size: 14px; margin: 6px 0 10px; }
   .pos-shell .availability i { width: 5px; height: 5px; background: #3c6a55; }
   .pos-shell .product-bottom { flex-wrap: wrap; gap: 6px; }
   .pos-shell .product-bottom strong { font-size: 24px; font-weight: 700; letter-spacing: normal; color: #333333; font-variant-numeric: tabular-nums; }
@@ -139,7 +154,8 @@
   .pos-shell .cart-empty h3 { color: #7b5c51; font-weight: 600; font-size: 16px; }
   .pos-shell .cart-empty p { color: #665b58; font-size: 14px; }
   .pos-shell .cart-line { border-color: #eee4de; padding-top: 15px; }
-  .pos-shell .cart-line-title { font-size: 16px; line-height: 1.65; }
+  .pos-shell .cart-line-title { font-size: 17px; line-height: 1.65; }
+  .pos-shell .cart-line-title strong { font-weight: 700; }
   .pos-shell .cart-line-title > strong:last-child { white-space: nowrap; }
   .pos-shell .cart-line > small { font-size: 14px; line-height: 1.65; }
   .pos-shell .cart-line-title > strong:last-child { color: #711b1b; }
@@ -164,7 +180,9 @@
   .pos-shell kbd { border-color: #e3d4cc; color: #7b6157; background: #faf5f0; }
   .pos-shell :focus-visible { outline-color: #a92928; }
 
-  .pos-shell .modal, body:has(.pos-shell) > .modal { --primary: #a92928; --primary-dark: #711b1b; --soft: #fbeceb; --green: #3c6a55; --muted: #665b58; --border: #e7dfdc; color: #333333; border-top: 5px solid #a92928; font-family: 'Noto Sans Thai Looped', 'Noto Sans Thai', Tahoma, Arial, sans-serif; font-size: 16px; line-height: 1.65; }
+  .pos-shell .modal, body:has(.pos-shell) > .modal { --primary: #a92928; --primary-dark: #711b1b; --soft: #fbeceb; --green: #3c6a55; --muted: #514843; --border: #e7dfdc; color: #202020; border-top: 5px solid #a92928; font-family: Tahoma, 'Sarabun', Arial, sans-serif; font-size: 16px; line-height: 1.65; }
+  .pos-shell .primary, .pos-shell .secondary, body:has(.pos-shell) > .modal .primary, body:has(.pos-shell) > .modal .secondary { font-weight: 700; }
+  .pos-shell input::placeholder, body:has(.pos-shell) > .modal input::placeholder { color: #625a55; opacity: 1; }
   body:has(.pos-shell) .modal label, body:has(.pos-shell) .modal .primary, body:has(.pos-shell) .modal .secondary { font-size: 16px; }
   body:has(.pos-shell) .modal input, body:has(.pos-shell) .modal select { font-size: 16px; }
   body:has(.pos-shell) .modal .small { font-size: 14px; }
@@ -186,9 +204,9 @@
     .pos-header .brand { margin-right: auto; }
     .pos-header .header-status { padding: 7px; }
     .pos-shell .product-content { padding: 10px; }
-    .pos-shell .product-content h3 { font-size: 17px; }
+    .pos-shell .product-content h3 { font-size: 18px; line-height: 28px; min-height: 56px; }
     .pos-shell .product-bottom strong { font-size: 22px; }
-    .pos-shell .cart-line-title { font-size: 15px; }
+    .pos-shell .cart-line-title { font-size: 16px; }
     .pos-shell .cart-total { padding: 13px; }
     .pos-shell .cart-total strong { font-size: 32px; }
   }
@@ -224,7 +242,7 @@
     .pos-shell .product-visual { height: 82px; }
     .pos-shell .product-visual > svg { width: 34px; }
     .pos-shell .product-content { padding: 11px; }
-    .pos-shell .product-content h3 { font-size: 16px; min-height: 53px; }
+    .pos-shell .product-content h3 { font-size: 18px; line-height: 28px; min-height: 56px; }
     .pos-shell .product-category { font-size: 12px; left: 7px; bottom: 7px; padding: 3px 6px; }
     .pos-shell .product-bottom strong { font-size: 22px; }
     .pos-shell .add-circle { width: 30px; height: 30px; }

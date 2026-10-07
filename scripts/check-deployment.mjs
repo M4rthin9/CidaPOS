@@ -14,7 +14,7 @@ async function verify(){
   if(!html.includes('เข้าสู่ระบบ')||!html.includes('name="password"'))throw new Error('The POS login page was not served.');
   const chunks=[...new Set([...html.matchAll(/(?:src|href)="([^" ]*\/_next\/static\/[^" ]+)"/g)].map(match=>match[1]))];
   if(!chunks.length)throw new Error('The login page has no compiled assets.');
-  for(const path of [...chunks.slice(0,4),'/fonts/NotoSansThai.ttf','/fonts/NotoSansThaiLooped.ttf','/vendor/imin-printer.min.js']){
+  for(const path of [...chunks.slice(0,4),'/fonts/NotoSansThai.ttf','/fonts/Sarabun-Regular.ttf','/fonts/Sarabun-Medium.ttf','/fonts/Sarabun-Bold.ttf','/vendor/imin-printer.min.js']){
     const url=new URL(path,origin);
     if(url.origin!==origin)throw new Error('Compiled asset points to a different host.');
     const response=await request(path);
