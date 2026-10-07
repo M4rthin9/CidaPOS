@@ -21,6 +21,8 @@ Open http://localhost:3000. Initial account passwords are generated into ignored
 
 The deployed POS is [https://poscida.dpdns.org](https://poscida.dpdns.org), using database `cida-pos` and private bucket `cida-pos-private`. See [Cloudflare deployment and migration](docs/CLOUDFLARE.md) for the verified migration, setup, free-tier limits and deployment steps.
 
+Push to GitHub `main` to update the website automatically. [Deploy POS to Cloudflare](.github/workflows/deploy.yml) checks out the source, runs isolated financial tests, builds the Worker and static assets, deploys them to Cloudflare, and checks the live HTTPS site. Build status and manual reruns are available in [GitHub Actions](https://github.com/M4rthin9/CidaPOS/actions/workflows/deploy.yml).
+
 Cloud credentials belong in ignored `.env.cloudflare.local`. Deployment uses D1/R2 bindings directly, so R2 access keys are not shipped to the browser or required in the Worker. The database stores image URLs and archive checksums rather than large file contents. Media routes require a staff session; sales archives require Super Admin.
 
 ```powershell

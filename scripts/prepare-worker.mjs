@@ -16,6 +16,7 @@ if(!process.argv.includes('--check')){
   }
 }
 const secrets=[];
+for(const [key,value] of Object.entries(process.env))if(/PASSWORD|TOKEN|SECRET|ACCESS_KEY|DATABASE_URL/.test(key)&&value&&value.length>=12)secrets.push(value);
 for(const path of ['.env','.env.local','.env.production','.env.production.local','.env.cloudflare.local']){
   if(!existsSync(path))continue;
   for(const line of readFileSync(path,'utf8').split(/\r?\n/)){

@@ -28,6 +28,20 @@ Build with `npm run cf:build`; inspect with `node scripts/cloudflare-command.mjs
 
 OpenNext automatically copies Next `.env` files into build output. `cf:build` strips those generated copies and clears bundled environment defaults; runtime values come from Wrangler bindings. The deployment helper refuses to upload output containing local credential values or copied environment files. Always build through `npm run cf:build`.
 
+## Deploy from GitHub
+
+The production path is `GitHub main → GitHub Actions → Cloudflare Worker cida-pos → https://poscida.dpdns.org`. The workflow in `.github/workflows/deploy.yml` downloads the repository with checkout, installs locked dependencies on Node.js 22, generates model types, runs domain and isolated D1/R2 tests, and builds the OpenNext Worker. A successful build uploads both server code and static assets to the existing Worker and verifies the live login page, hosted bundles, Thai font, iMin SDK and API authentication/origin checks.
+
+Pushes to `main` deploy automatically. To redeploy the current main branch, select **Actions → Deploy POS to Cloudflare → Run workflow → main**. Deployment jobs run one at a time. Failed tests or builds stop before upload, retaining the previous deployed version. Each deployment message includes its GitHub commit SHA.
+
+Repository Actions secrets `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` authorize only the deployment step. Their values are encrypted through GitHub's repository public key and do not appear in source or build files. Runtime uses D1/R2 bindings; R2 S3 credentials and staff passwords are not supplied to CI. Review and apply schema migrations separately before deploying changes that require them; this workflow never seeds or resets production sales.
+
+Cloudflare's native Workers Builds API does not accept the supplied account-owned token (HTTP 401, Invalid token). GitHub Actions provides automatic deployment to the same Worker with the authorized credentials. Avoid enabling a second automatic deployment system for the same main branch.
+
+Cloudflare hosts the built application and assets. GitHub supplies source at build time; the Worker does not download repository files for each customer request. Sales and uploaded media persist independently in D1 and private R2.
+
+References: [Cloudflare GitHub Actions](https://developers.cloudflare.com/workers/ci-cd/external-cicd/github-actions/), [Workers Builds API authentication](https://developers.cloudflare.com/workers/ci-cd/builds/api-reference/), [encrypted GitHub Actions secrets](https://docs.github.com/en/rest/actions/secrets).
+
 ## PostgreSQL migration
 
 The source is exported by `node scripts/export-postgresql.mjs` using a read-only repeatable-read transaction. It writes a private JSON backup plus SHA-256 sidecar under ignored `backups/`. The original database is not changed.
