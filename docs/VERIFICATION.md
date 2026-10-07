@@ -1,5 +1,13 @@
 # Verification record
 
+## Cloudflare D1 and private R2 migration — 2026-10-07
+
+- Replaced the PostgreSQL runtime with native D1 queries and atomic, revision-checked batches. Read operations check their revision; conflicting writes retry without partial commits. SQLite triggers preserve monetary constraints, immutable audit/payment/closing records and order/item snapshots. Packed inserts/updates and cached transaction reads keep 100-line checkout/refund and sales reset within the tested Free query budget.
+- Created Cloudflare D1 `cida-pos` and private R2 `cida-pos-private`. Applied both D1 migrations locally and remotely. Exported the PostgreSQL source in a read-only repeatable-read transaction to an ignored backup with a SHA-256 sidecar; copied it to both local and remote D1, verifying every model field. Preserved 4 users, 97 products, 4 categories, 136 audit records, existing counters, print jobs, sessions, retired checkout key and prior reset history. The source had zero active orders at export; its historical reset payload was copied into verified R2 storage. The PostgreSQL source was not reset or modified.
+- Product/receipt images use authenticated R2 media routes; reset downloads require Super Admin and verify the saved checksum. R2 failure blocks reset, and a concurrent checkout during archive upload cancels reset and removes its unused archive.
+- Fifteen domain tests and six isolated D1/R2 integration tests passed. Twenty Chrome browser checks passed on the compiled Worker for charts, live reports, A4 pagination, category-only 58 mm printing, iMin fallback, reset permissions, R2 media access and imported archive download. Printing/reset mutations in browser checks were mocked; financial integration ran only in disposable emulators.
+- TypeScript and OpenNext/Next.js production builds passed. Wrangler dry-run produced the expected D1/R2/assets bindings; npm audit reported zero vulnerabilities. Public Worker deployment and actual Free-plan authentication CPU behavior remain to be validated before production; no paid subscription was enabled.
+
 ## Dedicated Super Admin sales reset menu — 2026-10-07
 
 - Added a Super Admin-only sidebar menu and `/admin/sales-reset` page, retaining the existing Settings entry. The preview shows all eight record counts before preparation; the server redirects other roles and the API rejects them.

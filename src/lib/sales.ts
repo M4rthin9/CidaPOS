@@ -1,4 +1,4 @@
-import { Prisma } from '@prisma/client';
+import type { Prisma } from '@prisma/client';
 import { randomBytes } from 'node:crypto';
 import { db } from './db';
 import { AppError, hash, type Actor } from './auth';
@@ -12,7 +12,7 @@ export type Tx=Prisma.TransactionClient;
 export const orderInclude={items:true,payments:true,adjustments:true,cashier:{select:{id:true,name:true}},terminal:true} as const;
 export async function settings(tx:Tx=db){const row=await tx.setting.findUnique({where:{key:'system'}});return row?settingsSchema.parse(row.value):defaultSettings;}
 export async function audit(tx:Tx,user:Actor,action:string,entity:string,entityId:string,before?:unknown,after?:unknown,reason='',context=''){await tx.auditLog.create({data:{userId:user.id,userName:user.name,action,entity,entityId,before:before===undefined?undefined:json(before),after:after===undefined?undefined:json(after),reason,context}});}
-export async function lockDay(tx:Tx,date:string){await tx.businessDay.upsert({where:{date},create:{date,config:json(await settings(tx))},update:{}});await tx.$queryRaw`SELECT date FROM "BusinessDay" WHERE date = ${date} FOR UPDATE`;return (await tx.businessDay.findUniqueOrThrow({where:{date}}));}
+export async function lockDay(tx:Tx,date:string){await tx.businessDay.upsert({where:{date},create:{date,config:json(await settings(tx))},update:{}});return (await tx.businessDay.findUniqueOrThrow({where:{date}}));}
 function checkOpen(day:{closed:boolean}){if(day.closed)throw new AppError('วันทำการนี้ปิดยอดแล้ว ต้องเปิดรอบแก้ไขโดยผู้ดูแลสูงสุด');}
 export function receipt(order:Awaited<ReturnType<typeof getOrder>>,config:Settings){return {orderId:order.id,number:order.number,queue:order.queue,date:order.createdAt.toISOString(),cashier:order.cashier.name,terminal:order.terminal.name,subtotal:order.subtotal,discount:order.discount,total:order.total,items:order.items,payments:order.payments,config};}
 export async function getOrder(id:string,tx:Tx=db){return tx.order.findUniqueOrThrow({where:{id},include:orderInclude});}
@@ -31,7 +31,7 @@ export async function checkout(input:Checkout,user:Actor){
     const day=await lockDay(tx,date);
     const version=await tx.setting.findUnique({where:{key:'sales-version'}});
     if((input.salesVersion??'')!==(version?.value??''))throw new AppError('ยอดขายถูกรีเซ็ตแล้ว กรุณาโหลดหน้าขายใหม่ก่อนรับชำระ',409);
-    const retired=await tx.$queryRaw<{key:string}[]>`SELECT key FROM "RetiredCheckoutKey" WHERE key=${input.key}`;
+    const retired=await tx.retiredCheckoutKey.findMany({where:{key:input.key}});
     if(retired.length)throw new AppError('บิลนี้ถูกเก็บในการรีเซ็ตแล้ว กรุณาโหลดหน้าขายใหม่',409);
     const existing=await tx.order.findUnique({where:{key:input.key},include:orderInclude});
     if(existing){if(existing.requestHash!==requestHash||existing.cashierId!==user.id)throw new AppError('รหัสคำขอนี้ถูกใช้กับบิลอื่นแล้ว',409);return {order:existing,jobs:await tx.printJob.findMany({where:{orderId:existing.id,isReprint:false}}),replayed:true};}
@@ -39,7 +39,8 @@ export async function checkout(input:Checkout,user:Actor){
     if(input.discount&&!can(user.role,'discount'))throw new AppError('คุณไม่มีสิทธิ์ให้ส่วนลด',403);
     const terminal=await tx.terminal.findUnique({where:{id:input.terminalId}});if(!terminal?.active)throw new AppError('เครื่อง POS ยังไม่ได้เปิดใช้งาน');
     const items=[];
-    for(const line of input.items){const product=await tx.product.findUnique({where:{id:line.productId},include:{category:true,modifiers:true}});if(!product?.active||!product.available||!product.category.active)throw new AppError('สินค้าบางรายการไม่พร้อมขาย กรุณาตรวจสอบบิล');
+    const products=await tx.product.findMany({where:{id:{in:input.items.map(line=>line.productId)}},include:{category:true,modifiers:true}});
+    for(const line of input.items){const product=products.find(product=>product.id===line.productId);if(!product?.active||!product.available||!product.category.active)throw new AppError('สินค้าบางรายการไม่พร้อมขาย กรุณาตรวจสอบบิล');
       const ids=[...new Set(line.modifiers)];if(ids.length!==line.modifiers.length)throw new AppError('ตัวเลือกสินค้าซ้ำ');
       const mods=ids.map(id=>product.modifiers.find(m=>m.id===id&&m.active));if(mods.some(m=>!m))throw new AppError('ตัวเลือกสินค้าไม่พร้อมใช้งาน');
       const unitPrice=product.price+mods.reduce((s,m)=>s+(m?.price??0),0);
@@ -70,7 +71,7 @@ export async function adjustOrder(id:string,type:'VOID'|'REFUND',amount:number,r
   });
 }
 export async function report(date:string,tx:Tx=db):Promise<{date:string;config:Settings;summary:ReturnType<typeof summarize>;day:Awaited<ReturnType<Tx['businessDay']['findUnique']>>}>{
- if(tx===db)return db.$transaction(client=>report(date,client),{isolationLevel:Prisma.TransactionIsolationLevel.RepeatableRead});
+ if(tx===db)return db.$transaction(client=>report(date,client),{isolationLevel:'Serializable'});
  const day=await tx.businessDay.findUnique({where:{date}}),config=day?settingsSchema.parse(day.config):await settings(tx),cuts=boundaries(date,config.opening);
  const orders=await tx.order.findMany({where:{businessDate:date,createdAt:{gte:cuts.start,lt:cuts.end}},include:orderInclude}),summary=summarize(orders);
  const categories=await tx.category.findMany({where:{active:true},orderBy:{sort:'asc'}});
@@ -78,7 +79,7 @@ export async function report(date:string,tx:Tx=db):Promise<{date:string;config:S
  return {date,config,summary,day};
 }
 export async function salesTrend(date:string,count:7|30,tx:Tx=db):Promise<DailyTrend[]>{
- if(tx===db)return db.$transaction(client=>salesTrend(date,count,client),{isolationLevel:Prisma.TransactionIsolationLevel.RepeatableRead});
+ if(tx===db)return db.$transaction(client=>salesTrend(date,count,client),{isolationLevel:'Serializable'});
  const dates=reportDates(date,count),config=await settings(tx);
  const days=await tx.businessDay.findMany({where:{date:{in:dates}}});
  const orders=await tx.order.findMany({where:{businessDate:{gte:dates[0],lte:date}},select:{businessDate:true,createdAt:true,total:true,refunded:true,status:true}});
@@ -103,7 +104,7 @@ export async function dailyReportPrint(date:string,terminalId:string,user:Actor)
   const job=await tx.printJob.create({data:{terminalId,printerId:device.printerId,template:'DAILY_REPORT',profile:json(profile),payload:json(payload),requestedBy:user.id}});
   await audit(tx,user,'DAILY_REPORT_PRINT','PrintJob',job.id,undefined,{date,terminalId,total:data.summary.total,paperMm:'58'});
   return job;
- },{isolationLevel:Prisma.TransactionIsolationLevel.RepeatableRead});
+ },{isolationLevel:'Serializable'});
 }
 export async function closeDay(date:string,actualCash:number,note:string,user:Actor){return db.$transaction(async tx=>{const day=await lockDay(tx,date);checkOpen(day);const cfg=await settings(tx);if(date>businessDate(new Date(),cfg.opening))throw new AppError('ไม่สามารถปิดยอดล่วงหน้า');const data=await report(date,tx),expectedCash=data.summary.payments.CASH,difference=actualCash-expectedCash;if(difference!==0&&!note.trim())throw new AppError('กรุณาระบุเหตุผลของส่วนต่างเงินสด');const revision=day.revision+1;const close=await tx.dailyClosing.create({data:{businessDate:date,revision,summary:json(data.summary),expectedCash,actualCash,difference,note,userId:user.id}});await tx.businessDay.update({where:{date},data:{closed:true,revision}});await audit(tx,user,'DAILY_CLOSE','DailyClosing',close.id,undefined,close,note);return close;});}
 export async function reopenDay(date:string,reason:string,user:Actor){return db.$transaction(async tx=>{const day=await lockDay(tx,date);if(!day.closed)throw new AppError('วันนี้ยังเปิดขายอยู่');await tx.businessDay.update({where:{date},data:{closed:false}});await audit(tx,user,'REOPEN','BusinessDay',date,day,{closed:false},reason);});}

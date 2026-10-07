@@ -9,3 +9,6 @@ playwright-report
 .git
 *.tsbuildinfo
 backups
+.open-next
+.wrangler
+.dev.vars

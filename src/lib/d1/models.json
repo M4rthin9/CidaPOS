@@ -1,0 +1,981 @@
+{
+  "User": {
+    "primary": "id",
+    "fields": {
+      "id": {
+        "type": "String",
+        "nullable": false,
+        "default": "cuid()"
+      },
+      "username": {
+        "type": "String",
+        "nullable": false
+      },
+      "name": {
+        "type": "String",
+        "nullable": false
+      },
+      "passwordHash": {
+        "type": "String",
+        "nullable": false
+      },
+      "role": {
+        "type": "String",
+        "nullable": false,
+        "default": "\"CASHIER\""
+      },
+      "active": {
+        "type": "Boolean",
+        "nullable": false,
+        "default": "true"
+      },
+      "createdAt": {
+        "type": "DateTime",
+        "nullable": false,
+        "default": "now()"
+      }
+    },
+    "relations": {
+      "sessions": {
+        "model": "Session",
+        "many": true,
+        "local": "id",
+        "foreign": "userId"
+      },
+      "orders": {
+        "model": "Order",
+        "many": true,
+        "local": "id",
+        "foreign": "cashierId"
+      }
+    }
+  },
+  "Session": {
+    "primary": "id",
+    "fields": {
+      "id": {
+        "type": "String",
+        "nullable": false
+      },
+      "userId": {
+        "type": "String",
+        "nullable": false
+      },
+      "expiresAt": {
+        "type": "DateTime",
+        "nullable": false
+      }
+    },
+    "relations": {
+      "user": {
+        "model": "User",
+        "many": false,
+        "local": "userId",
+        "foreign": "id"
+      }
+    }
+  },
+  "LoginAttempt": {
+    "primary": "key",
+    "fields": {
+      "key": {
+        "type": "String",
+        "nullable": false
+      },
+      "count": {
+        "type": "Int",
+        "nullable": false,
+        "default": "0"
+      },
+      "resetAt": {
+        "type": "DateTime",
+        "nullable": false
+      }
+    },
+    "relations": {}
+  },
+  "Category": {
+    "primary": "id",
+    "fields": {
+      "id": {
+        "type": "String",
+        "nullable": false,
+        "default": "cuid()"
+      },
+      "name": {
+        "type": "String",
+        "nullable": false
+      },
+      "icon": {
+        "type": "String",
+        "nullable": false,
+        "default": "\"Utensils\""
+      },
+      "color": {
+        "type": "String",
+        "nullable": false,
+        "default": "\"#c75c32\""
+      },
+      "shortcut": {
+        "type": "String",
+        "nullable": false,
+        "default": "\"\""
+      },
+      "preparationArea": {
+        "type": "String",
+        "nullable": false,
+        "default": "\"\""
+      },
+      "sort": {
+        "type": "Int",
+        "nullable": false,
+        "default": "0"
+      },
+      "active": {
+        "type": "Boolean",
+        "nullable": false,
+        "default": "true"
+      }
+    },
+    "relations": {
+      "products": {
+        "model": "Product",
+        "many": true,
+        "local": "id",
+        "foreign": "categoryId"
+      }
+    }
+  },
+  "Product": {
+    "primary": "id",
+    "fields": {
+      "id": {
+        "type": "String",
+        "nullable": false,
+        "default": "cuid()"
+      },
+      "sku": {
+        "type": "String",
+        "nullable": false
+      },
+      "barcode": {
+        "type": "String",
+        "nullable": true
+      },
+      "name": {
+        "type": "String",
+        "nullable": false
+      },
+      "description": {
+        "type": "String",
+        "nullable": false,
+        "default": "\"\""
+      },
+      "categoryId": {
+        "type": "String",
+        "nullable": false
+      },
+      "price": {
+        "type": "Int",
+        "nullable": false
+      },
+      "cost": {
+        "type": "Int",
+        "nullable": false,
+        "default": "0"
+      },
+      "image": {
+        "type": "String",
+        "nullable": false,
+        "default": "\"\""
+      },
+      "active": {
+        "type": "Boolean",
+        "nullable": false,
+        "default": "true"
+      },
+      "available": {
+        "type": "Boolean",
+        "nullable": false,
+        "default": "true"
+      },
+      "favorite": {
+        "type": "Boolean",
+        "nullable": false,
+        "default": "false"
+      },
+      "featured": {
+        "type": "Boolean",
+        "nullable": false,
+        "default": "false"
+      },
+      "sort": {
+        "type": "Int",
+        "nullable": false,
+        "default": "0"
+      },
+      "updatedAt": {
+        "type": "DateTime",
+        "nullable": false,
+        "updated": true
+      }
+    },
+    "relations": {
+      "category": {
+        "model": "Category",
+        "many": false,
+        "local": "categoryId",
+        "foreign": "id"
+      },
+      "modifiers": {
+        "model": "Modifier",
+        "many": true,
+        "local": "id",
+        "foreign": "productId"
+      }
+    }
+  },
+  "Modifier": {
+    "primary": "id",
+    "fields": {
+      "id": {
+        "type": "String",
+        "nullable": false,
+        "default": "cuid()"
+      },
+      "productId": {
+        "type": "String",
+        "nullable": false
+      },
+      "name": {
+        "type": "String",
+        "nullable": false
+      },
+      "price": {
+        "type": "Int",
+        "nullable": false,
+        "default": "0"
+      },
+      "active": {
+        "type": "Boolean",
+        "nullable": false,
+        "default": "true"
+      },
+      "sort": {
+        "type": "Int",
+        "nullable": false,
+        "default": "0"
+      }
+    },
+    "relations": {
+      "product": {
+        "model": "Product",
+        "many": false,
+        "local": "productId",
+        "foreign": "id"
+      }
+    }
+  },
+  "Terminal": {
+    "primary": "id",
+    "fields": {
+      "id": {
+        "type": "String",
+        "nullable": false
+      },
+      "name": {
+        "type": "String",
+        "nullable": false
+      },
+      "location": {
+        "type": "String",
+        "nullable": false,
+        "default": "\"\""
+      },
+      "active": {
+        "type": "Boolean",
+        "nullable": false,
+        "default": "true"
+      },
+      "config": {
+        "type": "Json",
+        "nullable": false
+      }
+    },
+    "relations": {
+      "orders": {
+        "model": "Order",
+        "many": true,
+        "local": "id",
+        "foreign": "terminalId"
+      }
+    }
+  },
+  "BusinessDay": {
+    "primary": "date",
+    "fields": {
+      "date": {
+        "type": "String",
+        "nullable": false
+      },
+      "config": {
+        "type": "Json",
+        "nullable": false
+      },
+      "counter": {
+        "type": "Int",
+        "nullable": false,
+        "default": "0"
+      },
+      "closed": {
+        "type": "Boolean",
+        "nullable": false,
+        "default": "false"
+      },
+      "revision": {
+        "type": "Int",
+        "nullable": false,
+        "default": "0"
+      }
+    },
+    "relations": {}
+  },
+  "Order": {
+    "primary": "id",
+    "fields": {
+      "id": {
+        "type": "String",
+        "nullable": false,
+        "default": "cuid()"
+      },
+      "key": {
+        "type": "String",
+        "nullable": false
+      },
+      "requestHash": {
+        "type": "String",
+        "nullable": false
+      },
+      "number": {
+        "type": "String",
+        "nullable": false
+      },
+      "queue": {
+        "type": "String",
+        "nullable": false
+      },
+      "businessDate": {
+        "type": "String",
+        "nullable": false
+      },
+      "cashierId": {
+        "type": "String",
+        "nullable": false
+      },
+      "terminalId": {
+        "type": "String",
+        "nullable": false
+      },
+      "subtotal": {
+        "type": "Int",
+        "nullable": false
+      },
+      "discount": {
+        "type": "Int",
+        "nullable": false
+      },
+      "total": {
+        "type": "Int",
+        "nullable": false
+      },
+      "refunded": {
+        "type": "Int",
+        "nullable": false,
+        "default": "0"
+      },
+      "status": {
+        "type": "String",
+        "nullable": false,
+        "default": "\"COMPLETED\""
+      },
+      "note": {
+        "type": "String",
+        "nullable": false,
+        "default": "\"\""
+      },
+      "receiptConfig": {
+        "type": "Json",
+        "nullable": false
+      },
+      "createdAt": {
+        "type": "DateTime",
+        "nullable": false,
+        "default": "now()"
+      }
+    },
+    "relations": {
+      "cashier": {
+        "model": "User",
+        "many": false,
+        "local": "cashierId",
+        "foreign": "id"
+      },
+      "terminal": {
+        "model": "Terminal",
+        "many": false,
+        "local": "terminalId",
+        "foreign": "id"
+      },
+      "items": {
+        "model": "OrderItem",
+        "many": true,
+        "local": "id",
+        "foreign": "orderId"
+      },
+      "payments": {
+        "model": "Payment",
+        "many": true,
+        "local": "id",
+        "foreign": "orderId"
+      },
+      "adjustments": {
+        "model": "Adjustment",
+        "many": true,
+        "local": "id",
+        "foreign": "orderId"
+      },
+      "printJobs": {
+        "model": "PrintJob",
+        "many": true,
+        "local": "id",
+        "foreign": "orderId"
+      }
+    }
+  },
+  "OrderItem": {
+    "primary": "id",
+    "fields": {
+      "id": {
+        "type": "String",
+        "nullable": false,
+        "default": "cuid()"
+      },
+      "orderId": {
+        "type": "String",
+        "nullable": false
+      },
+      "productId": {
+        "type": "String",
+        "nullable": false
+      },
+      "name": {
+        "type": "String",
+        "nullable": false
+      },
+      "categoryId": {
+        "type": "String",
+        "nullable": false
+      },
+      "categoryName": {
+        "type": "String",
+        "nullable": false
+      },
+      "unitPrice": {
+        "type": "Int",
+        "nullable": false
+      },
+      "quantity": {
+        "type": "Int",
+        "nullable": false
+      },
+      "discount": {
+        "type": "Int",
+        "nullable": false
+      },
+      "lineTotal": {
+        "type": "Int",
+        "nullable": false
+      },
+      "refunded": {
+        "type": "Int",
+        "nullable": false,
+        "default": "0"
+      },
+      "modifiers": {
+        "type": "Json",
+        "nullable": false
+      },
+      "note": {
+        "type": "String",
+        "nullable": false,
+        "default": "\"\""
+      }
+    },
+    "relations": {
+      "order": {
+        "model": "Order",
+        "many": false,
+        "local": "orderId",
+        "foreign": "id"
+      }
+    }
+  },
+  "Payment": {
+    "primary": "id",
+    "fields": {
+      "id": {
+        "type": "String",
+        "nullable": false,
+        "default": "cuid()"
+      },
+      "orderId": {
+        "type": "String",
+        "nullable": false
+      },
+      "method": {
+        "type": "String",
+        "nullable": false
+      },
+      "amount": {
+        "type": "Int",
+        "nullable": false
+      },
+      "received": {
+        "type": "Int",
+        "nullable": false
+      },
+      "change": {
+        "type": "Int",
+        "nullable": false
+      },
+      "reference": {
+        "type": "String",
+        "nullable": false,
+        "default": "\"\""
+      }
+    },
+    "relations": {
+      "order": {
+        "model": "Order",
+        "many": false,
+        "local": "orderId",
+        "foreign": "id"
+      }
+    }
+  },
+  "Adjustment": {
+    "primary": "id",
+    "fields": {
+      "id": {
+        "type": "String",
+        "nullable": false,
+        "default": "cuid()"
+      },
+      "orderId": {
+        "type": "String",
+        "nullable": false
+      },
+      "type": {
+        "type": "String",
+        "nullable": false
+      },
+      "amount": {
+        "type": "Int",
+        "nullable": false
+      },
+      "method": {
+        "type": "String",
+        "nullable": false
+      },
+      "allocations": {
+        "type": "Json",
+        "nullable": false
+      },
+      "reason": {
+        "type": "String",
+        "nullable": false
+      },
+      "requestedBy": {
+        "type": "String",
+        "nullable": false
+      },
+      "approvedBy": {
+        "type": "String",
+        "nullable": false
+      },
+      "createdAt": {
+        "type": "DateTime",
+        "nullable": false,
+        "default": "now()"
+      }
+    },
+    "relations": {
+      "order": {
+        "model": "Order",
+        "many": false,
+        "local": "orderId",
+        "foreign": "id"
+      }
+    }
+  },
+  "ParkedOrder": {
+    "primary": "id",
+    "fields": {
+      "id": {
+        "type": "String",
+        "nullable": false,
+        "default": "cuid()"
+      },
+      "userId": {
+        "type": "String",
+        "nullable": false
+      },
+      "terminalId": {
+        "type": "String",
+        "nullable": false
+      },
+      "label": {
+        "type": "String",
+        "nullable": false
+      },
+      "cart": {
+        "type": "Json",
+        "nullable": false
+      },
+      "createdAt": {
+        "type": "DateTime",
+        "nullable": false,
+        "default": "now()"
+      }
+    },
+    "relations": {}
+  },
+  "PrintJob": {
+    "primary": "id",
+    "fields": {
+      "id": {
+        "type": "String",
+        "nullable": false,
+        "default": "cuid()"
+      },
+      "orderId": {
+        "type": "String",
+        "nullable": true
+      },
+      "terminalId": {
+        "type": "String",
+        "nullable": false
+      },
+      "printerId": {
+        "type": "String",
+        "nullable": false
+      },
+      "template": {
+        "type": "String",
+        "nullable": false,
+        "default": "\"CUSTOMER\""
+      },
+      "status": {
+        "type": "String",
+        "nullable": false,
+        "default": "\"PENDING\""
+      },
+      "profile": {
+        "type": "Json",
+        "nullable": false
+      },
+      "payload": {
+        "type": "Json",
+        "nullable": false
+      },
+      "requestedBy": {
+        "type": "String",
+        "nullable": false
+      },
+      "isReprint": {
+        "type": "Boolean",
+        "nullable": false,
+        "default": "false"
+      },
+      "reprintCount": {
+        "type": "Int",
+        "nullable": false,
+        "default": "0"
+      },
+      "claimToken": {
+        "type": "String",
+        "nullable": true
+      },
+      "claimedAt": {
+        "type": "DateTime",
+        "nullable": true
+      },
+      "printedAt": {
+        "type": "DateTime",
+        "nullable": true
+      },
+      "error": {
+        "type": "String",
+        "nullable": true
+      },
+      "createdAt": {
+        "type": "DateTime",
+        "nullable": false,
+        "default": "now()"
+      }
+    },
+    "relations": {
+      "order": {
+        "model": "Order",
+        "many": false,
+        "local": "orderId",
+        "foreign": "id"
+      }
+    }
+  },
+  "PrinterRoute": {
+    "primary": "id",
+    "fields": {
+      "id": {
+        "type": "String",
+        "nullable": false,
+        "default": "cuid()"
+      },
+      "categoryId": {
+        "type": "String",
+        "nullable": false
+      },
+      "terminalId": {
+        "type": "String",
+        "nullable": false
+      },
+      "printerId": {
+        "type": "String",
+        "nullable": false
+      },
+      "template": {
+        "type": "String",
+        "nullable": false,
+        "default": "\"KITCHEN\""
+      },
+      "copies": {
+        "type": "Int",
+        "nullable": false,
+        "default": "1"
+      },
+      "enabled": {
+        "type": "Boolean",
+        "nullable": false,
+        "default": "false"
+      }
+    },
+    "relations": {}
+  },
+  "SalesSnapshot": {
+    "primary": "id",
+    "fields": {
+      "id": {
+        "type": "String",
+        "nullable": false,
+        "default": "cuid()"
+      },
+      "businessDate": {
+        "type": "String",
+        "nullable": false
+      },
+      "cutoff": {
+        "type": "String",
+        "nullable": false
+      },
+      "summary": {
+        "type": "Json",
+        "nullable": false
+      },
+      "userId": {
+        "type": "String",
+        "nullable": false
+      },
+      "createdAt": {
+        "type": "DateTime",
+        "nullable": false,
+        "default": "now()"
+      }
+    },
+    "relations": {}
+  },
+  "DailyClosing": {
+    "primary": "id",
+    "fields": {
+      "id": {
+        "type": "String",
+        "nullable": false,
+        "default": "cuid()"
+      },
+      "businessDate": {
+        "type": "String",
+        "nullable": false
+      },
+      "revision": {
+        "type": "Int",
+        "nullable": false
+      },
+      "summary": {
+        "type": "Json",
+        "nullable": false
+      },
+      "expectedCash": {
+        "type": "Int",
+        "nullable": false
+      },
+      "actualCash": {
+        "type": "Int",
+        "nullable": false
+      },
+      "difference": {
+        "type": "Int",
+        "nullable": false
+      },
+      "note": {
+        "type": "String",
+        "nullable": false
+      },
+      "userId": {
+        "type": "String",
+        "nullable": false
+      },
+      "createdAt": {
+        "type": "DateTime",
+        "nullable": false,
+        "default": "now()"
+      }
+    },
+    "relations": {}
+  },
+  "AuditLog": {
+    "primary": "id",
+    "fields": {
+      "id": {
+        "type": "String",
+        "nullable": false,
+        "default": "cuid()"
+      },
+      "userId": {
+        "type": "String",
+        "nullable": true
+      },
+      "userName": {
+        "type": "String",
+        "nullable": false
+      },
+      "action": {
+        "type": "String",
+        "nullable": false
+      },
+      "entity": {
+        "type": "String",
+        "nullable": false
+      },
+      "entityId": {
+        "type": "String",
+        "nullable": false
+      },
+      "before": {
+        "type": "Json",
+        "nullable": true
+      },
+      "after": {
+        "type": "Json",
+        "nullable": true
+      },
+      "reason": {
+        "type": "String",
+        "nullable": false,
+        "default": "\"\""
+      },
+      "context": {
+        "type": "String",
+        "nullable": false,
+        "default": "\"\""
+      },
+      "createdAt": {
+        "type": "DateTime",
+        "nullable": false,
+        "default": "now()"
+      }
+    },
+    "relations": {}
+  },
+  "Setting": {
+    "primary": "key",
+    "fields": {
+      "key": {
+        "type": "String",
+        "nullable": false
+      },
+      "value": {
+        "type": "Json",
+        "nullable": false
+      },
+      "updatedAt": {
+        "type": "DateTime",
+        "nullable": false,
+        "updated": true
+      }
+    },
+    "relations": {}
+  },
+  "SalesResetArchive": {
+    "primary": "id",
+    "fields": {
+      "id": {
+        "type": "String",
+        "nullable": false
+      },
+      "userId": {
+        "type": "String",
+        "nullable": false
+      },
+      "userName": {
+        "type": "String",
+        "nullable": false
+      },
+      "reason": {
+        "type": "String",
+        "nullable": false
+      },
+      "counts": {
+        "type": "Json",
+        "nullable": false
+      },
+      "payload": {
+        "type": "Json",
+        "nullable": false
+      },
+      "createdAt": {
+        "type": "DateTime",
+        "nullable": false,
+        "default": "now()"
+      }
+    },
+    "relations": {}
+  },
+  "RetiredCheckoutKey": {
+    "primary": "key",
+    "fields": {
+      "key": {
+        "type": "String",
+        "nullable": false
+      },
+      "archiveId": {
+        "type": "String",
+        "nullable": false
+      },
+      "createdAt": {
+        "type": "DateTime",
+        "nullable": false,
+        "default": "now()"
+      }
+    },
+    "relations": {}
+  }
+}

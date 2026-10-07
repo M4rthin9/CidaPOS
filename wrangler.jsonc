@@ -1,0 +1,33 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "cida-pos",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2026-10-07",
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "cida-pos",
+      "database_id": "616fdf2c-56f1-4fc9-b82e-a1760bbc814a",
+      "migrations_dir": "d1/migrations"
+    }
+  ],
+  "r2_buckets": [
+    {
+      "binding": "FILES",
+      "bucket_name": "cida-pos-private"
+    }
+  ],
+  "vars": {
+    "COOKIE_SECURE": "true"
+  },
+  "observability": {
+    "enabled": true
+  }
+}

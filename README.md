@@ -1,45 +1,36 @@
 # CIDA POS — ระบบ POS ทัณฑสถานบำบัดพิเศษกลาง
 
-โปรเจกต์ใหม่ในโฟลเดอร์ที่เดิมว่าง: Next.js 16.3.8 / React / TypeScript / PostgreSQL / Prisma พร้อมหน้าขายภาษาไทยและหลังบ้าน ไม่มีการคัดลอกโค้ดหรือรูปแบบเฉพาะของ POS2U
+Next.js 16.3.8 / React / TypeScript with **Cloudflare D1** for POS data and a **private Cloudflare R2 bucket** for product images, receipt logos and sales-reset archives. Prisma generates TypeScript model types only; runtime queries use native D1 bindings and atomic batches.
 
-## เริ่มใช้งานในเครื่อง Windows
+## Local development (Windows)
 
-ต้องมี Node.js 22 LTS ขึ้นไปและ npm (เครื่องที่พัฒนาใช้ Node 26) เปิด PowerShell ในโฟลเดอร์โปรเจกต์:
+Use Node.js 22+ and npm. Local D1/R2 are provided by Wrangler and need no PostgreSQL service:
 
 ```powershell
 npm ci
 node scripts/prepare-local.mjs
-npm run db:local
-```
-
-เปิด PowerShell อีกหน้าต่าง:
-
-```powershell
 npm run db:generate
 npm run db:migrate
 npm run db:seed
 npm run dev
 ```
 
-เปิด http://localhost:3000 บัญชี `admin` และ `cashier` ใช้รหัสผ่านสุ่มที่บันทึกใน `.local-access.txt` ซึ่งถูกกันออกจาก Git และ Docker ห้ามเผยแพร่ไฟล์นี้ เมนู seed ใช้รายการและราคาจาก Excel ที่ให้มา: อาหารร้านนอก 58 รายการ, อาหารหน้าร้าน 16 รายการ และอาหารอีสาน 17 รายการ การ seed ซ้ำไม่รีเซ็ตรหัสผ่านและไม่ทับเมนูที่แก้ไขไว้แล้ว
+Open http://localhost:3000. Initial account passwords are generated into ignored `.local-access.txt`; existing passwords are preserved. Local D1 and R2 persist under ignored `.wrangler/state/`. Do not delete this directory to upgrade the schema. The seed contains the 91 spreadsheet menus and preserves later edits.
 
-ข้อมูลเมนูอยู่ใน `prisma/menu-data.json` (ราคาเป็นสตางค์ พร้อมชื่อไฟล์และแถวต้นทาง) จึง seed ได้โดยไม่ต้องมี Excel ในไดรฟ์ F: การ seed จะลบสินค้า DEMO-001 ถึง DEMO-017 และตัวเลือกเสริมเดิมออกจากฐานข้อมูล ก่อนลบจะสำรองหมวดและสินค้าเดิมใน `backups/menu-before-replacement-*.json` และบันทึก audit เมนูที่สร้างเองและประวัติการขายยังคงอยู่ หมวดเดิมที่ว่างจะถูกลบ; หมวดที่มีเมนูปิดใช้งานอยู่จะเก็บไว้แบบปิดใช้งาน
+## Cloudflare D1 + R2
 
-ฐานข้อมูลพัฒนาเป็น PostgreSQL จริงที่ `127.0.0.1:5433`, เก็บใน `.local-db/` และต้องเปิด `npm run db:local` ค้างไว้ ฐานข้อมูลนี้ไม่ใช่บริการ production; ห้ามลบโฟลเดอร์เพื่ออัปเกรด schema
+The configured database is `cida-pos` and the private bucket is `cida-pos-private`. See [Cloudflare deployment and migration](docs/CLOUDFLARE.md) for the verified migration, setup, free-tier limits and deployment steps.
 
-## ใช้ PostgreSQL ที่มีอยู่
+Cloud credentials belong in ignored `.env.cloudflare.local`. Deployment uses D1/R2 bindings directly, so R2 access keys are not shipped to the browser or required in the Worker. The database stores image URLs and archive checksums rather than large file contents. Media routes require a staff session; sales archives require Super Admin.
 
-คัดลอก `.env.example` เป็น `.env` และกำหนด:
+```powershell
+npm run cf:setup
+npm run db:migrate:remote
+npm run cf:build
+npm run cf:deploy
+```
 
-| ตัวแปร | ความหมาย |
-|---|---|
-| `DATABASE_URL` | PostgreSQL URL ของฐานข้อมูล POS |
-| `APP_ORIGIN` | URL ที่เจ้าหน้าที่เปิดจริง ต้องตรง origin เช่น `https://pos.internal` |
-| `COOKIE_SECURE` | `true` สำหรับ HTTPS; `false` เฉพาะ LAN HTTP / พัฒนา |
-| `SEED_ADMIN_PASSWORD` | รหัสผ่านผู้ดูแลใหม่อย่างน้อย 12 ตัวอักษร |
-| `SEED_CASHIER_PASSWORD` | รหัสผ่านบัญชี cashier (เว้นว่างเพื่อไม่สร้าง) |
-
-จากนั้น generate, migrate และ seed ตามด้านบน ใช้บัญชีฐานข้อมูลของแอปที่แยกจากบัญชีผู้ดูแลฐานข้อมูล และจำกัดสิทธิ์ตามนโยบายหน่วยงาน
+Application variables: `APP_ORIGIN` must match the exact URL staff use, `COOKIE_SECURE` is true for HTTPS and false only for local/LAN HTTP, and `SEED_ADMIN_PASSWORD` / `SEED_CASHIER_PASSWORD` are used only to initialize new accounts. `DATABASE_URL` is read only by the legacy PostgreSQL export helper; the application no longer uses it.
 
 ## การใช้งาน
 
@@ -73,7 +64,7 @@ npm run dev
 
 หลังบ้าน → **พิมพ์ A4** ใช้รายงานเฉพาะสำหรับกระดาษ A4 แนวตั้ง แสดงช่วงวันที่และตัวกรองที่เลือก ข้อมูล ณ เวลาที่โหลด ยอดรวม ตารางหมวดสินค้า วิธีชำระเงิน การปรับยอด สินค้าขายดี และช่องลงชื่อ ไม่พิมพ์เมนูหรือกราฟหน้าจอ ตารางต่อหลายหน้าได้พร้อมหัวตารางและเลขหน้า เมื่อเลือกเฉพาะหมวดหรือสินค้า จะไม่แสดงยอดชำระที่แยกจากบิลรวมไม่ได้ เลือก A4 ขนาด 100% และปิดหัว/ท้ายหน้าของเบราว์เซอร์ หรือเลือก Save as PDF
 
-รหัสผ่าน bcrypt; session token แบบสุ่มและเก็บ hash ในฐานข้อมูล; cookie HttpOnly/SameSite strict; session 8 ชั่วโมง; จำกัดความพยายาม login; mutation ตรวจ Origin. การแก้ผู้ใช้ยกเลิก session เก่า ห้ามลบรายการขายที่สำเร็จ ปรับผ่าน VOID/REFUND พร้อมเหตุผลและผู้อนุมัติเท่านั้น Audit, payment, adjustment, snapshot และ closing มี PostgreSQL trigger ป้องกันแก้/ลบ
+รหัสผ่าน bcrypt; session token แบบสุ่มและเก็บ hash ในฐานข้อมูล; cookie HttpOnly/SameSite strict; session 8 ชั่วโมง; จำกัดความพยายาม login; mutation ตรวจ Origin. การแก้ผู้ใช้ยกเลิก session เก่า ห้ามลบรายการขายที่สำเร็จ ปรับผ่าน VOID/REFUND พร้อมเหตุผลและผู้อนุมัติเท่านั้น Audit, payment, adjustment, snapshot และ closing มี SQLite trigger ใน D1 ป้องกันแก้/ลบ
 
 ## หลักการเงิน
 
@@ -106,36 +97,16 @@ npm run typecheck
 npm test
 npm run test:integration
 npm run test:browser
-npm run build
+npm run cf:build
 npm start
 ```
 
-Integration ใช้ฐานแยก `cida_pos_test` บน PostgreSQL local port 5433 จึงไม่ปิดยอดฐาน demo. Browser tests ใช้ Google Chrome ที่ติดตั้งและ dev server port 3000; มีการสร้างบิลจริงในฐาน development พร้อมภาพใน `test-results/` ห้ามรัน browser tests บน production. Unit tests ตรวจ satang, change, allocations, daily totals, timezone, refund, dynamic categories และสิทธิ์. Integration ตรวจ transaction rollback, concurrent duplicate/refund, close locks และ immutable triggers.
-
-## Docker
-
-เครื่องพัฒนาปัจจุบันไม่มี Docker จึงยังไม่ได้รัน container acceptance. มี multi-stage Dockerfile, migration service, database healthcheck และ named volume:
-
-```powershell
-Copy-Item .env.docker.example .env.docker
-# แก้ secrets และ APP_ORIGIN ใน .env.docker
-docker compose --env-file .env.docker up -d --build
-docker compose --env-file .env.docker --profile setup run --rm seed
-```
-
-ใช้ reverse proxy HTTPS สำหรับ production และตรวจความเข้ากันของ iMin local service กับ HTTPS ก่อนใช้งาน. ไม่มี credential ถูก COPY เข้า Docker image. กรณี LAN HTTP ให้ตั้ง origin ตรง IP/hostname ที่ใช้งาน และ cookie ตาม protocol
+Integration ใช้ Cloudflare D1/R2 emulator ที่แยกจากฐานใช้งานจริง ไม่ใช้ PostgreSQL. Browser tests ใช้ Google Chrome ที่ติดตั้งและ dev server port 3000; มีการสร้างบิลจริงในฐาน development พร้อมภาพใน `test-results/` ห้ามรัน browser tests บน production. Unit tests ตรวจ satang, change, allocations, daily totals, timezone, refund, dynamic categories และสิทธิ์. Integration ตรวจ transaction rollback, concurrent duplicate/refund, close locks และ immutable triggers.
 
 ## Backup / Restore
 
-กำหนดงานสำรองรายวันด้วย `pg_dump --format=custom` เก็บสำเนาเข้ารหัสในที่แยกจากเครื่อง POS; สำรองก่อน migrate และทดสอบ restore เป็นประจำ. เก็บระยะเวลาตามนโยบายหน่วยงานและจำกัดผู้เข้าถึง. Backup มีทั้งยอดขาย users config และ audit:
-
-```powershell
-pg_dump --format=custom --file=cida-pos.backup --dbname=$env:DATABASE_URL
-pg_restore --no-owner --dbname=$env:RESTORE_DATABASE_URL cida-pos.backup
-```
-
-Restore ลงฐานใหม่ที่ว่างและใช้ URL แยก; ตรวจจำนวนบิล ยอดตามหมวด ยอดปิดวันและ audit ก่อนสลับระบบ หลีกเลี่ยง overwrite ฐานใช้งานและอย่าใช้คำสั่ง clean กับฐาน production ในขณะขาย `pg_dump/pg_restore` ต้องติดตั้ง PostgreSQL client บนเครื่องสำรองเอง
+Use D1 Time Travel and regular D1 exports for database recovery, and preserve the private R2 bucket separately. D1 metadata alone cannot restore archived sales or images whose objects have been removed. See [Cloudflare operations](docs/CLOUDFLARE.md). The original PostgreSQL schema, migrations and deployment examples are retained under `prisma/legacy-postgresql` and `docs/legacy-postgresql` for rollback/reference; they are not the current deployment path.
 
 ## ข้อจำกัดที่ต้องยืนยันก่อนเปิดใช้งานจริง
 
-ยังไม่มีเครื่อง iMin จึงยังไม่ได้ผ่านการพิมพ์ไทย/ชุดตัด/ลิ้นชัก/ความเร็วบนฮาร์ดแวร์จริง และไม่มี Docker runtime ให้ทดสอบ. ไม่มี full offline checkout, gateway ยืนยัน QR, native APK, XLSX binary export, physical-item refund tracking หรือ network printer transport. รายงาน CSV เปิด Excel ได้ และ PDF ผ่าน print report. ควรทดสอบปริมาณงานจริงบนเซิร์ฟเวอร์/เครือข่ายของหน่วยงาน รายละเอียดสถาปัตยกรรมอยู่ใน [ARCHITECTURE](docs/ARCHITECTURE.md).
+ยังไม่มีเครื่อง iMin จึงยังไม่ได้ผ่านการพิมพ์ไทย/ชุดตัด/ลิ้นชัก/ความเร็วบนฮาร์ดแวร์จริง Cloudflare Worker ต้องทดสอบ CPU/ปริมาณงานตาม plan ก่อนเปิดขายจริง. ไม่มี full offline checkout, gateway ยืนยัน QR, native APK, XLSX binary export, physical-item refund tracking หรือ network printer transport. รายงาน CSV เปิด Excel ได้ และ PDF ผ่าน print report. ควรทดสอบปริมาณงานจริงบนเซิร์ฟเวอร์/เครือข่ายของหน่วยงาน รายละเอียดสถาปัตยกรรมอยู่ใน [ARCHITECTURE](docs/ARCHITECTURE.md).

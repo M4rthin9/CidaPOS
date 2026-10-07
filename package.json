@@ -9,11 +9,16 @@
     "typecheck": "tsc --noEmit",
     "test": "tsx --test tests/domain.test.ts",
     "db:generate": "prisma generate",
-    "db:migrate": "prisma migrate deploy",
-    "db:seed": "tsx prisma/seed.ts",
-    "db:local": "node scripts/local-db.mjs",
-    "test:integration": "node scripts/test-database.mjs",
-    "test:browser": "playwright test"
+    "db:migrate": "node scripts/cloudflare-command.mjs d1 migrations apply cida-pos --local",
+    "db:seed": "tsx scripts/seed-d1.ts",
+    "test:integration": "node scripts/test-d1.mjs",
+    "test:browser": "playwright test",
+    "db:migrate:remote": "node scripts/cloudflare-command.mjs d1 migrations apply cida-pos --remote",
+    "db:seed:sql": "tsx scripts/seed-d1.ts --sql-only",
+    "cf:build": "prisma generate && opennextjs-cloudflare build",
+    "cf:preview": "opennextjs-cloudflare preview",
+    "cf:deploy": "node scripts/cloudflare-command.mjs deploy",
+    "cf:setup": "node scripts/cloudflare-setup.mjs"
   },
   "dependencies": {
     "@prisma/client": "6.19.2",
@@ -27,17 +32,23 @@
     "zod": "^4.3.6"
   },
   "devDependencies": {
+    "@cloudflare/workers-types": "^5.20261007.1",
+    "@opennextjs/cloudflare": "^1.20.9",
     "@playwright/test": "1.63.0",
     "@types/node": "^24.10.0",
     "@types/react": "^19.2.0",
     "@types/react-dom": "^19.2.0",
-    "embedded-postgres": "18.4.0-beta.17",
+    "aws4fetch": "^1.0.20",
+    "miniflare": "^5.20261006.0-alpha",
+    "pg": "^8.23.1",
     "prisma": "6.19.2",
     "tsx": "^4.21.0",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "wrangler": "^4.148.0"
   },
   "overrides": {
     "effect": "^3.20.0",
-    "deepmerge-ts": "^8.0.0"
+    "deepmerge-ts": "^8.0.0",
+    "sharp": "^0.35.5"
   }
 }

@@ -1,7 +1,7 @@
 import {mkdirSync, writeFileSync} from 'node:fs';
 import {resolve} from 'node:path';
 import {randomUUID} from 'node:crypto';
-import {Prisma, type PrismaClient} from '@prisma/client';
+import type {Prisma, PrismaClient} from '@prisma/client';
 import menuData from './menu-data.json';
 
 const legacyCategoryIds = Array.from({length:5}, (_,i)=>`category-${i+1}`);
@@ -63,5 +63,5 @@ export async function seedMenu(db:PrismaClient) {
    await tx.auditLog.create({data:{userName:'Menu seed',action:'MENU_SEED_REPLACE',entity:'Catalog',entityId:'spreadsheet-menu-v1',before:{legacyProducts:legacyProducts.map(p=>({id:p.id,sku:p.sku,name:p.name,price:p.price}))},after:result as Prisma.InputJsonObject,reason:'Replace bundled demo menu with the three supplied menu spreadsheets'}});
   }
   return result;
- },{isolationLevel:Prisma.TransactionIsolationLevel.Serializable,timeout:30000});
+ });
 }

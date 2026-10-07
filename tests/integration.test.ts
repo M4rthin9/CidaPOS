@@ -1,8 +1,9 @@
-import {test,after} from 'node:test';
+import {test,before,after} from 'node:test';
 import assert from 'node:assert/strict';
 import {randomUUID} from 'node:crypto';
 import {hash as passwordHash} from 'bcryptjs';
-import {PrismaClient} from '@prisma/client';
+import {db} from '../src/lib/db';
+import {isolatedCloudflare} from './cloudflare-fixture';
 import {checkout,adjustOrder,report,salesTrend,closeDay,reopenDay,reprint,claimJob,dailyReportPrint,settings,json} from '../src/lib/sales';
 import type {Actor} from '../src/lib/auth';
 import {defaultSettings} from '../src/lib/config';
@@ -12,10 +13,11 @@ import {resetPreview,resetSales,resetArchive,resetArchives} from '../src/lib/sal
 import {seedMenu} from '../prisma/menu-seed';
 import menuData from '../prisma/menu-data.json';
 try{process.loadEnvFile('.env');}catch{}
-const db=new PrismaClient();
 const enabled=process.env.RUN_DB_TESTS==='true';
-after(async()=>{await db.$disconnect();const {db:serviceDb}=await import('../src/lib/db');await serviceDb.$disconnect();});
-test('transactional sales, retries, refunds, close locks and immutable audit on PostgreSQL',{skip:!enabled},async()=>{
+let cloud:Awaited<ReturnType<typeof isolatedCloudflare>>|undefined;
+before(async()=>{if(enabled)cloud=await isolatedCloudflare();});
+after(async()=>{await cloud?.mf.dispose();});
+test('transactional sales, retries, refunds, close locks and immutable audit on D1',{skip:!enabled},async()=>{
  const suffix=randomUUID().slice(0,8),user=await db.user.create({data:{username:`test-${suffix}`,name:'INTEGRATION TEST',role:'SUPER_ADMIN',passwordHash:'not-a-login'}});const actor:Actor={id:user.id,name:user.name,role:user.role,username:user.username};
  const category=await db.category.create({data:{name:`TEST ${suffix}`,icon:'Package'}});const product=await db.product.create({data:{sku:`TEST-${suffix}`,name:'TEST กะเพรา',categoryId:category.id,price:5000,modifiers:{create:[{name:'ไข่ดาว',price:1000}] }},include:{modifiers:true}});
  const terminal=await db.terminal.create({data:{id:`TEST-${suffix}`,name:'TEST terminal',config:{printerId:'mock',adapter:'mock'}}});
