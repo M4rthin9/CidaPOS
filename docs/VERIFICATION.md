@@ -1,5 +1,11 @@
 # Verification record
 
+## Cashier font readability — 2026-10-07
+
+- Added self-hosted Noto Sans Thai Looped with its original SIL Open Font License and source provenance. Cashier menu names, prices, category buttons, cart text and dialogs use larger type, more line spacing and darker secondary text. Mobile header uses two rows to keep status labels readable.
+- Verified the actual font loaded in Chrome. Desktop, tablet, mobile and payment screenshots were reviewed; 320, 390, 768, 1024, 1440 and 1920 px layouts had no horizontal page overflow. Category selection, cart highlighting and payment/menu/report dialogs passed without submitting sales, menu changes or print jobs. TypeScript passed.
+- Cashier typography overrides are screen-only. The deployment asset check now includes the new Thai font.
+
 ## Cashier color and layout design — 2026-10-07
 
 - Added a scoped, screen-only cashier theme: navy header and category rail, light blue product workspace, category-colored menu cards, blue cart header and total, green payment action, and distinct menu/report shortcuts. Selected menu cards retain quantity badges and a teal outline; category selection exposes its pressed state to assistive technology.
