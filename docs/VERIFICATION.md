@@ -1,5 +1,10 @@
 # Verification record
 
+## Department of Corrections cashier colors — 2026-10-07
+
+- Inspected the rendered Department of Corrections homepage at `https://main.correct.go.th/` after the supplied `correction.go.th` address did not resolve. Adapted its underlying red `#a92928`, maroon `#520000` / `#711b1b`, gold `#f0a726`, white and neutral grey to the cashier header, category rail, menu cards, cart and dialogs. The reference currently applies a page-wide grayscale filter; the POS uses its underlying brand palette.
+- Desktop/mobile/payment previews and six viewport checks (320–1920 px) passed. The Thai font loaded; category selection, cart highlighting and cashier dialogs worked without submitting sales, catalog changes or print jobs. TypeScript passed. Checked main text and button pairs measured at least 5.09:1 contrast.
+
 ## Warm cashier color palette — 2026-10-07
 
 - Replaced the cashier colors with a deep plum header, warm ivory workspace and category rail, rose/sage/amber menu accents, lavender cart details, plum total and forest-green payment action. Category buttons and menu cards share their presentation palette without changing stored catalog colors. Cashier dialogs, hover, focus and disabled states use matching colors.
