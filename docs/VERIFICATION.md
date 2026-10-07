@@ -1,5 +1,11 @@
 # Verification record
 
+## Cashier color and layout design — 2026-10-07
+
+- Added a scoped, screen-only cashier theme: navy header and category rail, light blue product workspace, category-colored menu cards, blue cart header and total, green payment action, and distinct menu/report shortcuts. Selected menu cards retain quantity badges and a teal outline; category selection exposes its pressed state to assistive technology.
+- Reviewed desktop, mobile and payment screenshots. Checked 320, 390, 768, 1024, 1440 and 1920 px widths without page overflow. Mobile uses larger two-column cards and a scrollable product list, bringing the cart closer to the menus. Category selection, cart highlighting, payment, add-menu and daily-report dialogs passed browser checks without submitting any sales or menu changes.
+- TypeScript passed. The new styling is inside `@media screen`; printed 58 mm receipts and A4 reports retain their existing document styles. The existing GitHub workflow runs financial tests, builds and deploys the updated Worker, and verifies the live site.
+
 ## Production domain and HTTPS — 2026-10-07
 
 - Deployed Worker `cida-pos` to the active Cloudflare Custom Domain `https://poscida.dpdns.org`, using the existing remote D1 database and private R2 bucket. Enabled HTTP-to-HTTPS redirect, set the exact production origin and secure cookies, and disabled workers.dev and preview URLs. DNS resolves via Cloudflare and the TLS certificate is active.

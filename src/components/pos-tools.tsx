@@ -53,9 +53,9 @@ export default function PosTools({catalog,categoryId,disabled,onCatalogUpdated}:
   }
   return <>
     <div className="pos-tools" aria-label="เครื่องมือพนักงานขาย">
-      {can(catalog.user.role,'products.create')&&<button className="secondary" disabled={disabled||!catalog.categories.length} onClick={openMenu}><Plus size={18}/>เพิ่มเมนู</button>}
+      {can(catalog.user.role,'products.create')&&<button className="secondary pos-menu-tool" disabled={disabled||!catalog.categories.length} onClick={openMenu}><Plus size={18}/>เพิ่มเมนู</button>}
       {can(catalog.user.role,'reports.read')&&<>
-        <button className="secondary" disabled={disabled} onClick={()=>setTool('daily')}><ReceiptText size={18}/>รายงานประจำวัน</button>
+        <button className="secondary pos-report-tool" disabled={disabled} onClick={()=>setTool('daily')}><ReceiptText size={18}/>รายงานประจำวัน</button>
       </>}
     </div>
     {notice&&<div role="status" className="notice pos-tool-notice">{notice}<button onClick={()=>setNotice('')}>ปิด</button></div>}
