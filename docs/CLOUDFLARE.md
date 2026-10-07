@@ -2,6 +2,8 @@
 
 The POS runtime uses Cloudflare Workers (OpenNext), D1 database `cida-pos`, and private R2 bucket `cida-pos-private`. Source and deployments contain no API tokens or R2 S3 keys. GitHub contains code, the 91-menu seed and D1 migrations; users, sales, audit data, credentials and export files stay private.
 
+Production URL: **https://poscida.dpdns.org**. Wrangler manages its Custom Domain and DNS record. HTTPS redirect is enabled in the Cloudflare zone, session cookies are Secure/HttpOnly/SameSite=Strict, and the `workers.dev` endpoint and preview URLs are disabled. Keep the Custom Domain and `APP_ORIGIN` in `wrangler.jsonc` aligned when changing the hostname.
+
 ## Local and cloud environments
 
 `npm run dev` uses local D1/R2 data in `.wrangler/state/`. `npm run db:migrate` applies local D1 migrations; `npm run db:seed` initializes accounts, terminal and spreadsheet menus without replacing existing passwords or edited prices. `npm run cf:preview` runs the compiled Worker locally. Both use the same local bindings.
@@ -23,6 +25,8 @@ R2_SECRET_ACCESS_KEY=your-r2-secret-key
 Run `npm run cf:setup`, then `npm run db:migrate:remote`. The setup helper updates the non-secret database ID in `wrangler.jsonc`. For a **new empty** database, generate seed SQL using `npm run db:seed:sql` and apply `.wrangler/seed.sql` with `node scripts/cloudflare-command.mjs d1 execute cida-pos --remote --file .wrangler/seed.sql`. Imported databases already contain their accounts and menus.
 
 Build with `npm run cf:build`; inspect with `node scripts/cloudflare-command.mjs deploy --dry-run`. Set `APP_ORIGIN` to the actual HTTPS POS URL in Wrangler `vars` before `npm run cf:deploy`. `COOKIE_SECURE` is true in the deployed Worker. Do not put account credentials or seed passwords in `vars`.
+
+OpenNext automatically copies Next `.env` files into build output. `cf:build` strips those generated copies and clears bundled environment defaults; runtime values come from Wrangler bindings. The deployment helper refuses to upload output containing local credential values or copied environment files. Always build through `npm run cf:build`.
 
 ## PostgreSQL migration
 
@@ -51,5 +55,7 @@ D1 Free permits 500 MB per database (5 GB total), 5 million rows read/day and 10
 R2 Standard includes 10 GB-month of storage, 1 million Class A operations and 10 million Class B operations/month, with no egress charge. Infrequent Access is excluded from that allowance. R2 can bill overages; no paid-plan upgrade is performed by these setup scripts.
 
 Workers Free includes 100,000 requests/day and 10 ms CPU/request. The current bcrypt password verification must be checked against the actual account CPU allowance before production; D1/R2 free allowances do not imply that all Next.js/authentication requests fit the Workers Free CPU limit. Preserve password security when addressing CPU limits.
+
+HTTPS login, authenticated D1/catalog/report reads and dashboard rendering succeeded on the deployed account on 2026-10-07. This verifies those requests on the current account, not sustained usage against all Free allowances. No subscription or CPU allowance was changed.
 
 Sources: [D1 limits](https://developers.cloudflare.com/d1/platform/limits/), [D1 pricing](https://developers.cloudflare.com/d1/platform/pricing/), [atomic D1 batches](https://developers.cloudflare.com/d1/worker-api/d1-database/), [R2 pricing](https://developers.cloudflare.com/r2/pricing/), [Workers pricing](https://developers.cloudflare.com/workers/platform/pricing/), [OpenNext](https://opennext.js.org/cloudflare/get-started).

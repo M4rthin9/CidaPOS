@@ -19,7 +19,7 @@ Open http://localhost:3000. Initial account passwords are generated into ignored
 
 ## Cloudflare D1 + R2
 
-The configured database is `cida-pos` and the private bucket is `cida-pos-private`. See [Cloudflare deployment and migration](docs/CLOUDFLARE.md) for the verified migration, setup, free-tier limits and deployment steps.
+The deployed POS is [https://poscida.dpdns.org](https://poscida.dpdns.org), using database `cida-pos` and private bucket `cida-pos-private`. See [Cloudflare deployment and migration](docs/CLOUDFLARE.md) for the verified migration, setup, free-tier limits and deployment steps.
 
 Cloud credentials belong in ignored `.env.cloudflare.local`. Deployment uses D1/R2 bindings directly, so R2 access keys are not shipped to the browser or required in the Worker. The database stores image URLs and archive checksums rather than large file contents. Media routes require a staff session; sales archives require Super Admin.
 

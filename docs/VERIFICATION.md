@@ -1,5 +1,11 @@
 # Verification record
 
+## Production domain and HTTPS — 2026-10-07
+
+- Deployed Worker `cida-pos` to the active Cloudflare Custom Domain `https://poscida.dpdns.org`, using the existing remote D1 database and private R2 bucket. Enabled HTTP-to-HTTPS redirect, set the exact production origin and secure cookies, and disabled workers.dev and preview URLs. DNS resolves via Cloudflare and the TLS certificate is active.
+- Live Chrome checks passed for HTTPS login, authenticated POS/catalog (91 active spreadsheet menus and three active categories), D1 health, seven-day reports, dashboard, private R2 logo and historical reset archive download. Session cookies are Secure, HttpOnly and SameSite=Strict. No sales, refunds, resets or printing were executed, and no paid plan or subscription setting was changed.
+- The pre-deployment scan caught OpenNext's generated copies of local environment files before upload. The build now removes those generated copies and bundled environment defaults; deployment checks reject copied environment files or local credential values. Full OpenNext production build, TypeScript and output credential scans passed.
+
 ## Cloudflare D1 and private R2 migration — 2026-10-07
 
 - Replaced the PostgreSQL runtime with native D1 queries and atomic, revision-checked batches. Read operations check their revision; conflicting writes retry without partial commits. SQLite triggers preserve monetary constraints, immutable audit/payment/closing records and order/item snapshots. Packed inserts/updates and cached transaction reads keep 100-line checkout/refund and sales reset within the tested Free query budget.

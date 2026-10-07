@@ -15,7 +15,7 @@
     "test:browser": "playwright test",
     "db:migrate:remote": "node scripts/cloudflare-command.mjs d1 migrations apply cida-pos --remote",
     "db:seed:sql": "tsx scripts/seed-d1.ts --sql-only",
-    "cf:build": "prisma generate && opennextjs-cloudflare build",
+    "cf:build": "prisma generate && opennextjs-cloudflare build && node scripts/prepare-worker.mjs",
     "cf:preview": "opennextjs-cloudflare preview",
     "cf:deploy": "node scripts/cloudflare-command.mjs deploy",
     "cf:setup": "node scripts/cloudflare-setup.mjs"

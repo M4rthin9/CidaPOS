@@ -6,6 +6,14 @@
   "compatibility_flags": [
     "nodejs_compat"
   ],
+  "workers_dev": false,
+  "preview_urls": false,
+  "routes": [
+    {
+      "pattern": "poscida.dpdns.org",
+      "custom_domain": true
+    }
+  ],
   "assets": {
     "directory": ".open-next/assets",
     "binding": "ASSETS"
@@ -25,7 +33,8 @@
     }
   ],
   "vars": {
-    "COOKIE_SECURE": "true"
+    "COOKIE_SECURE": "true",
+    "APP_ORIGIN": "https://poscida.dpdns.org"
   },
   "observability": {
     "enabled": true
