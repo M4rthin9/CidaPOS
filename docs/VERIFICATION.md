@@ -1,5 +1,10 @@
 # Verification record
 
+## Warm cashier color palette — 2026-10-07
+
+- Replaced the cashier colors with a deep plum header, warm ivory workspace and category rail, rose/sage/amber menu accents, lavender cart details, plum total and forest-green payment action. Category buttons and menu cards share their presentation palette without changing stored catalog colors. Cashier dialogs, hover, focus and disabled states use matching colors.
+- Reviewed desktop, mobile and payment screenshots; the existing Thai font loaded correctly. Six viewport checks (320–1920 px), category selection, cart highlighting and cashier dialogs passed. The main text/shortcut/total/payment color pairs measured at least 5.17:1 contrast. TypeScript passed. Checks submitted no sales, menu updates or print jobs.
+
 ## Cashier font readability — 2026-10-07
 
 - Added self-hosted Noto Sans Thai Looped with its original SIL Open Font License and source provenance. Cashier menu names, prices, category buttons, cart text and dialogs use larger type, more line spacing and darker secondary text. Mobile header uses two rows to keep status labels readable.
