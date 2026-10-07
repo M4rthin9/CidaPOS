@@ -1,0 +1,148 @@
+/* Shared screen styles; receipt and A4 print layouts retain globals.css. */
+@media screen {
+  :root {
+    --bg: #f6f7f9;
+    --surface: #fff;
+    --text: #242936;
+    --muted: #687180;
+    --border: #e7e9ee;
+    --primary: #a92928;
+    --primary-dark: #852020;
+    --soft: #fcf0ef;
+    --green: #287354;
+    --shadow: 0 2px 4px #24293603, 0 8px 28px #24293605;
+  }
+  body {
+    font-family: var(--font-interface), Tahoma, Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  h1, h2, h3 { letter-spacing: normal; line-height: 1.5; }
+  h1 { font-weight: 700; }
+  h2, h3 { font-weight: 600; }
+  ::selection { background: #a9292820; color: #852020; }
+  input, select, textarea { border-radius: 11px; padding: 11px 14px; }
+  input::placeholder, textarea::placeholder { color: #848c99; opacity: 1; }
+  input:focus, select:focus, textarea:focus { border-color: var(--primary); box-shadow: 0 0 0 4px #a9292810; }
+  :is(button, a, input, select, textarea):focus-visible { outline: 3px solid #a9292866; outline-offset: 3px; }
+  :is(input, select, textarea):focus-visible { outline: none; }
+  :is(button, a) { transition: background-color .18s, color .18s, border-color .18s, box-shadow .18s; }
+  .primary, .secondary { border-radius: 11px; font-size: 14px; font-weight: 600; }
+  .primary { box-shadow: 0 4px 12px #a9292815; }
+  .secondary:hover:enabled { background: #f7f8fa; border-color: #d6dae2; }
+  .icon-button { border-radius: 10px; }
+  .icon-button:hover { background: #f1f3f6; }
+  .brand { font-family: Arial, var(--font-interface), sans-serif; letter-spacing: -.5px; }
+  .brand-icon { border-radius: 12px; box-shadow: 0 4px 10px #a9292815; }
+  .badge { border-radius: 7px; background: #f0f2f5; color: #5e6878; font-size: 12px; font-weight: 500; }
+  .badge.success { background: #eaf6ef; color: #26734b; }
+  .badge.danger { background: #fff0ee; color: #a3352b; }
+  .eyebrow { font-size: 11px; font-weight: 600; letter-spacing: .35px; }
+  .error, .notice, .info { border-radius: 12px; }
+  .search-box { border-radius: 11px; }
+  .search-box:focus-within { border-color: var(--primary); box-shadow: 0 0 0 4px #a9292810; }
+  .search-box input { font-size: 13px; background: transparent; }
+  .search-box input:focus { box-shadow: none; }
+  kbd { background: #f7f8fa; border-color: #e2e5ea; color: #737d8c; border-radius: 5px; }
+  .modal { border-radius: 20px; padding: 28px; border-color: #e7e9ee; box-shadow: 0 24px 100px #19202e30; }
+  .modal::backdrop { background: #19202e70; backdrop-filter: blur(4px); }
+  .modal > header h2 { font-size: 21px; }
+  .payment-total { background: #faf3f2; }
+  .payment-total strong, .change strong, .kpi > strong, .pos-daily-total strong { font-variant-numeric: tabular-nums; }
+
+  /* Back office */
+  .admin-sidebar { padding-top: 30px; }
+  .admin-label { font-size: 10px; color: var(--muted); letter-spacing: .6px; }
+  .admin-sidebar nav { gap: 6px; }
+  .admin-sidebar nav a { font-size: 13px; color: #647080; border-radius: 11px; padding: 12px; }
+  .admin-sidebar nav a:hover { background: #f6f7f9; }
+  .admin-sidebar nav a.active { background: var(--soft); color: var(--primary); box-shadow: inset 3px 0 var(--primary); }
+  .admin-side-bottom { border-top: 1px solid var(--border); padding-top: 18px; }
+  .admin-side-bottom a { font-size: 13px; }
+  .admin-side-bottom small { font-size: 11px; color: var(--muted); }
+  .admin-header { font-size: 13px; }
+  .admin-header > span, .admin-header > span small { color: var(--muted); }
+  .admin-user > div { font-size: 13px; }
+  .admin-user small { font-size: 11px; }
+  .cashier-avatar { background: var(--soft); color: var(--primary); }
+  .page-heading h1 { font-size: 29px; }
+  .page-heading p { font-size: 13px; }
+  .page-actions .secondary, .page-actions input { font-size: 12px; }
+  .panel, .kpi { border-radius: 16px; box-shadow: var(--shadow); }
+  .panel h2 { font-size: 17px; }
+  .panel-title > span { font-size: 12px; }
+  .kpi { padding: 24px; }
+  .kpi > span { font-size: 13px; }
+  .kpi > strong { font-size: 30px; letter-spacing: -.5px; font-weight: 700; }
+  .kpi > small { font-size: 11px; color: var(--muted); }
+  .kpi.featured { background: #8e2525; border-color: #8e2525; box-shadow: 0 8px 24px #a9292816; }
+  .kpi.featured > span, .kpi.featured > small { color: #ffe6de; }
+  .report-day, .report-day small { font-size: 11px; }
+  .admin-content th { background: #f8f9fb; color: #657082; font-size: 12px; font-weight: 600; }
+  .admin-content td { font-size: 13px; border-color: #eef0f4; }
+  .admin-content td strong { font-size: 13px; }
+  .admin-content td small { font-size: 11px; }
+  .admin-content tbody tr:hover { background: #fbfcfd; }
+  .admin-content tfoot td { background: #f8f9fb; }
+  .metric-row, .metric-row strong { font-size: 13px; }
+  .metric-row small { font-size: 11px; }
+  .table-toolbar > label:not(.search-box), .report-filters label { font-size: 12px; }
+  .table-toolbar > select, .table-toolbar > .muted, .pagination { font-size: 12px; }
+  .tabs { border-color: var(--border); gap: 8px; }
+  .tabs button { font-size: 13px; }
+  .receipt-preview-panel { background: #edf0f4; border-radius: 16px; }
+  .dashboard-chart-grid .panel-title p, .trend-metrics, .chart-footnote { font-size: 12px; }
+  .chart-switch { border-radius: 10px; }
+  .chart-switch button { border-radius: 7px; font-size: 12px; }
+  .pos-daily-total { background: #fcf4f2; border-color: #f0deda; border-radius: 14px; }
+
+  /* Login */
+  .login { grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); }
+  .login > section { min-width: 0; }
+  .login-story { background: radial-gradient(ellipse at 15% 15%, #b23d37 0, transparent 60%), linear-gradient(145deg, #922625, #501c24); padding: clamp(36px, 5vw, 80px); }
+  .login-story .brand { font-size: 27px; }
+  .login-story .brand-icon { background: #ffffff14; border: 1px solid #ffffff20; width: 44px; height: 44px; color: #ffdc9b; }
+  .login-story .brand > span:last-child { color: #ffdc9b; }
+  .login-story .eyebrow { color: #f5cdbb; font-size: 12px; }
+  .login-story h1 { font-size: clamp(32px, 3.5vw, 52px); line-height: 1.5; letter-spacing: normal; margin: 22px 0; }
+  .login-story p { font-size: 14px; line-height: 2; color: #ead4d2; }
+  .login-story > small { color: #e1bfbc; font-size: 11px; }
+  .login-assurance { padding-top: 32px; color: #f2d5d0; font-size: 13px; }
+  .login-assurance svg { color: #f0bf75; }
+  .login-story::after { width: 480px; height: 480px; border-color: #f0a72620; box-shadow: 0 0 0 65px #ffffff03, 0 0 0 130px #ffffff03; }
+  .login-form { background: #f8f9fb; padding: 40px; }
+  .login-box { width: 420px; padding: 40px; border: 1px solid var(--border); border-radius: 24px; background: #fff; box-shadow: 0 20px 70px #24293608; }
+  .login-box .badge { background: var(--soft); color: var(--primary); padding: 6px 10px; }
+  .login-box h2 { font-size: 29px; margin: 24px 0 8px; }
+  .login-box > p { font-size: 13px; margin-bottom: 28px; }
+  .login-box label { font-size: 13px; gap: 9px; margin-bottom: 20px; }
+  .login-box input { min-height: 52px; background: #fcfcfd; }
+  .login-box .primary { min-height: 52px; padding: 14px 18px; }
+  .login-box > .small { font-size: 11px; margin: 24px 0 0; }
+  @media (max-width: 950px) {
+    .login-story { padding: 36px; }
+    .login-story h1 { font-size: 34px; }
+    .login-form { padding: 28px; }
+    .login-box { padding: 28px; }
+  }
+  @media (max-width: 680px) {
+    .login { grid-template-columns: minmax(0, 1fr); }
+    .login-story { padding: 28px; min-height: 280px; gap: 28px; }
+    .login-story h1 { font-size: 30px; margin: 12px 0; }
+    .login-story h1 br { display: initial; }
+    .login-story p { font-size: 12px; }
+    .login-form { padding: 24px 16px 36px; }
+    .login-box { padding: 28px 24px; border-radius: 20px; }
+    .page-heading h1 { font-size: 25px; }
+    .admin-user > div { font-size: 11px; }
+    .panel, .kpi { border-radius: 13px; }
+    .kpi { padding: 16px; }
+    .kpi > strong { font-size: 25px; }
+    .kpi > span { font-size: 11px; }
+    .page-actions .secondary { font-size: 12px; }
+    .modal { padding: 20px; border-radius: 16px; }
+  }
+}
+@media screen and (prefers-reduced-motion: reduce) { :is(button, a) { transition: none; } }
