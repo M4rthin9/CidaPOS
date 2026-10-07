@@ -45,7 +45,7 @@ jobs:
         run: npm run cf:build
 
       - name: Deploy to the POS domain
-        run: npm run cf:deploy -- --message "GitHub $GITHUB_SHA"
+        run: npm run cf:deploy -- --message "GitHub-$GITHUB_SHA"
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
