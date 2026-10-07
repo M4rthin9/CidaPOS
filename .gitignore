@@ -1,0 +1,17 @@
+node_modules/
+.next/
+.env
+.env.*
+!.env.example
+!.env.docker.example
+.dev.vars
+.dev.vars.*
+.wrangler/
+.local-access.txt
+.local-db/
+test-results/
+playwright-report/
+*.tsbuildinfo
+backups/
+*.pem
+*.key

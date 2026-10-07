@@ -1,0 +1,589 @@
+{
+  "version": 1,
+  "currency": "THB",
+  "priceUnit": "satang",
+  "categories": [
+    {
+      "file": "อาหารร้านนอก.xlsx",
+      "id": "menu-outside",
+      "skuPrefix": "OUTSIDE",
+      "name": "อาหารร้านนอก",
+      "icon": "Utensils",
+      "color": "#bd603b",
+      "shortcut": "F1",
+      "sort": 0,
+      "products": [
+        {
+          "sku": "SEED-OUTSIDE-001",
+          "name": "หมูปิ้งนมสด",
+          "price": 8000,
+          "sourceRow": 2
+        },
+        {
+          "sku": "SEED-OUTSIDE-002",
+          "name": "ไก่ย่างแดง",
+          "price": 8000,
+          "sourceRow": 3
+        },
+        {
+          "sku": "SEED-OUTSIDE-003",
+          "name": "หมูทอดแดดเดียว",
+          "price": 10000,
+          "sourceRow": 4
+        },
+        {
+          "sku": "SEED-OUTSIDE-004",
+          "name": "ไข่เจียวหมูสับ",
+          "price": 4500,
+          "sourceRow": 5
+        },
+        {
+          "sku": "SEED-OUTSIDE-005",
+          "name": "ข้าวสวยหอมมะลิ",
+          "price": 1000,
+          "sourceRow": 6
+        },
+        {
+          "sku": "SEED-OUTSIDE-006",
+          "name": "ข้าวเหนียว",
+          "price": 1000,
+          "sourceRow": 7
+        },
+        {
+          "sku": "SEED-OUTSIDE-007",
+          "name": "ผัดผักรวมไก่",
+          "price": 4500,
+          "sourceRow": 8
+        },
+        {
+          "sku": "SEED-OUTSIDE-008",
+          "name": "ผัดผักรวมหมู",
+          "price": 4500,
+          "sourceRow": 9
+        },
+        {
+          "sku": "SEED-OUTSIDE-009",
+          "name": "ต้มข่าไก่",
+          "price": 4500,
+          "sourceRow": 10
+        },
+        {
+          "sku": "SEED-OUTSIDE-010",
+          "name": "ปลาดุกผัดพริกแกง",
+          "price": 5000,
+          "sourceRow": 11
+        },
+        {
+          "sku": "SEED-OUTSIDE-011",
+          "name": "พะแนงไก่",
+          "price": 5000,
+          "sourceRow": 12
+        },
+        {
+          "sku": "SEED-OUTSIDE-012",
+          "name": "ต้มจืดมะระยัดไส้",
+          "price": 5000,
+          "sourceRow": 13
+        },
+        {
+          "sku": "SEED-OUTSIDE-013",
+          "name": "ลาบหมู",
+          "price": 6000,
+          "sourceRow": 14
+        },
+        {
+          "sku": "SEED-OUTSIDE-014",
+          "name": "ปลานิลทอด",
+          "price": 8000,
+          "sourceRow": 15
+        },
+        {
+          "sku": "SEED-OUTSIDE-015",
+          "name": "ส้มตำ ปูปลาร้า",
+          "price": 3500,
+          "sourceRow": 16
+        },
+        {
+          "sku": "SEED-OUTSIDE-016",
+          "name": "สะโพกไก่ทอด",
+          "price": 5000,
+          "sourceRow": 17
+        },
+        {
+          "sku": "SEED-OUTSIDE-017",
+          "name": "คอหมูย่าง",
+          "price": 8000,
+          "sourceRow": 18
+        },
+        {
+          "sku": "SEED-OUTSIDE-018",
+          "name": "น้ำตกหมู",
+          "price": 8000,
+          "sourceRow": 19
+        },
+        {
+          "sku": "SEED-OUTSIDE-019",
+          "name": "ไก่อบถัง 1 ตัว",
+          "price": 25000,
+          "sourceRow": 20
+        },
+        {
+          "sku": "SEED-OUTSIDE-020",
+          "name": "ไก่ต้มน้ำปลา 1 ตัว",
+          "price": 25000,
+          "sourceRow": 21
+        },
+        {
+          "sku": "SEED-OUTSIDE-021",
+          "name": "ส้มตำไทย",
+          "price": 3500,
+          "sourceRow": 22
+        },
+        {
+          "sku": "SEED-OUTSIDE-022",
+          "name": "กะเพราไก่ชิ้น",
+          "price": 6000,
+          "sourceRow": 23
+        },
+        {
+          "sku": "SEED-OUTSIDE-023",
+          "name": "กะเพราเครื่องในไก่",
+          "price": 7000,
+          "sourceRow": 24
+        },
+        {
+          "sku": "SEED-OUTSIDE-024",
+          "name": "กะเพราหมูกรอบ",
+          "price": 7000,
+          "sourceRow": 25
+        },
+        {
+          "sku": "SEED-OUTSIDE-025",
+          "name": "กะเพราหมูสับ",
+          "price": 6000,
+          "sourceRow": 26
+        },
+        {
+          "sku": "SEED-OUTSIDE-026",
+          "name": "ไก่ทอดกระเทียม",
+          "price": 6000,
+          "sourceRow": 27
+        },
+        {
+          "sku": "SEED-OUTSIDE-027",
+          "name": "คะน้าหมูกรอบ",
+          "price": 7000,
+          "sourceRow": 28
+        },
+        {
+          "sku": "SEED-OUTSIDE-028",
+          "name": "ต้มยำไก่",
+          "price": 7000,
+          "sourceRow": 29
+        },
+        {
+          "sku": "SEED-OUTSIDE-029",
+          "name": "ต้มยำรวมมิตร",
+          "price": 10000,
+          "sourceRow": 30
+        },
+        {
+          "sku": "SEED-OUTSIDE-030",
+          "name": "หมูทอดกระเทียม",
+          "price": 6000,
+          "sourceRow": 31
+        },
+        {
+          "sku": "SEED-OUTSIDE-031",
+          "name": "กะเพราไก่บด ราดข้าว",
+          "price": 4500,
+          "sourceRow": 32
+        },
+        {
+          "sku": "SEED-OUTSIDE-032",
+          "name": "กะเพราเครื่องในไก่ ราดข้าว",
+          "price": 5000,
+          "sourceRow": 33
+        },
+        {
+          "sku": "SEED-OUTSIDE-033",
+          "name": "กะเพราหมูกรอบ ราดข้าว",
+          "price": 5000,
+          "sourceRow": 34
+        },
+        {
+          "sku": "SEED-OUTSIDE-034",
+          "name": "กะเพราหมูสับ ราดข้าว",
+          "price": 4500,
+          "sourceRow": 35
+        },
+        {
+          "sku": "SEED-OUTSIDE-035",
+          "name": "ไก่ทอดกระเทียม ราดข้าว",
+          "price": 4500,
+          "sourceRow": 36
+        },
+        {
+          "sku": "SEED-OUTSIDE-036",
+          "name": "ข้าวไข่เจียวหมูสับ ราดข้าว",
+          "price": 4500,
+          "sourceRow": 37
+        },
+        {
+          "sku": "SEED-OUTSIDE-037",
+          "name": "หมูทอดกระเทียม ราดข้าว",
+          "price": 4500,
+          "sourceRow": 38
+        },
+        {
+          "sku": "SEED-OUTSIDE-038",
+          "name": "แคปหมู",
+          "price": 5000,
+          "sourceRow": 39
+        },
+        {
+          "sku": "SEED-OUTSIDE-039",
+          "name": "ข้าวผัดกุ้ง",
+          "price": 7000,
+          "sourceRow": 40
+        },
+        {
+          "sku": "SEED-OUTSIDE-040",
+          "name": "กุยช่ายทอด",
+          "price": 5000,
+          "sourceRow": 41
+        },
+        {
+          "sku": "SEED-OUTSIDE-041",
+          "name": "เป็ดย่าง",
+          "price": 50000,
+          "sourceRow": 42
+        },
+        {
+          "sku": "SEED-OUTSIDE-042",
+          "name": "ชุดอีสาน",
+          "price": 35000,
+          "sourceRow": 43
+        },
+        {
+          "sku": "SEED-OUTSIDE-043",
+          "name": "ชุดอีสาน อิสลาม",
+          "price": 35000,
+          "sourceRow": 44
+        },
+        {
+          "sku": "SEED-OUTSIDE-044",
+          "name": "แกงป่าหมู",
+          "price": 7000,
+          "sourceRow": 45
+        },
+        {
+          "sku": "SEED-OUTSIDE-045",
+          "name": "แกงป่าไก่",
+          "price": 7000,
+          "sourceRow": 46
+        },
+        {
+          "sku": "SEED-OUTSIDE-046",
+          "name": "แกงอ่อมหมู",
+          "price": 7000,
+          "sourceRow": 47
+        },
+        {
+          "sku": "SEED-OUTSIDE-047",
+          "name": "แกงอ่อมไก่",
+          "price": 7000,
+          "sourceRow": 48
+        },
+        {
+          "sku": "SEED-OUTSIDE-048",
+          "name": "ข้าวผัดหมู",
+          "price": 5000,
+          "sourceRow": 49
+        },
+        {
+          "sku": "SEED-OUTSIDE-049",
+          "name": "ข้าวผัดไก่",
+          "price": 5000,
+          "sourceRow": 50
+        },
+        {
+          "sku": "SEED-OUTSIDE-050",
+          "name": "เนื้อหอยลายผัดพริกเผา",
+          "price": 10000,
+          "sourceRow": 51
+        },
+        {
+          "sku": "SEED-OUTSIDE-051",
+          "name": "ไก่ผัดขิง",
+          "price": 5000,
+          "sourceRow": 52
+        },
+        {
+          "sku": "SEED-OUTSIDE-052",
+          "name": "ต้มแซ่บเนื้อ",
+          "price": 5000,
+          "sourceRow": 53
+        },
+        {
+          "sku": "SEED-OUTSIDE-053",
+          "name": "ปลานิลทอดราดพริก",
+          "price": 10000,
+          "sourceRow": 54
+        },
+        {
+          "sku": "SEED-OUTSIDE-054",
+          "name": "เครื่องในไก่ทอด",
+          "price": 5000,
+          "sourceRow": 55
+        },
+        {
+          "sku": "SEED-OUTSIDE-055",
+          "name": "โครงไก่ทอด",
+          "price": 4000,
+          "sourceRow": 56
+        },
+        {
+          "sku": "SEED-OUTSIDE-056",
+          "name": "ต้มยำโครงไก่",
+          "price": 4500,
+          "sourceRow": 57
+        },
+        {
+          "sku": "SEED-OUTSIDE-057",
+          "name": "พะโล้ไก่",
+          "price": 6000,
+          "sourceRow": 58
+        },
+        {
+          "sku": "SEED-OUTSIDE-058",
+          "name": "อาหารพิเศษฝ่ายฝึก(ส่งวันเสาร์)",
+          "price": 5000,
+          "sourceRow": 59
+        }
+      ]
+    },
+    {
+      "file": "อาหารหน้าร้าน.xlsx",
+      "id": "menu-front",
+      "skuPrefix": "FRONT",
+      "name": "อาหารหน้าร้าน",
+      "icon": "Store",
+      "color": "#64826a",
+      "shortcut": "F2",
+      "sort": 1,
+      "products": [
+        {
+          "sku": "SEED-FRONT-001",
+          "name": "ข้าวราดแกง 1 อย่าง",
+          "price": 4000,
+          "sourceRow": 2
+        },
+        {
+          "sku": "SEED-FRONT-002",
+          "name": "ข้าวราดแกง 2 อย่าง",
+          "price": 5000,
+          "sourceRow": 3
+        },
+        {
+          "sku": "SEED-FRONT-003",
+          "name": "ข้าวราดแกง 3 อย่าง",
+          "price": 6000,
+          "sourceRow": 4
+        },
+        {
+          "sku": "SEED-FRONT-004",
+          "name": "ข้าวยำไก่แซบ",
+          "price": 5000,
+          "sourceRow": 5
+        },
+        {
+          "sku": "SEED-FRONT-005",
+          "name": "ยำไก่แซบ",
+          "price": 4000,
+          "sourceRow": 6
+        },
+        {
+          "sku": "SEED-FRONT-006",
+          "name": "ข้าวไข่เจียวธรรมดา",
+          "price": 3000,
+          "sourceRow": 7
+        },
+        {
+          "sku": "SEED-FRONT-007",
+          "name": "ข้าวไข่เจียวทรงเครื่อง",
+          "price": 4000,
+          "sourceRow": 8
+        },
+        {
+          "sku": "SEED-FRONT-008",
+          "name": "ไข่เจียว 1 ฟอง",
+          "price": 1000,
+          "sourceRow": 9
+        },
+        {
+          "sku": "SEED-FRONT-009",
+          "name": "ไข่ดาว 1 ฟอง",
+          "price": 1000,
+          "sourceRow": 10
+        },
+        {
+          "sku": "SEED-FRONT-010",
+          "name": "ข้าวสวย",
+          "price": 1000,
+          "sourceRow": 11
+        },
+        {
+          "sku": "SEED-FRONT-011",
+          "name": "หมูปิ้ง",
+          "price": 1000,
+          "sourceRow": 12
+        },
+        {
+          "sku": "SEED-FRONT-012",
+          "name": "สะโพกไก่ทอด",
+          "price": 3000,
+          "sourceRow": 13
+        },
+        {
+          "sku": "SEED-FRONT-013",
+          "name": "เฟรนช์ฟรายส์",
+          "price": 4000,
+          "sourceRow": 14
+        },
+        {
+          "sku": "SEED-FRONT-014",
+          "name": "นัคเก็ตทอด",
+          "price": 4000,
+          "sourceRow": 15
+        },
+        {
+          "sku": "SEED-FRONT-015",
+          "name": "นักเก็ต + เฟรนช์ฟรายส์",
+          "price": 4000,
+          "sourceRow": 16
+        },
+        {
+          "sku": "SEED-FRONT-016",
+          "name": "มาม่าคัพ",
+          "price": 2000,
+          "sourceRow": 17
+        }
+      ]
+    },
+    {
+      "file": "อาหารอีสาน.xlsx",
+      "id": "menu-isan",
+      "skuPrefix": "ISAN",
+      "name": "อาหารอีสาน",
+      "icon": "Flame",
+      "color": "#a27245",
+      "shortcut": "F3",
+      "sort": 2,
+      "products": [
+        {
+          "sku": "SEED-ISAN-001",
+          "name": "ตำแตง",
+          "price": 4000,
+          "sourceRow": 2
+        },
+        {
+          "sku": "SEED-ISAN-002",
+          "name": "ตำไทย",
+          "price": 4000,
+          "sourceRow": 3
+        },
+        {
+          "sku": "SEED-ISAN-003",
+          "name": "ตำไทย ไข่เค็ม",
+          "price": 5000,
+          "sourceRow": 4
+        },
+        {
+          "sku": "SEED-ISAN-004",
+          "name": "ตำปูปลาร้า",
+          "price": 4000,
+          "sourceRow": 5
+        },
+        {
+          "sku": "SEED-ISAN-005",
+          "name": "ตำถั่ว",
+          "price": 4000,
+          "sourceRow": 6
+        },
+        {
+          "sku": "SEED-ISAN-006",
+          "name": "ตำซั่วปลากรอบ",
+          "price": 5000,
+          "sourceRow": 7
+        },
+        {
+          "sku": "SEED-ISAN-007",
+          "name": "ตำหอยดอง",
+          "price": 5000,
+          "sourceRow": 8
+        },
+        {
+          "sku": "SEED-ISAN-008",
+          "name": "ลาบหมู",
+          "price": 4500,
+          "sourceRow": 9
+        },
+        {
+          "sku": "SEED-ISAN-009",
+          "name": "ลาบไก่",
+          "price": 4000,
+          "sourceRow": 10
+        },
+        {
+          "sku": "SEED-ISAN-010",
+          "name": "น้ำตกคอหมูย่าง",
+          "price": 6000,
+          "sourceRow": 11
+        },
+        {
+          "sku": "SEED-ISAN-011",
+          "name": "คอหมูย่าง",
+          "price": 6000,
+          "sourceRow": 12
+        },
+        {
+          "sku": "SEED-ISAN-012",
+          "name": "ปลาดุกย่าง",
+          "price": 3500,
+          "sourceRow": 13
+        },
+        {
+          "sku": "SEED-ISAN-013",
+          "name": "ลาบปลาดุก",
+          "price": 5000,
+          "sourceRow": 14
+        },
+        {
+          "sku": "SEED-ISAN-014",
+          "name": "สะโพกไก่ย่าง",
+          "price": 3000,
+          "sourceRow": 15
+        },
+        {
+          "sku": "SEED-ISAN-015",
+          "name": "สะโพกไก่ทอด",
+          "price": 3000,
+          "sourceRow": 16
+        },
+        {
+          "sku": "SEED-ISAN-016",
+          "name": "ข้าวเหนียว",
+          "price": 1000,
+          "sourceRow": 17
+        },
+        {
+          "sku": "SEED-ISAN-017",
+          "name": "ขนมจีน",
+          "price": 1000,
+          "sourceRow": 18
+        }
+      ]
+    }
+  ]
+}

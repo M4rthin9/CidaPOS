@@ -1,0 +1,15 @@
+'use client';
+import Link from 'next/link';
+import {useState} from 'react';
+import {Store,LayoutDashboard,Package,Tags,ReceiptText,ChartNoAxesCombined,LockKeyhole,Users,ScrollText,Settings,ArrowLeft,LogOut,Menu,RotateCcw} from 'lucide-react';
+import type {Actor} from '@/lib/auth';
+import {can,type Permission} from '@/lib/permissions';
+import {api} from '@/lib/client';
+import Reports from './reports';
+import CatalogManager from './catalog-manager';
+import OrdersManager from './orders-manager';
+import SettingsManager from './settings-manager';
+import UsersAudit from './users-audit';
+import SalesResetPage from './sales-reset-page';
+const nav:[string,string,typeof Store,Permission][]=[['dashboard','ภาพรวมวันนี้',LayoutDashboard,'reports.read'],['products','สินค้า',Package,'catalog.write'],['categories','หมวดสินค้า',Tags,'catalog.write'],['orders','ประวัติการขาย',ReceiptText,'orders.read'],['reports','รายงานยอดขาย',ChartNoAxesCombined,'reports.read'],['closings','ปิดยอดประจำวัน',LockKeyhole,'reports.read'],['users','ผู้ใช้งาน',Users,'users.write'],['audit','บันทึกการตรวจสอบ',ScrollText,'audit.read'],['settings','ตั้งค่าระบบ',Settings,'settings.write'],['sales-reset','รีเซ็ตยอดขาย',RotateCcw,'sales.reset']];
+export default function Admin({section,user}:{section:string;user:Actor}){const [mobile,setMobile]=useState(false);const title=nav.find(n=>n[0]===section)?.[1]??'ภาพรวมวันนี้';return <div className="admin-shell"><aside className={`admin-sidebar ${mobile?'open':''}`}><Link href="/admin/dashboard" className="brand"><span className="brand-icon"><Store size={21}/></span>CIDA<span>POS</span></Link><div className="admin-label">หลังบ้าน · BACK OFFICE</div><nav>{nav.filter(n=>can(user.role,n[3])).map(([href,label,Icon])=><Link onClick={()=>setMobile(false)} key={href} className={section===href?'active':''} href={`/admin/${href}`}><Icon size={19}/>{label}</Link>)}</nav><div className="admin-side-bottom">{can(user.role,'sell')&&<Link href="/pos"><ArrowLeft size={18}/>กลับหน้าขาย</Link>}<small>ทัณฑสถานบำบัดพิเศษกลาง</small></div></aside><div className="admin-main"><header className="admin-header"><button className="icon-button mobile-menu" onClick={()=>setMobile(!mobile)} aria-label="เมนู"><Menu/></button><span>หลังบ้าน<small> / {title}</small></span><div className="admin-user"><span className="cashier-avatar">{user.name.slice(0,1)}</span><div>{user.name}<small>{user.role}</small></div><button className="icon-button" title="ออกจากระบบ" onClick={()=>void api('logout',{}).then(()=>{localStorage.removeItem('cida-catalog');window.location.href='/login';})}><LogOut size={18}/></button></div></header><div className="admin-content">{['dashboard','reports','closings'].includes(section)?<Reports section={section} user={user}/>:section==='products'||section==='categories'?<CatalogManager section={section}/>:section==='orders'?<OrdersManager user={user}/>:section==='settings'?<SettingsManager user={user}/>:section==='sales-reset'&&can(user.role,'sales.reset')?<SalesResetPage/>:section==='users'||section==='audit'?<UsersAudit section={section} user={user}/>:<p>ไม่พบหน้าที่ร้องขอ</p>}</div></div></div>;}

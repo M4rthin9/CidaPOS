@@ -1,0 +1,245 @@
+generator client {
+  provider = "prisma-client-js"
+}
+datasource db {
+  provider = "postgresql"
+  url = env("DATABASE_URL")
+}
+model User {
+  id String @id @default(cuid())
+  username String @unique
+  name String
+  passwordHash String
+  role String @default("CASHIER")
+  active Boolean @default(true)
+  sessions Session[]
+  orders Order[]
+  createdAt DateTime @default(now())
+}
+model Session {
+  id String @id
+  userId String
+  user User @relation(fields: [userId], references: [id])
+  expiresAt DateTime
+  @@index([expiresAt])
+}
+model LoginAttempt {
+  key String @id
+  count Int @default(0)
+  resetAt DateTime
+}
+model Category {
+  id String @id @default(cuid())
+  name String
+  icon String @default("Utensils")
+  color String @default("#c75c32")
+  shortcut String @default("")
+  preparationArea String @default("")
+  sort Int @default(0)
+  active Boolean @default(true)
+  products Product[]
+}
+model Product {
+  id String @id @default(cuid())
+  sku String @unique
+  barcode String? @unique
+  name String
+  description String @default("")
+  categoryId String
+  category Category @relation(fields: [categoryId], references: [id])
+  price Int
+  cost Int @default(0)
+  image String @default("")
+  active Boolean @default(true)
+  available Boolean @default(true)
+  favorite Boolean @default(false)
+  featured Boolean @default(false)
+  sort Int @default(0)
+  modifiers Modifier[]
+  updatedAt DateTime @updatedAt
+}
+model Modifier {
+  id String @id @default(cuid())
+  productId String
+  product Product @relation(fields: [productId], references: [id])
+  name String
+  price Int @default(0)
+  active Boolean @default(true)
+  sort Int @default(0)
+}
+model Terminal {
+  id String @id
+  name String
+  location String @default("")
+  active Boolean @default(true)
+  config Json
+  orders Order[]
+}
+model BusinessDay {
+  date String @id
+  config Json
+  counter Int @default(0)
+  closed Boolean @default(false)
+  revision Int @default(0)
+}
+model Order {
+  id String @id @default(cuid())
+  key String @unique
+  requestHash String
+  number String @unique
+  queue String
+  businessDate String
+  cashierId String
+  cashier User @relation(fields: [cashierId], references: [id])
+  terminalId String
+  terminal Terminal @relation(fields: [terminalId], references: [id])
+  subtotal Int
+  discount Int
+  total Int
+  refunded Int @default(0)
+  status String @default("COMPLETED")
+  note String @default("")
+  receiptConfig Json
+  createdAt DateTime @default(now())
+  items OrderItem[]
+  payments Payment[]
+  adjustments Adjustment[]
+  printJobs PrintJob[]
+  @@index([businessDate, createdAt])
+  @@index([cashierId, businessDate])
+  @@index([terminalId, businessDate])
+  @@unique([businessDate, queue])
+}
+model OrderItem {
+  id String @id @default(cuid())
+  orderId String
+  order Order @relation(fields: [orderId], references: [id])
+  productId String
+  name String
+  categoryId String
+  categoryName String
+  unitPrice Int
+  quantity Int
+  discount Int
+  lineTotal Int
+  refunded Int @default(0)
+  modifiers Json
+  note String @default("")
+  @@index([categoryId])
+  @@index([productId])
+}
+model Payment {
+  id String @id @default(cuid())
+  orderId String
+  order Order @relation(fields: [orderId], references: [id])
+  method String
+  amount Int
+  received Int
+  change Int
+  reference String @default("")
+}
+model Adjustment {
+  id String @id @default(cuid())
+  orderId String
+  order Order @relation(fields: [orderId], references: [id])
+  type String
+  amount Int
+  method String
+  allocations Json
+  reason String
+  requestedBy String
+  approvedBy String
+  createdAt DateTime @default(now())
+}
+model ParkedOrder {
+  id String @id @default(cuid())
+  userId String
+  terminalId String
+  label String
+  cart Json
+  createdAt DateTime @default(now())
+}
+model PrintJob {
+  id String @id @default(cuid())
+  orderId String?
+  order Order? @relation(fields: [orderId], references: [id])
+  terminalId String
+  printerId String
+  template String @default("CUSTOMER")
+  status String @default("PENDING")
+  profile Json
+  payload Json
+  requestedBy String
+  isReprint Boolean @default(false)
+  reprintCount Int @default(0)
+  claimToken String?
+  claimedAt DateTime?
+  printedAt DateTime?
+  error String?
+  createdAt DateTime @default(now())
+  @@index([terminalId, status])
+}
+model PrinterRoute {
+  id String @id @default(cuid())
+  categoryId String
+  terminalId String
+  printerId String
+  template String @default("KITCHEN")
+  copies Int @default(1)
+  enabled Boolean @default(false)
+}
+model SalesSnapshot {
+  id String @id @default(cuid())
+  businessDate String
+  cutoff String
+  summary Json
+  userId String
+  createdAt DateTime @default(now())
+  @@unique([businessDate, cutoff])
+}
+model DailyClosing {
+  id String @id @default(cuid())
+  businessDate String
+  revision Int
+  summary Json
+  expectedCash Int
+  actualCash Int
+  difference Int
+  note String
+  userId String
+  createdAt DateTime @default(now())
+  @@unique([businessDate, revision])
+}
+model AuditLog {
+  id String @id @default(cuid())
+  userId String?
+  userName String
+  action String
+  entity String
+  entityId String
+  before Json?
+  after Json?
+  reason String @default("")
+  context String @default("")
+  createdAt DateTime @default(now())
+  @@index([createdAt, action])
+}
+model Setting {
+  key String @id
+  value Json
+  updatedAt DateTime @updatedAt
+}
+model SalesResetArchive {
+  id String @id
+  userId String
+  userName String
+  reason String
+  counts Json
+  payload Json
+  createdAt DateTime @default(now())
+}
+model RetiredCheckoutKey {
+  key String @id
+  archiveId String
+  createdAt DateTime @default(now())
+}

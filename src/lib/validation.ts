@@ -1,0 +1,8 @@
+import {z} from 'zod';
+const id=z.string().min(1).max(100);
+const amount=z.number().int().min(0).max(100_000_000);
+export const checkoutSchema=z.object({key:z.uuid(),salesVersion:z.string().max(100).optional(),terminalId:id,items:z.array(z.object({productId:id,quantity:z.number().int().min(1).max(999),modifiers:z.array(id).max(20).default([]),note:z.string().max(300).default('')})).min(1).max(100),discount:amount.default(0),note:z.string().max(1000).default(''),payments:z.array(z.object({method:z.enum(['CASH','QR','OTHER']),amount,received:amount,reference:z.string().max(100).default('')})).min(1).max(5)});
+export type Checkout=z.infer<typeof checkoutSchema>;
+export const productSchema=z.object({sku:z.string().min(1).max(50),barcode:z.string().max(100).nullable().optional(),name:z.string().min(1).max(200),description:z.string().max(1000).default(''),categoryId:id,price:amount,cost:amount.default(0),image:z.string().max(500000).default(''),active:z.boolean(),available:z.boolean(),favorite:z.boolean(),featured:z.boolean().default(false),sort:z.number().int().min(0).max(99999),modifiers:z.array(z.object({id:id.optional(),name:z.string().min(1).max(100),price:amount,active:z.boolean(),sort:z.number().int().min(0).max(999)})).max(30).default([])});
+export const categorySchema=z.object({name:z.string().min(1).max(100),icon:z.string().max(40),color:z.string().regex(/^#[\da-fA-F]{6}$/),shortcut:z.string().regex(/^(F[1-7])?$/),preparationArea:z.string().max(100).default(''),sort:z.number().int().min(0).max(99999),active:z.boolean()});
+export const dateSchema=z.string().regex(/^\d{4}-\d{2}-\d{2}$/).refine(d=>!isNaN(new Date(d).getTime())&&new Date(d).toISOString().slice(0,10)===d);

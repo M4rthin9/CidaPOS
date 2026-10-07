@@ -1,0 +1,54 @@
+services:
+  db:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: cida_pos
+      POSTGRES_USER: cida
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U cida -d cida_pos"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+  migrate:
+    build:
+      context: .
+      target: tools
+    environment:
+      DATABASE_URL: postgresql://cida:${POSTGRES_PASSWORD}@db:5432/cida_pos?schema=public
+    depends_on:
+      db:
+        condition: service_healthy
+  web:
+    build:
+      context: .
+      target: runner
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: postgresql://cida:${POSTGRES_PASSWORD}@db:5432/cida_pos?schema=public
+      APP_ORIGIN: ${APP_ORIGIN:?Set APP_ORIGIN to the exact POS URL}
+      COOKIE_SECURE: ${COOKIE_SECURE:-true}
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+  seed:
+    profiles: ["setup"]
+    build:
+      context: .
+      target: tools
+    command: ["npx", "tsx", "prisma/seed.ts"]
+    environment:
+      DATABASE_URL: postgresql://cida:${POSTGRES_PASSWORD}@db:5432/cida_pos?schema=public
+      SEED_ADMIN_PASSWORD: ${SEED_ADMIN_PASSWORD:?Set SEED_ADMIN_PASSWORD}
+      SEED_CASHIER_PASSWORD: ${SEED_CASHIER_PASSWORD:-}
+      SEED_DEMO: ${SEED_DEMO:-false}
+    depends_on:
+      db:
+        condition: service_healthy
+volumes:
+  postgres-data:

@@ -1,0 +1,5 @@
+export class ApiError extends Error {constructor(message:string,public status:number){super(message);}}
+export async function api<T=unknown>(path:string,body?:unknown):Promise<T>{const response=await fetch(`/api/${path}`,{method:body===undefined?'GET':'POST',headers:body===undefined?undefined:{'Content-Type':'application/json'},body:body===undefined?undefined:JSON.stringify(body),cache:'no-store'});const data=await response.json();if(!response.ok){if(response.status===401&&typeof window!=='undefined')window.location.href='/login';throw new ApiError(data.error??'ไม่สามารถเชื่อมต่อระบบ',response.status);}return data;}
+export function uuid(){const bytes=crypto.getRandomValues(new Uint8Array(16));bytes[6]=(bytes[6]&15)|64;bytes[8]=(bytes[8]&63)|128;const s=Array.from(bytes,b=>b.toString(16).padStart(2,'0')).join('');return `${s.slice(0,8)}-${s.slice(8,12)}-${s.slice(12,16)}-${s.slice(16,20)}-${s.slice(20)}`;}
+export const thaiDate=(date:Date|string)=>new Intl.DateTimeFormat('th-TH',{timeZone:'Asia/Bangkok',dateStyle:'medium',timeStyle:'short'}).format(new Date(date));
+export function deviceId(){return localStorage.getItem('cida-terminal')??'POS-01';}

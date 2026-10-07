@@ -1,0 +1,7 @@
+'use client';
+import {useEffect,useRef} from 'react';
+import {X,Utensils,Flame,IceCreamBowl,Droplets,Coffee,Package,Store} from 'lucide-react';
+export function CategoryIcon({name,size=22}:{name:string;size?:number}){const Icon=({Utensils,Flame,IceCreamBowl,Droplets,Coffee,Store} as Record<string,typeof Utensils>)[name]??Package;return <Icon size={size}/>;}
+export function Modal({title,children,onClose,wide=false}:{title:string;children:React.ReactNode;onClose:()=>void;wide?:boolean}){const ref=useRef<HTMLDialogElement>(null);useEffect(()=>{ref.current?.showModal();const element=ref.current;return()=>element?.close();},[]);return <dialog ref={ref} aria-label={title} className={`modal ${wide?'modal-wide':''}`} onCancel={e=>{e.preventDefault();onClose();}}><header><h2>{title}</h2><button aria-label="ปิด" className="icon-button" onClick={onClose}><X/></button></header>{children}</dialog>;}
+export function Empty({text}:{text:string}){return <div className="empty"><Package size={36}/><p>{text}</p></div>;}
+export function Status({value}:{value:string}){const labels:Record<string,string>={COMPLETED:'สำเร็จ',VOIDED:'ยกเลิก',REFUNDED:'คืนเงินครบ',PARTIALLY_REFUNDED:'คืนเงินบางส่วน',PENDING:'รอพิมพ์',PRINTING:'กำลังพิมพ์ / รอยืนยัน',FAILED:'พิมพ์ไม่สำเร็จ',PRINTED:'พิมพ์แล้ว',REPRINTED:'พิมพ์สำเนาแล้ว'};return <span className={`badge ${value==='VOIDED'||value==='FAILED'?'danger':value==='COMPLETED'||value==='PRINTED'?'success':''}`}>{labels[value]??value}</span>;}
