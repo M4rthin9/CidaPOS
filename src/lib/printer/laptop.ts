@@ -1,6 +1,7 @@
 'use client';
 import type {Receipt} from '../types';
 import {receiptBlocks} from './layout';
+import {appendItemTable,receiptItemStyles} from './item-table';
 
 export async function printWithLaptop(receipt:Receipt,options:{fallbackReason?:string}={}):Promise<void>{
  const dialog=document.createElement('dialog');dialog.className='modal laptop-print-dialog';dialog.setAttribute('aria-label','พิมพ์ผ่านแล็ปท็อป');
@@ -27,11 +28,13 @@ export async function printWithLaptop(receipt:Receipt,options:{fallbackReason?:s
   const doc=frame.contentDocument!,p=receipt.config.profile,style=doc.createElement('style');
   const paper=Number(p.paperMm),usable=Math.min(paper,p.width/8),margin=p.margin/8;
   style.textContent=`@font-face{font-family:Noto;src:url('/fonts/NotoSansThai.ttf')}@page{margin:0}*{box-sizing:border-box}html,body{margin:0;padding:0;background:white;color:black}body{font-family:Noto,Tahoma,sans-serif;width:${paper}mm}main{width:${usable}mm;margin:auto;padding:0 ${margin}mm ${(p.feed/8).toFixed(2)}mm}.receipt-block{white-space:pre-wrap;overflow-wrap:anywhere;line-height:${1.5*p.lineSpacing};break-inside:avoid;margin:0 0 1mm}img{max-width:100%;height:auto}hr{width:100%;margin:2mm 0;border:0;border-top:.25mm solid black}.receipt-code{image-rendering:pixelated;max-width:100%}@media screen{body{margin:10px auto}}`;
+  style.textContent+=receiptItemStyles;
   doc.head.append(style);const main=doc.createElement('main');main.className='laptop-receipt';doc.body.append(main);
   for(const block of receiptBlocks(receipt)){
    if(block.kind==='divider'){main.append(doc.createElement('hr'));continue;}
    const row=doc.createElement('div');row.className='receipt-block';row.style.textAlign=block.align.toLowerCase();row.style.fontWeight=block.bold?'700':'400';row.style.fontSize=`${p.fontSize/8*{SMALL:.8,NORMAL:1,LARGE:1.25,EXTRA_LARGE:2}[block.size]}mm`;
-   if(block.kind==='image'){const image=doc.createElement('img');image.src=block.text;image.alt='โลโก้';row.append(image);}
+   if(block.kind==='items'||block.kind==='details'){appendItemTable(row,block);}
+   else if(block.kind==='image'){const image=doc.createElement('img');image.src=block.text;image.alt='โลโก้';row.append(image);}
    else if(block.kind==='qr'||block.kind==='barcode'){
     const {default:bwip}=await import('bwip-js/browser');const canvas=document.createElement('canvas');
     bwip.toCanvas(canvas,{bcid:block.kind==='qr'?'qrcode':'code128',text:block.text,scale:2,padding:8,backgroundcolor:'FFFFFF',...(block.kind==='barcode'?{height:10,includetext:true}:{})});

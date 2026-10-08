@@ -2,6 +2,7 @@ import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {allocate,calculate,validatePayment,businessDate,boundaries,summarize,toSatang,type ReportOrder} from '../src/lib/domain';
 import {receiptBlocks,wrapThai} from '../src/lib/printer/layout';
+import {wrapMeasuredText} from '../src/lib/printer/item-table';
 import {defaultSettings,settingsSchema} from '../src/lib/config';
 import {can} from '../src/lib/permissions';
 import {reportDates} from '../src/lib/reporting';
@@ -15,6 +16,38 @@ const order=(time:string,total:number,category='future-category'):ReportOrder=>(
 test('daily totals include every sale and reconcile categories without timed periods',()=>{const s=summarize([order('09:59:59',100),order('10:00:00',200),order('13:59:59',300),order('14:00:00',400)]);assert.equal(s.total,1000);assert.equal(s.categories[0].id,'future-category');assert.equal(s.categories.reduce((a,c)=>a+c.total,0),s.total);assert.equal(s.payments.CASH,s.total);assert.equal('periods' in s,false);assert.equal('cumulative14' in s,false);assert.equal('periods' in s.categories[0],false);const day=boundaries('2026-10-06','06:00');assert.equal(day.start.toISOString(),'2026-10-05T23:00:00.000Z');assert.equal(day.end.toISOString(),'2026-10-06T23:00:00.000Z');});
 test('voids excluded, partial refunds reduce item/category/payment totals',()=>{const a=order('09:00:00',1000),b=order('11:00:00',2000);a.status='VOIDED';b.status='PARTIALLY_REFUNDED';b.refunded=500;b.items[0].refunded=500;b.adjustments=[{method:'CASH',amount:500}];const s=summarize([a,b]);assert.equal(s.total,1500);assert.equal(s.count,1);assert.equal(s.voided,1000);assert.equal(s.refunded,500);assert.equal(s.categories[0].total,1500);assert.equal(s.payments.CASH,1500);});
 test('receipt wrapping preserves Thai combining marks and kitchen tickets omit prices',()=>{const text='ทัณฑสถานบำบัดพิเศษกลาง';assert.equal(wrapThai(text,8).replaceAll('\n',''),text);const blocks=receiptBlocks({kitchen:true,number:'test',queue:'A0123',date:'2026-10-06T04:00:00Z',terminal:'POS-01',config:defaultSettings,items:[{name:'กะเพราไก่',quantity:2,unitPrice:5000,lineTotal:10000,modifiers:[{name:'ไข่ดาว',price:1000}],note:'เผ็ดน้อย'}]});const joined=blocks.map(b=>b.text).join('\n');assert.match(joined,/A0123/);assert.match(joined,/ไข่ดาว/);assert.doesNotMatch(joined,/100\.00|50\.00/);});
+test('compact receipt rows retain saved totals, quantities, modifiers and notes',()=>{
+ const blocks=receiptBlocks({date:'2026-10-08T04:00:00Z',terminal:'POS-01',config:{...defaultSettings,blocks:defaultSettings.blocks.filter(b=>b.type==='ITEM_TABLE').map(b=>({...b,align:'CENTER',before:1,after:2}))},items:[
+  {name:'ข้าวกะเพราไก่',quantity:2,unitPrice:5000,lineTotal:9500,modifiers:[{name:'ไข่ดาว',price:1000}],note:'เผ็ดน้อย'},
+  {name:'น้ำดื่ม',quantity:1,unitPrice:1000,lineTotal:1000,modifiers:[],note:''},
+  {name:'สินค้าแถม',quantity:31,unitPrice:0,lineTotal:0,modifiers:[],note:''}
+ ]});
+ assert.equal(blocks[0].kind,'divider');
+ const table=blocks.find(b=>b.kind==='items')!;
+ assert.equal(table.align,'LEFT');assert.equal(table.before,1);assert.equal(table.after,2);
+ assert.deepEqual(table.rows,[{quantity:'2',name:'ข้าวกะเพราไก่ @50.00',amount:'95.00'},{quantity:'',name:'+ ไข่ดาว',amount:''},{quantity:'',name:'เผ็ดน้อย',amount:''},{quantity:'1',name:'น้ำดื่ม',amount:'10.00'},{quantity:'31',name:'สินค้าแถม @0.00',amount:'0.00'}]);
+ assert.doesNotMatch(table.text,/×|100\.00/);
+ const empty=receiptBlocks({date:'2026-10-08T04:00:00Z',terminal:'POS-01',config:defaultSettings,items:[]});assert.equal(empty.some(b=>b.kind==='items'),false);
+});
+test('measured receipt name wrapping preserves Thai marks and explicit newlines',()=>{
+ const text='กุ้งผัดน้ำพริกเผาไข่ดาว',segments=new Intl.Segmenter('th',{granularity:'grapheme'});
+ const measure=(value:string)=>[...segments.segment(value)].length*10;
+ const lines=wrapMeasuredText(text,40,measure);
+ assert.equal(lines.join(''),text);assert.ok(lines.length>1);assert.ok(lines.every(line=>measure(line)<=40));
+ assert.deepEqual(wrapMeasuredText('น้ำ\n\nชา',40,measure),['น้ำ','','ชา']);
+});
+test('bill detail rows preserve discounted totals and mixed payment accounting',()=>{
+ const receipt={number:'POS-20261008-000125',queue:'A0125',date:'2026-10-08T06:42:00Z',terminal:'POS-01',cashier:'ผู้ขาย',subtotal:14000,discount:500,total:13500,isReprint:true,config:defaultSettings,payments:[{method:'CASH',amount:8500,received:10000,change:1500},{method:'QR',amount:5000,received:5000,change:0}]};
+ const blocks=receiptBlocks(receipt),rows=blocks.filter(b=>b.kind==='details').flatMap(b=>b.rows??[]);
+ assert.deepEqual(rows.filter(row=>['รวมก่อนลด','ส่วนลด','ยอดสุทธิ','เงินสด','รับเงิน','QR/โอน','เงินทอน'].includes(row.name)).map(row=>[row.name,row.amount]),[['รวมก่อนลด','140.00'],['ส่วนลด','5.00'],['ยอดสุทธิ','135.00'],['เงินสด','85.00'],['รับเงิน','100.00'],['QR/โอน','50.00'],['เงินทอน','15.00']]);
+ assert.equal(rows.find(row=>row.name==='เลขที่บิล')?.amount,receipt.number);
+ assert.ok(blocks.some(b=>b.text==='ใบเสร็จรับเงิน'));assert.ok(blocks.some(b=>b.text.trim()==='คิว A0125'));assert.match(blocks[0].text,/สำเนาใบเสร็จ/);
+ const qr=receiptBlocks({...receipt,number:undefined,queue:undefined,cashier:undefined,payments:[{method:'QR',amount:13500,received:13500,change:0}]}),qrRows=qr.flatMap(b=>b.rows??[]);
+ assert.equal(qrRows.some(row=>['เลขที่บิล','ผู้ขาย','รับเงิน','เงินทอน'].includes(row.name)),false);
+ assert.doesNotMatch(qr.map(b=>b.text).join('\n'),/undefined/);
+ const hidden=receiptBlocks({...receipt,config:{...defaultSettings,blocks:defaultSettings.blocks.map(b=>({...b,visible:b.type==='TOTAL'?false:b.visible}))}});
+ assert.equal(hidden.flatMap(b=>b.rows??[]).some(row=>row.name==='ยอดสุทธิ'),false);
+});
 test('cashier cannot discount, void, close or configure system',()=>{assert.ok(can('CASHIER','sell'));for(const p of ['discount','void','refund','close','settings.write'] as const)assert.equal(can('CASHIER',p),false);});
 test('cashier may create menus and read reports while catalog edits require their own permission',()=>{assert.ok(can('CASHIER','products.create'));assert.ok(can('CASHIER','reports.read'));assert.equal(can('CASHIER','catalog.write'),false);assert.ok(can('MANAGER','products.create'));});
 test('legacy settings load as daily settings without scheduled cutoffs',()=>{const parsed=settingsSchema.parse({...defaultSettings,cutoff1:'10:00',cutoff2:'14:00'});assert.equal(parsed.opening,'00:00');assert.equal('cutoff1' in parsed,false);assert.equal('cutoff2' in parsed,false);});

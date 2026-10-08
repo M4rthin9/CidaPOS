@@ -3,6 +3,7 @@ import type {PrintJob,Receipt,Terminal} from '../types';
 import {api} from '../client';
 import {receiptBlocks,wrapThai,type PrintBlock} from './layout';
 import {printWithLaptop} from './laptop';
+import {wrapMeasuredText} from './item-table';
 export interface PrinterAdapter {status():Promise<string>;print(receipt:Receipt):Promise<void>;}
 type SDK={PrintConnectType?:Record<string,unknown>;connect?:()=>Promise<boolean>;ws?:WebSocket;initPrinter:(type:unknown)=>void;getPrinterStatus:(type:unknown,callback?:(status:{value:number})=>void)=>Promise<{value:number}>|void;setTextWidth:(width:number)=>void;setPageFormat:(style:number)=>void;setAlignment:(align:number)=>void;setTextSize:(size:number)=>void;setTextStyle?:(style:number)=>void;setTextLineSpacing?:(spacing:number)=>void;printText:(text:string,type?:number)=>void;printAndFeedPaper:(height:number)=>void;partialCut?:()=>void;openCashBox?:()=>void;printSingleBitmap?:(data:string,alignment?:number)=>Promise<unknown>|void;printQrCode?:(text:string,alignment:number)=>void;printBarCode?:(type:number,text:string,alignment:number)=>void;};
 declare global {interface Window {IminPrintInstance?:SDK;IminPrinter?:new()=>SDK;}}
@@ -46,7 +47,8 @@ export class IminPrinterAdapter implements PrinterAdapter {
   if(status!=='เครื่องพิมพ์พร้อม'&&status!=='กระดาษใกล้หมด')throw new Error(status);
   const p=receipt.config.profile;sdk.setPageFormat(1);sdk.setTextWidth(p.width-p.margin*2);sdk.setTextLineSpacing?.(p.lineSpacing);
   for(const block of receiptBlocks(receipt)){sdk.setAlignment({LEFT:0,CENTER:1,RIGHT:2}[block.align]);const size=Math.round(p.fontSize*{SMALL:0.8,NORMAL:1,LARGE:1.25,EXTRA_LARGE:2}[block.size]);sdk.setTextSize(size);sdk.setTextStyle?.(block.bold?1:0);
-   if(block.kind==='divider'){if(!sdk.printSingleBitmap)throw new Error('SDK ไม่รองรับเส้นคั่น');const canvas=document.createElement('canvas');canvas.width=p.width-p.margin*2;canvas.height=12;const ctx=canvas.getContext('2d')!;ctx.fillStyle='white';ctx.fillRect(0,0,canvas.width,12);ctx.fillStyle='black';ctx.fillRect(0,5,canvas.width,2);await bounded(sdk.printSingleBitmap(canvas.toDataURL('image/png'),1));}
+   if(block.kind==='items'||block.kind==='details'){if(!sdk.printSingleBitmap)throw new Error('SDK ไม่รองรับภาพใบเสร็จ');await bounded(sdk.printSingleBitmap(await itemTableBitmap(block,p.width-p.margin*2,size,p.lineSpacing),0));}
+   else if(block.kind==='divider'){if(!sdk.printSingleBitmap)throw new Error('SDK ไม่รองรับเส้นคั่น');const canvas=document.createElement('canvas');canvas.width=p.width-p.margin*2;canvas.height=12;const ctx=canvas.getContext('2d')!;ctx.fillStyle='white';ctx.fillRect(0,0,canvas.width,12);ctx.fillStyle='black';ctx.fillRect(0,5,canvas.width,2);await bounded(sdk.printSingleBitmap(canvas.toDataURL('image/png'),1));}
    else if(block.kind==='image'){if(!sdk.printSingleBitmap)throw new Error('SDK ไม่รองรับภาพ');await bounded(sdk.printSingleBitmap(await imageBitmap(block.text,p.width),{LEFT:0,CENTER:1,RIGHT:2}[block.align]));}
    else if(block.kind==='qr'){if(!sdk.printQrCode)throw new Error('SDK ไม่รองรับ QR');sdk.printQrCode(block.text,{LEFT:0,CENTER:1,RIGHT:2}[block.align]);}
    else if(block.kind==='barcode'){if(!sdk.printBarCode)throw new Error('SDK ไม่รองรับบาร์โค้ด');sdk.printBarCode(73,'{B'+block.text,1);}
@@ -58,6 +60,28 @@ export class IminPrinterAdapter implements PrinterAdapter {
  }
 }
 async function bounded(operation:Promise<unknown>|void){if(!operation)return;let timeout:ReturnType<typeof setTimeout>|undefined;try{await Promise.race([operation,new Promise((_,reject)=>{timeout=setTimeout(()=>reject(new Error('เครื่องพิมพ์ไม่ตอบรับงานภาพ')),10000);})]);}finally{if(timeout)clearTimeout(timeout);}}
+async function itemTableBitmap(block:PrintBlock,width:number,size:number,lineSpacing:number){
+ await document.fonts.load(`${block.bold?'bold ':''}${size}px "Noto Sans Thai"`);await document.fonts.ready;
+ const canvas=document.createElement('canvas'),ctx=canvas.getContext('2d')!,rows=block.rows??[];
+ const font=(fontSize:number)=>`${block.bold?'bold ':''}${fontSize}px "Noto Sans Thai",sans-serif`;
+ ctx.font=font(size);
+ const measure=(text:string)=>ctx.measureText(text).width;
+ const isDetails=block.kind==='details',isMetadata=block.detailMode==='metadata';
+ const quantityWidth=isDetails?0:Math.max(size*.6,...rows.map(row=>measure(row.quantity)));
+ const amountWidth=Math.max(size*2.4,...rows.map(row=>measure(row.amount)));
+ // Keep room for a readable name even at large configured font sizes.
+ size*=Math.min(1,width/(isMetadata?size*9.1:quantityWidth+amountWidth+size*4));ctx.font=font(size);
+ const gap=size*.6;
+ const amountSpace=isMetadata?width-size*4.5-gap:Math.max(size*2.4,...rows.map(row=>measure(row.amount)));
+ const actualNameX=isDetails?0:Math.max(size*.6,...rows.map(row=>measure(row.quantity)))+gap;
+ const nameWidth=width-actualNameX-amountSpace-gap,lineHeight=size*1.65*lineSpacing;
+ const wrapped=rows.map(row=>({...row,lines:wrapMeasuredText(row.name,nameWidth,measure),values:isMetadata?wrapMeasuredText(row.amount,amountSpace,measure):[row.amount]}));
+ canvas.width=width;canvas.height=Math.ceil(((block.before??0)+(block.after??0)+wrapped.reduce((sum,row)=>sum+Math.max(row.lines.length,row.values.length),0))*lineHeight+size*.5);
+ ctx.fillStyle='white';ctx.fillRect(0,0,width,canvas.height);ctx.fillStyle='black';ctx.font=font(size);
+ let y=(block.before??0)*lineHeight+size*1.3;
+ for(const row of wrapped){ctx.textAlign='left';if(!isDetails)ctx.fillText(row.quantity,0,y);row.lines.forEach((line,index)=>ctx.fillText(line,actualNameX,y+index*lineHeight));ctx.textAlign='right';row.values.forEach((line,index)=>ctx.fillText(line,width,y+index*lineHeight));y+=Math.max(row.lines.length,row.values.length)*lineHeight;}
+ return canvas.toDataURL('image/png');
+}
 async function imageBitmap(source:string,width:number){const img=new Image();img.src=source;await img.decode();const scale=Math.min(1,(width*0.65)/img.width,120/img.height);const canvas=document.createElement('canvas');canvas.width=Math.round(img.width*scale);canvas.height=Math.round(img.height*scale);const ctx=canvas.getContext('2d')!;ctx.fillStyle='white';ctx.fillRect(0,0,canvas.width,canvas.height);ctx.drawImage(img,0,0,canvas.width,canvas.height);const pixels=ctx.getImageData(0,0,canvas.width,canvas.height);for(let i=0;i<pixels.data.length;i+=4){const value=pixels.data[i]*.299+pixels.data[i+1]*.587+pixels.data[i+2]*.114<160?0:255;pixels.data[i]=pixels.data[i+1]=pixels.data[i+2]=value;}ctx.putImageData(pixels,0,0);return canvas.toDataURL('image/png');}
 async function textBitmap(block:PrintBlock,width:number,size:number){await document.fonts.ready;const canvas=document.createElement('canvas'),ctx=canvas.getContext('2d')!;ctx.font=`${block.bold?'bold ':''}${size}px "Noto Sans Thai",sans-serif`;const raw=wrapThai(block.text,Math.max(8,Math.floor(width/(size*.6)))).split('\n');const lines:string[]=[];for(const line of raw){let text='';for(const segment of new Intl.Segmenter('th',{granularity:'grapheme'}).segment(line)){if(ctx.measureText(text+segment.segment).width>width&&text){lines.push(text);text='';}text+=segment.segment;}lines.push(text);}canvas.width=width;canvas.height=Math.ceil(lines.length*size*1.7+size*.5);ctx.fillStyle='white';ctx.fillRect(0,0,width,canvas.height);ctx.fillStyle='black';ctx.font=`${block.bold?'bold ':''}${size}px "Noto Sans Thai",sans-serif`;ctx.textAlign=block.align==='CENTER'?'center':block.align==='RIGHT'?'right':'left';lines.forEach((line,i)=>ctx.fillText(line,block.align==='CENTER'?width/2:block.align==='RIGHT'?width:0,size*1.3+i*size*1.7));return canvas.toDataURL('image/png');}
 export class MockPrinterAdapter implements PrinterAdapter {async status(){return 'เครื่องพิมพ์จำลอง';}async print(receipt:Receipt){console.info('MOCK PRINT',receiptBlocks(receipt));}}
