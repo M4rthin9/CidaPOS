@@ -2,6 +2,7 @@
 import type {Receipt} from '../types';
 import {receiptBlocks} from './layout';
 import {appendItemTable,receiptItemStyles} from './item-table';
+import {receiptFontFamily,receiptFontFaces,receiptGeometry,receiptSizeScale} from './appearance';
 
 export async function printWithLaptop(receipt:Receipt,options:{fallbackReason?:string}={}):Promise<void>{
  const dialog=document.createElement('dialog');dialog.className='modal laptop-print-dialog';dialog.setAttribute('aria-label','พิมพ์ผ่านแล็ปท็อป');
@@ -26,13 +27,13 @@ export async function printWithLaptop(receipt:Receipt,options:{fallbackReason?:s
   await Promise.race([result,new Promise<void>(resolve=>{frame.onload=()=>resolve();frame.srcdoc='<!doctype html><html lang="th"><head><meta charset="utf-8"><title>ใบเสร็จ</title></head><body></body></html>';})]);
   if(!dialog.isConnected)return await result;
   const doc=frame.contentDocument!,p=receipt.config.profile,style=doc.createElement('style');
-  const paper=Number(p.paperMm),usable=Math.min(paper,p.width/8),margin=p.margin/8;
-  style.textContent=`@font-face{font-family:Noto;src:url('/fonts/NotoSansThai.ttf')}@page{margin:0}*{box-sizing:border-box}html,body{margin:0;padding:0;background:white;color:black}body{font-family:Noto,Tahoma,sans-serif;width:${paper}mm}main{width:${usable}mm;margin:auto;padding:0 ${margin}mm ${(p.feed/8).toFixed(2)}mm}.receipt-block{white-space:pre-wrap;overflow-wrap:anywhere;line-height:${1.5*p.lineSpacing};break-inside:avoid;margin:0 0 1mm}img{max-width:100%;height:auto}hr{width:100%;margin:2mm 0;border:0;border-top:.25mm solid black}.receipt-code{image-rendering:pixelated;max-width:100%}@media screen{body{margin:10px auto}}`;
+  const {paperMm:paper,insetMm,fontMm,feedMm}=receiptGeometry(p);
+  style.textContent=`${receiptFontFaces}@page{margin:0}*{box-sizing:border-box}html,body{margin:0;padding:0;background:white;color:black}body{font-family:${receiptFontFamily};width:${paper}mm;font-variant-numeric:tabular-nums}main{width:${paper}mm;margin:0 auto;padding:3mm ${insetMm}mm ${feedMm}mm}.receipt-block{white-space:pre-wrap;overflow-wrap:anywhere;line-height:${1.5*p.lineSpacing};break-inside:avoid;margin:0 0 .65mm}img{display:block;margin-inline:auto;max-width:100%;height:auto}hr{width:100%;margin:2mm 0;border:0;border-top:.2mm dashed #333}.receipt-code{image-rendering:pixelated;max-width:100%}@media screen{html{background:#eeefe8}body{margin:16px auto;box-shadow:0 2px 12px #0002}}`;
   style.textContent+=receiptItemStyles;
   doc.head.append(style);const main=doc.createElement('main');main.className='laptop-receipt';doc.body.append(main);
   for(const block of receiptBlocks(receipt)){
    if(block.kind==='divider'){main.append(doc.createElement('hr'));continue;}
-   const row=doc.createElement('div');row.className='receipt-block';row.style.textAlign=block.align.toLowerCase();row.style.fontWeight=block.bold?'700':'400';row.style.fontSize=`${p.fontSize/8*{SMALL:.8,NORMAL:1,LARGE:1.25,EXTRA_LARGE:2}[block.size]}mm`;
+   const row=doc.createElement('div');row.className='receipt-block';row.style.textAlign=block.align.toLowerCase();row.style.fontWeight=block.bold?'700':'400';row.style.fontSize=`${fontMm*receiptSizeScale[block.size]}mm`;
    if(block.kind==='items'||block.kind==='details'){appendItemTable(row,block);}
    else if(block.kind==='image'){const image=doc.createElement('img');image.src=block.text;image.alt='โลโก้';row.append(image);}
    else if(block.kind==='qr'||block.kind==='barcode'){

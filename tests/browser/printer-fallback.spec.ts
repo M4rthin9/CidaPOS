@@ -18,7 +18,7 @@ async function setup(page:Page,mode:Mode,receipt=false){
  await page.route(`**/api/print-jobs/${job.id}/claim`,route=>route.fulfill({json:{...job,claimToken:'fallback-test-claim'}}));
  await page.route(`**/api/print-jobs/${job.id}/result`,route=>{results.push(route.request().postDataJSON());return route.fulfill({json:{ok:true}});});
  await page.addInitScript(mode=>{
-  const state={sent:0,images:[] as string[],draws:[] as {text:string;x:number;y:number;align:string}[]};Object.assign(window,{fallbackPrinterState:state});
+  const state={sent:0,images:[] as string[],bitmapAlignments:[] as number[],draws:[] as {text:string;x:number;y:number;align:string}[]};Object.assign(window,{fallbackPrinterState:state});
   const fillText=CanvasRenderingContext2D.prototype.fillText;
   CanvasRenderingContext2D.prototype.fillText=function(text,x,y,maxWidth){state.draws.push({text,x,y,align:this.textAlign});if(maxWidth===undefined)fillText.call(this,text,x,y);else fillText.call(this,text,x,y,maxWidth);};
   if(mode==='missing')return;
@@ -27,7 +27,7 @@ async function setup(page:Page,mode:Mode,receipt=false){
    ...(mode==='disconnected'?{connect:async()=>false}:mode==='connect-timeout'?{connect:()=>new Promise<boolean>(()=>{})}:{}),
    setTextWidth(){},setPageFormat(){},setAlignment(){},setTextSize(){},
    printText(){state.sent++;},printAndFeedPaper(){},partialCut(){},openCashBox(){},printQrCode(){state.sent++;},printBarCode(){state.sent++;},
-   async printSingleBitmap(data){state.sent++;state.images.push(data);if(mode==='mid-print')throw new Error('TEST bitmap upload failed');},
+   async printSingleBitmap(data,alignment){state.sent++;state.images.push(data);state.bitmapAlignments.push(alignment??0);if(mode==='mid-print')throw new Error('TEST bitmap upload failed');},
   };
  },mode);
  await page.goto('/pos');await expect(page.locator('.product-card').first()).toBeVisible();
@@ -60,7 +60,7 @@ for(const mode of ['missing','offline','disconnected','connect-timeout','status-
 test('iMin receipt places quantity, Thai name and saved amount on one bitmap row',async({page})=>{
  const {results,job}=await setup(page,'ready',true);
  await expect.poll(()=>results.length).toBe(1);expect(results[0].success,results[0].error).toBe(true);
- const state=await page.evaluate(()=>Object.getOwnPropertyDescriptor(window,'fallbackPrinterState')!.value as {images:string[];draws:{text:string;x:number;y:number;align:string}[]});
+ const state=await page.evaluate(()=>Object.getOwnPropertyDescriptor(window,'fallbackPrinterState')!.value as {images:string[];bitmapAlignments:number[];draws:{text:string;x:number;y:number;align:string}[]});
  expect(state.images.length).toBeGreaterThan(0);
  const quantity=state.draws.find(draw=>draw.text==='1'&&draw.x===0)!,name=state.draws.find(draw=>draw.text==='หมูปิ้งนมสด')!,amount=state.draws.find(draw=>draw.text==='80.00'&&draw.align==='right')!;
  expect(quantity).toBeDefined();expect(name).toBeDefined();expect(amount).toBeDefined();
@@ -68,6 +68,7 @@ test('iMin receipt places quantity, Thai name and saved amount on one bitmap row
  expect(name.y).toBe(quantity.y);expect(amount.y).toBe(quantity.y);
  const totalLabel=state.draws.find(draw=>draw.text==='ยอดสุทธิ')!;
  expect(totalLabel).toBeDefined();expect(state.draws.some(draw=>draw.text==='80.00'&&draw.y===totalLabel.y&&draw.align==='right')).toBe(true);
+ expect(state.bitmapAlignments.every(alignment=>alignment===1)).toBe(true);
 });
 
 test('cancelled automatic computer printing remains a failed job',async({page})=>{

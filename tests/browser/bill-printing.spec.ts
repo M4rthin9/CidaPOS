@@ -28,6 +28,12 @@ for(const paper of ['58','48'] as const){
   const dialog=page.getByRole('dialog',{name:'พิมพ์ผ่านแล็ปท็อป'}),frame=page.frameLocator('iframe[title="ใบเสร็จสำหรับเครื่องพิมพ์แล็ปท็อป"]');
   await expect(dialog.getByRole('button',{name:'พิมพ์ใบเสร็จ',exact:true})).toBeEnabled();
   const main=frame.locator('main');await expect(main).toContainText('สำเนาใบเสร็จ');await expect(main).toContainText('ใบเสร็จรับเงิน');await expect(main).toContainText(receipt.number!);await expect(main).toContainText('คิว A0125');
+  const geometry=await main.evaluate(element=>{
+   const style=getComputedStyle(element),body=element.ownerDocument.body,bounds=element.getBoundingClientRect(),roll=body.getBoundingClientRect();
+   return {paperMm:bounds.width*25.4/96,left:parseFloat(style.paddingLeft),right:parseFloat(style.paddingRight),centerDifference:Math.abs(bounds.left+bounds.width/2-roll.left-roll.width/2),font:getComputedStyle(element.querySelector('.receipt-block')!).fontFamily};
+  });
+  expect(geometry.paperMm).toBeCloseTo(Number(paper),1);expect(geometry.left).toBeCloseTo(geometry.right,2);expect(geometry.left).toBeGreaterThan(0);expect(geometry.centerDifference).toBeLessThan(1);expect(geometry.font).toContain('Receipt Sarabun');
+  expect(await frame.locator('body').evaluate(element=>[...element.ownerDocument.styleSheets[0].cssRules].some(rule=>rule instanceof element.ownerDocument.defaultView!.CSSPageRule&&(rule as CSSPageRule).style.getPropertyValue('size').startsWith(element.getBoundingClientRect().width>200?'58mm':'48mm')))).toBe(true);
   const details=main.locator('.receipt-details .receipt-item');
   for(const [label,value] of [['รวมก่อนลด','140.00'],['ส่วนลด','5.00'],['ยอดสุทธิ','135.00'],['เงินสด','85.00'],['รับเงิน','100.00'],['QR/โอน','50.00'],['เงินทอน','15.00']]){
    await expect(details.filter({has:page.locator('.receipt-item-name',{hasText:label})}).locator('.receipt-item-amount')).toHaveText(value);

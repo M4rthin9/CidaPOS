@@ -61,7 +61,8 @@ export function receiptBlocks(receipt:Receipt):PrintBlock[]{
   }
   if(kind){blocks.push({text,kind,align:block.align,size:block.size,bold:block.bold});continue;}
   if(block.divider)blocks.push({text:'',kind:'divider',align:'CENTER',size:'NORMAL',bold:false});
-  blocks.push({text:'\n'.repeat(block.before)+text+'\n'.repeat(block.after),align:block.align,size:block.size,bold:block.bold});
+  const align=['INSTITUTION_NAME','STORE_NAME','CUSTOM_HEADER','CUSTOM_FOOTER'].includes(block.type)?'CENTER':block.align;
+  blocks.push({text:'\n'.repeat(block.before)+text+'\n'.repeat(block.after),align,size:block.size,bold:block.bold});
  }
  return blocks;
 }
