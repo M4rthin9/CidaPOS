@@ -56,15 +56,15 @@ test('R2 image uploads validate signatures and use private media URLs',async()=>
  assert.equal((await settings()).organization.length>0,true);
 });
 
-test('80 mm migration preserves other settings and does not repeat after a paper change',async()=>{
+test('paper correction restores the previous selection and preserves custom settings',async()=>{
  const legacy={...defaultSettings,header:'Keep this header',profile:{...defaultSettings.profile,paperMm:'58',width:384,characters:32,fontSize:28,margin:4}};
  await db.setting.upsert({where:{key:'system'},create:{key:'system',value:legacy},update:{value:legacy}});
- const sql=readFileSync('d1/migrations/0003_receipt_80mm.sql','utf8').replace(/^--.*$/gm,'');
- await cloud.DB.prepare(sql).run();
- const upgraded=await settings();
- assert.deepEqual(upgraded,{...legacy,profile:{...legacy.profile,paperMm:'80',width:576,characters:48}});
- await cloud.DB.prepare(sql).run();assert.deepEqual(await settings(),upgraded);
- const custom={...upgraded,profile:{...upgraded.profile,paperMm:'58' as const,width:360}};
+ const previous=readFileSync('d1/migrations/0003_receipt_80mm.sql','utf8').replace(/^--.*$/gm,'');
+ const correction=readFileSync('d1/migrations/0004_restore_paper_selection.sql','utf8').replace(/^--.*$/gm,'');
+ await cloud.DB.prepare(previous).run();assert.equal((await settings()).profile.paperMm,'80');
+ await cloud.DB.prepare(correction).run();assert.deepEqual(await settings(),legacy);
+ await cloud.DB.prepare(correction).run();assert.deepEqual(await settings(),legacy);
+ const custom={...legacy,profile:{...legacy.profile,paperMm:'80' as const,width:512}};
  await db.setting.update({where:{key:'system'},data:{value:custom}});
- await cloud.DB.prepare(sql).run();assert.deepEqual(await settings(),custom);
+ await cloud.DB.prepare(correction).run();assert.deepEqual(await settings(),custom);
 });

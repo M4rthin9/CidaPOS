@@ -1,5 +1,26 @@
 import {test,expect} from '@playwright/test';
+import {defaultSettings} from '../../src/lib/config';
 try{process.loadEnvFile('.env');}catch{}
+
+test('paper selector adds 80 mm while retaining the 58 mm default',async({page,baseURL})=>{
+ expect((await page.request.post('/api/login',{headers:{Origin:baseURL!},data:{username:'admin',password:process.env.SEED_ADMIN_PASSWORD}})).ok()).toBe(true);
+ let saved=structuredClone(defaultSettings),writes=0;
+ await page.route('**/api/settings',route=>{
+  if(route.request().method()==='POST'){saved=route.request().postDataJSON();writes++;}
+  return route.fulfill({json:saved});
+ });
+ await page.goto('/admin/settings');
+ const paper=page.getByRole('combobox',{name:/^กระดาษ/});await expect(paper).toHaveValue('58');
+ await expect(paper.locator('option')).toHaveText(['48 มม. (โปรไฟล์แคบ)','58 มม.','80 มม.']);
+ await paper.selectOption('80');
+ await expect(page.getByLabel('ความกว้างพิมพ์จริง (px)',{exact:true})).toHaveValue('576');
+ await expect(page.getByLabel('จำนวนอักษรต่อบรรทัด',{exact:true})).toHaveValue('48');
+ await expect(page.locator('.receipt-preview-panel .panel-title')).toContainText('80 มม.');
+ expect(writes).toBe(0);expect(saved.profile.paperMm).toBe('58');
+ await page.getByRole('button',{name:'บันทึกการตั้งค่า',exact:true}).click();
+ await expect.poll(()=>writes).toBe(1);expect(saved.profile.paperMm).toBe('80');
+ await page.reload();await expect(paper).toHaveValue('80');
+});
 
 test('Super Admin reset review and laptop receipt printing require explicit confirmation',async({page,browser,baseURL})=>{
  const headers={Origin:baseURL!};

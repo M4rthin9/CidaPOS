@@ -50,11 +50,12 @@ test('bill detail rows preserve discounted totals and mixed payment accounting',
  assert.equal(hidden.flatMap(b=>b.rows??[]).some(row=>row.name==='ยอดสุทธิ'),false);
 });
 test('browser bills use the selected roll width independently of native dot width',()=>{
- const wide=receiptGeometry(defaultSettings.profile),legacy=receiptGeometry({...defaultSettings.profile,width:384});
+ const profile={...defaultSettings.profile,paperMm:'80' as const,width:576};
+ const wide=receiptGeometry(profile),legacy=receiptGeometry({...profile,width:384});
  assert.equal(wide.paperMm,80);assert.equal(wide.contentMm,75);assert.deepEqual(legacy,wide);
  const small=receiptGeometry({...defaultSettings.profile,paperMm:'58'});assert.equal(small.paperMm,58);assert.equal(small.contentMm,53);
  const narrow=receiptGeometry({...defaultSettings.profile,paperMm:'48'});assert.equal(narrow.paperMm,48);assert.equal(narrow.contentMm,43);
- const inset=receiptGeometry({...defaultSettings.profile,margin:8});assert.equal(inset.insetMm,3.5);assert.equal(inset.contentMm,73);
+ const inset=receiptGeometry({...profile,margin:8});assert.equal(inset.insetMm,3.5);assert.equal(inset.contentMm,73);
 });
 test('cashier cannot discount, void, close or configure system',()=>{assert.ok(can('CASHIER','sell'));for(const p of ['discount','void','refund','close','settings.write'] as const)assert.equal(can('CASHIER',p),false);});
 test('cashier may create menus and read reports while catalog edits require their own permission',()=>{assert.ok(can('CASHIER','products.create'));assert.ok(can('CASHIER','reports.read'));assert.equal(can('CASHIER','catalog.write'),false);assert.ok(can('MANAGER','products.create'));});

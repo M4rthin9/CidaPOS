@@ -32,7 +32,7 @@ test('transactional sales, retries, refunds, close locks and immutable audit on 
  await assert.rejects(()=>checkout({...input,key:randomUUID(),payments:[{method:'CASH',amount:9999,received:1,reference:''}]},actor),/เงินรับ/);
  assert.equal((await report(date)).summary.total,before.summary.total);
  await db.product.update({where:{id:product.id},data:{price:9900,name:'CHANGED'}});const unchanged=await db.orderItem.findMany({where:{orderId:a.order.id}});assert.equal(unchanged[0].name,'TEST กะเพรา');assert.equal(unchanged[0].unitPrice,5000);
- await db.setting.update({where:{key:'system'},data:{value:json({...config,storeName:'Changed shop'})}});
+ await db.setting.update({where:{key:'system'},data:{value:json({...config,storeName:'Changed shop',profile:{...config.profile,paperMm:'80',width:576,characters:48}})}});
  const jobs=await reprint(a.order.id,actor);assert.equal(await db.order.count({where:{key:input.key}}),1);assert.equal(jobs[0].isReprint,true);
  const reprinted=jobs[0].payload as unknown as import('../src/lib/types').Receipt;
  assert.equal(reprinted.config.profile.paperMm,'80');assert.equal(reprinted.config.profile.width,576);assert.equal(reprinted.config.storeName,'Original shop');assert.equal(reprinted.total,a.order.total);assert.equal(reprinted.items?.[0].unitPrice,5000);
