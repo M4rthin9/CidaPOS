@@ -1,6 +1,8 @@
 import {test,before,after} from 'node:test';
 import assert from 'node:assert/strict';
 import {randomUUID} from 'node:crypto';
+import {readFileSync} from 'node:fs';
+import {defaultSettings} from '../src/lib/config';
 import {hash as passwordHash} from 'bcryptjs';
 import {isolatedCloudflare} from './cloudflare-fixture';
 import {db} from '../src/lib/db';
@@ -52,4 +54,17 @@ test('R2 image uploads validate signatures and use private media URLs',async()=>
  const result=await putImage(new File([png],'test.png',{type:'image/png'}),'products');assert.match(result.url,/^\/api\/media\/products\/[a-f0-9-]+\.png$/);assert.ok(await cloud.FILES.get(result.url.replace('/api/media/','')));
  await assert.rejects(()=>putImage(new File(['<svg>'],'fake.png',{type:'image/png'}),'products'),/PNG/);
  assert.equal((await settings()).organization.length>0,true);
+});
+
+test('80 mm migration preserves other settings and does not repeat after a paper change',async()=>{
+ const legacy={...defaultSettings,header:'Keep this header',profile:{...defaultSettings.profile,paperMm:'58',width:384,characters:32,fontSize:28,margin:4}};
+ await db.setting.upsert({where:{key:'system'},create:{key:'system',value:legacy},update:{value:legacy}});
+ const sql=readFileSync('d1/migrations/0003_receipt_80mm.sql','utf8').replace(/^--.*$/gm,'');
+ await cloud.DB.prepare(sql).run();
+ const upgraded=await settings();
+ assert.deepEqual(upgraded,{...legacy,profile:{...legacy.profile,paperMm:'80',width:576,characters:48}});
+ await cloud.DB.prepare(sql).run();assert.deepEqual(await settings(),upgraded);
+ const custom={...upgraded,profile:{...upgraded.profile,paperMm:'58' as const,width:360}};
+ await db.setting.update({where:{key:'system'},data:{value:custom}});
+ await cloud.DB.prepare(sql).run();assert.deepEqual(await settings(),custom);
 });

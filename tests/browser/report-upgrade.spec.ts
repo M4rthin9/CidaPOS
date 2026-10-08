@@ -36,7 +36,7 @@ test('overview charts compare amounts and quantities and support daily 7/30-day 
  expect((await (await trendResponse).json()).trend).toHaveLength(30);
  await expect(page.getByRole('button',{name:'30 วัน',exact:true})).toHaveAttribute('aria-pressed','true');
  await expect(page.getByRole('button',{name:'พิมพ์ A4',exact:true})).toBeEnabled();
- await expect(page.getByRole('button',{name:'พิมพ์ 58 มม.',exact:true})).toHaveCount(0);
+ await expect(page.getByRole('button',{name:'พิมพ์ 80 มม.',exact:true})).toHaveCount(0);
  await page.screenshot({path:'test-results/dashboard-upgraded.png',fullPage:true});
  await page.setViewportSize({width:390,height:844});
  await expect(page.locator('.share-chart-panel')).toBeVisible();
@@ -118,11 +118,12 @@ test('A4 category tables paginate with repeatable headers and unsplit rows',asyn
  expect([...pdf.toString('latin1').matchAll(/\/Type\s*\/Page\b/g)].length).toBeGreaterThan(1);
 });
 
-test('cashier prints only category amounts and the daily total on a 58 mm report',async({page,baseURL})=>{
+test('cashier prints only category amounts and the daily total on an 80 mm report',async({page,baseURL})=>{
  const {catalog,fixture}=await prepare(page,'cashier');
+ catalog.config.profile={...catalog.config.profile,paperMm:'80',width:576,characters:48};
  await page.route('**/api/catalog',route=>route.fulfill({json:{...catalog,products:catalog.products.map((product:{image:string})=>({...product,image:''})),terminals:catalog.terminals.map((terminal:Terminal)=>({...terminal,config:{...terminal.config,adapter:'imin'}}))}}));
  const terminal:Terminal=catalog.terminals.find((t:Terminal)=>t.id==='POS-01');
- const profile={...catalog.config.profile,paperMm:'58' as const,width:384,characters:32,bitmapThai:true};
+ const profile={...catalog.config.profile,paperMm:'80' as const,width:576,characters:48,bitmapThai:true};
  const job:PrintJob={id:'category-only-report',orderId:null,terminalId:terminal.id,printerId:terminal.config.printerId,template:'DAILY_REPORT',status:'PENDING',createdAt:new Date().toISOString(),profile,payload:{date:new Date().toISOString(),terminal:terminal.name,cashier:'CASHIER SHOULD NOT PRINT',config:{...catalog.config,profile},dailyReport:{businessDate:fixture.date,closed:false,opening:'00:00',summary:fixture.summary}}};
  const results:{success:boolean}[]=[];
  await page.route('**/api/daily-report-print',route=>route.fulfill({json:job}));
@@ -137,7 +138,7 @@ test('cashier prints only category amounts and the daily total on a 58 mm report
  await expect(dialog.locator('.category-report')).toContainText('1,250.50');
  await expect(dialog.getByRole('button',{name:'พิมพ์ A4',exact:true})).toHaveCount(0);
  await dialog.screenshot({path:'test-results/cashier-category-report.png'});
- await dialog.getByRole('button',{name:'พิมพ์ 58 มม.',exact:true}).click();
+ await dialog.getByRole('button',{name:'พิมพ์ 80 มม.',exact:true}).click();
  const laptop=page.getByRole('dialog',{name:'พิมพ์ผ่านแล็ปท็อป'});await expect(laptop).toBeVisible({timeout:15000});
  const frame=page.frameLocator('iframe[title="ใบเสร็จสำหรับเครื่องพิมพ์แล็ปท็อป"]');
  const receipt=frame.locator('main');await expect(receipt).toContainText('อาหารร้านนอก');await expect(receipt).toContainText('800.25 บาท');await expect(receipt).toContainText('250.00 บาท');await expect(receipt).toContainText('200.25 บาท');await expect(receipt).toContainText('รวมยอดขายประจำวัน');await expect(receipt).toContainText('1,250.50 บาท');
@@ -146,7 +147,7 @@ test('cashier prints only category amounts and the daily total on a 58 mm report
  expect(await receipt.evaluate(element=>[...element.querySelectorAll('.receipt-details')].every(table=>table.scrollWidth<=table.clientWidth&&[...table.querySelectorAll('.receipt-item-amount')].every(value=>Math.abs(value.getBoundingClientRect().right-table.getBoundingClientRect().right)<1)))).toBe(true);
  const printHtml=await frame.locator('html').evaluate(element=>element.outerHTML),preview=await page.context().newPage();
  await preview.route('**/__report-preview',route=>route.fulfill({contentType:'text/html',body:printHtml}));await preview.goto(`${baseURL}/__report-preview`);await preview.evaluate(()=>document.fonts.ready);
- await preview.locator('main').screenshot({path:'test-results/daily-report-58mm.png'});await preview.close();
+ await preview.locator('main').screenshot({path:'test-results/daily-report-80mm.png'});await preview.close();
  await frame.locator('body').evaluate(e=>{e.ownerDocument.defaultView!.print=()=>{};});
  await laptop.getByRole('button',{name:'พิมพ์ใบเสร็จ',exact:true}).click();await laptop.getByRole('button',{name:'ยืนยันพิมพ์ออกแล้ว',exact:true}).click();
  await expect.poll(()=>results.length).toBe(1);expect(results[0].success).toBe(true);

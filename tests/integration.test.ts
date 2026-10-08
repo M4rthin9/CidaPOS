@@ -22,6 +22,8 @@ test('transactional sales, retries, refunds, close locks and immutable audit on 
  const category=await db.category.create({data:{name:`TEST ${suffix}`,icon:'Package'}});const product=await db.product.create({data:{sku:`TEST-${suffix}`,name:'TEST กะเพรา',categoryId:category.id,price:5000,modifiers:{create:[{name:'ไข่ดาว',price:1000}] }},include:{modifiers:true}});
  const terminal=await db.terminal.create({data:{id:`TEST-${suffix}`,name:'TEST terminal',config:{printerId:'mock',adapter:'mock'}}});
  const config=await settings(),date=businessDate(new Date(),config.opening);const priorDay=await db.businessDay.findUnique({where:{date}});assert.notEqual(priorDay?.closed,true,'Run integration tests against an open test database');
+ const legacyConfig={...config,storeName:'Original shop',profile:{...config.profile,paperMm:'58' as const,width:384,characters:32}};
+ await db.setting.upsert({where:{key:'system'},create:{key:'system',value:json(legacyConfig)},update:{value:json(legacyConfig)}});
  const input:Checkout={key:randomUUID(),salesVersion:((await db.setting.findUnique({where:{key:'sales-version'}}))?.value??'') as string,terminalId:terminal.id,items:[{productId:product.id,quantity:2,modifiers:[],note:''}],discount:1,note:'INTEGRATION TEST',payments:[{method:'CASH',amount:9999,received:20000,reference:''}]};
  const [a,b]=await Promise.all([checkout(input,actor),checkout(input,actor)]);assert.equal(a.order.id,b.order.id);assert.equal(await db.order.count({where:{key:input.key}}),1);assert.equal(a.order.payments[0].change,10001);assert.equal(a.order.items[0].discount,1);
  await assert.rejects(()=>checkout({...input,discount:2},actor),/รหัสคำขอ/);
@@ -30,7 +32,12 @@ test('transactional sales, retries, refunds, close locks and immutable audit on 
  await assert.rejects(()=>checkout({...input,key:randomUUID(),payments:[{method:'CASH',amount:9999,received:1,reference:''}]},actor),/เงินรับ/);
  assert.equal((await report(date)).summary.total,before.summary.total);
  await db.product.update({where:{id:product.id},data:{price:9900,name:'CHANGED'}});const unchanged=await db.orderItem.findMany({where:{orderId:a.order.id}});assert.equal(unchanged[0].name,'TEST กะเพรา');assert.equal(unchanged[0].unitPrice,5000);
- const jobs=await reprint(a.order.id,actor);assert.equal(await db.order.count({where:{key:input.key}}),1);assert.equal(jobs[0].isReprint,true);const claimed=await claimJob(jobs[0].id,actor);assert.ok(claimed.claimToken);await assert.rejects(()=>claimJob(jobs[0].id,actor),/ถูกส่งพิมพ์แล้ว/);await db.printJob.update({where:{id:jobs[0].id},data:{status:'FAILED',error:'paper out'}});assert.equal((await db.order.findUniqueOrThrow({where:{id:a.order.id}})).status,'COMPLETED');
+ await db.setting.update({where:{key:'system'},data:{value:json({...config,storeName:'Changed shop'})}});
+ const jobs=await reprint(a.order.id,actor);assert.equal(await db.order.count({where:{key:input.key}}),1);assert.equal(jobs[0].isReprint,true);
+ const reprinted=jobs[0].payload as unknown as import('../src/lib/types').Receipt;
+ assert.equal(reprinted.config.profile.paperMm,'80');assert.equal(reprinted.config.profile.width,576);assert.equal(reprinted.config.storeName,'Original shop');assert.equal(reprinted.total,a.order.total);assert.equal(reprinted.items?.[0].unitPrice,5000);
+ assert.deepEqual((await db.order.findUniqueOrThrow({where:{id:a.order.id}})).receiptConfig,a.order.receiptConfig);
+ const claimed=await claimJob(jobs[0].id,actor);assert.ok(claimed.claimToken);await assert.rejects(()=>claimJob(jobs[0].id,actor),/ถูกส่งพิมพ์แล้ว/);await db.printJob.update({where:{id:jobs[0].id},data:{status:'FAILED',error:'paper out'}});assert.equal((await db.order.findUniqueOrThrow({where:{id:a.order.id}})).status,'COMPLETED');
  const previousTotal=(await report(date)).summary.total;await adjustOrder(a.order.id,'REFUND',3000,'test partial refund','CASH',actor);const afterRefund=await report(date);assert.equal(afterRefund.summary.total,previousTotal-3000);assert.equal(afterRefund.summary.categories.reduce((s,c)=>s+c.total,0),afterRefund.summary.total);assert.equal(Object.values(afterRefund.summary.payments).reduce((s,v)=>s+v,0),afterRefund.summary.total);
  await assert.rejects(()=>adjustOrder(a.order.id,'REFUND',9999,'over refund','CASH',actor),/เกินยอด/);
  const remaining=6999;const results=await Promise.allSettled([adjustOrder(a.order.id,'REFUND',remaining,'concurrent refund 1','CASH',actor),adjustOrder(a.order.id,'REFUND',remaining,'concurrent refund 2','CASH',actor)]);assert.equal(results.filter(r=>r.status==='fulfilled').length,1);
@@ -54,7 +61,7 @@ test('transactional sales, retries, refunds, close locks and immutable audit on 
  assert.equal(dailyJob.orderId,null);assert.equal(dailyJob.template,'DAILY_REPORT');
  const payload=dailyJob.payload as unknown as import('../src/lib/types').Receipt;
  assert.equal(payload.dailyReport?.summary.total,550);assert.equal(payload.dailyReport?.businessDate,historicalDate);assert.equal(payload.dailyReport?.closed,true);
- assert.equal(payload.config.profile.paperMm,'58');assert.equal(payload.config.profile.width,384);assert.equal(payload.config.profile.bitmapThai,true);
+ assert.equal(payload.config.profile.paperMm,'80');assert.equal(payload.config.profile.width,576);assert.equal(payload.config.profile.bitmapThai,true);
  assert.equal(payload.payments,undefined);assert.equal(await db.order.count(),orderCount);assert.equal(await db.dailyClosing.count(),closingCount);
  await claimJob(dailyJob.id,actor);await assert.rejects(()=>claimJob(dailyJob.id,actor),/ถูกส่งพิมพ์แล้ว/);
  await assert.rejects(()=>dailyReportPrint(historicalDate,terminal.id,{...actor,role:'VIEWER'}),/สิทธิ์/);

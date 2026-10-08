@@ -46,7 +46,7 @@ export class IminPrinterAdapter implements PrinterAdapter {
   catch(error){return printWithLaptop(receipt,{fallbackReason:error instanceof Error?error.message:'ไม่พบเครื่องพิมพ์ iMin'});}
   if(status==='เครื่องพิมพ์ไม่พร้อม')return printWithLaptop(receipt,{fallbackReason:status});
   if(status!=='เครื่องพิมพ์พร้อม'&&status!=='กระดาษใกล้หมด')throw new Error(status);
-  const p=receipt.config.profile;sdk.setPageFormat(1);sdk.setTextWidth(p.width-p.margin*2);sdk.setTextLineSpacing?.(p.lineSpacing);
+  const p=receipt.config.profile;sdk.setPageFormat(p.paperMm==='80'?0:1);sdk.setTextWidth(p.width-p.margin*2);sdk.setTextLineSpacing?.(p.lineSpacing);
   if(!document.getElementById('receipt-printer-fonts')){const style=document.createElement('style');style.id='receipt-printer-fonts';style.textContent=receiptFontFaces;document.head.append(style);}
   for(const block of receiptBlocks(receipt)){sdk.setAlignment({LEFT:0,CENTER:1,RIGHT:2}[block.align]);const size=Math.round(p.fontSize*receiptSizeScale[block.size]);sdk.setTextSize(size);sdk.setTextStyle?.(block.bold?1:0);
    if(block.kind==='items'||block.kind==='details'){if(!sdk.printSingleBitmap)throw new Error('SDK ไม่รองรับภาพใบเสร็จ');await bounded(sdk.printSingleBitmap(await itemTableBitmap(block,p.width-p.margin*2,size,p.lineSpacing),1));}

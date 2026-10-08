@@ -16,7 +16,7 @@ async function installPrinter(page:Page){
  });
 }
 
-test('daily report uses 58 mm printer jobs and recovers paper-out without changing sales',async({page})=>{
+test('daily report uses the configured paper for printer jobs and recovers paper-out without changing sales',async({page})=>{
  await page.goto('/login');await page.getByLabel('ชื่อผู้ใช้งาน').fill('cashier');
  await page.getByLabel('รหัสผ่าน').fill(process.env.SEED_CASHIER_PASSWORD!);
  await page.getByRole('button',{name:'เข้าสู่ระบบ',exact:true}).click();
@@ -25,6 +25,7 @@ test('daily report uses 58 mm printer jobs and recovers paper-out without changi
  await installPrinter(page);
  await page.locator('.product-card').first().click();
  const cart=await page.locator('.cart-panel').innerText();
+ const catalog=await (await page.request.get('/api/catalog')).json(),profile=catalog.config.profile;
  const initialOrders=await (await page.request.get('/api/orders')).json();
  await page.getByRole('button',{name:'รายงานประจำวัน',exact:true}).click();
  const dialog=page.getByRole('dialog');
@@ -33,7 +34,7 @@ test('daily report uses 58 mm printer jobs and recovers paper-out without changi
  const expectedReport=await (await page.request.get(`/api/reports?date=${date}`)).json();
  const jobResponse=page.waitForResponse(r=>r.url().endsWith('/api/daily-report-print')&&r.request().method()==='POST');
  const resultResponse=page.waitForResponse(r=>r.url().includes('/result')&&r.request().method()==='POST');
- await dialog.getByRole('button',{name:'พิมพ์ 58 มม.',exact:true}).click();
+ await dialog.getByRole('button',{name:`พิมพ์ ${profile.paperMm} มม.`,exact:true}).click();
  const job=await (await jobResponse).json();
  expect((await resultResponse).status()).toBe(200);
  expect(job.template).toBe('DAILY_REPORT');expect(job.orderId).toBeNull();
@@ -41,17 +42,17 @@ test('daily report uses 58 mm printer jobs and recovers paper-out without changi
  expect(job.payload.dailyReport.summary.total).toBe(expectedReport.summary.total);
  expect(job.payload.dailyReport).not.toHaveProperty('cutoff1');expect(job.payload.dailyReport).not.toHaveProperty('cutoff2');
  expect(job.payload.dailyReport.summary).not.toHaveProperty('periods');
- expect(job.profile).toMatchObject({paperMm:'58',width:384,bitmapThai:true});
- await expect(dialog.getByRole('status')).toContainText('ส่งรายงาน 58 มม.');
+ expect(job.profile).toMatchObject({paperMm:profile.paperMm,width:profile.width,bitmapThai:true});
+ await expect(dialog.getByRole('status')).toContainText(`ส่งรายงาน ${profile.paperMm} มม.`);
  const state=await page.evaluate(()=>Object.getOwnPropertyDescriptor(window,'thermalState')!.value);
- expect(state.widths).toContain(384);expect(state.images.length).toBeGreaterThan(4);
- expect(state.images.every((i:{width:number;height:number})=>i.width===384&&i.height>0)).toBe(true);
+ expect(state.widths).toContain(profile.width);expect(state.images.length).toBeGreaterThan(4);
+ expect(state.images.every((i:{width:number;height:number})=>i.width===profile.width-profile.margin*2&&i.height>0)).toBe(true);
  expect(state.edges.length).toBeGreaterThan(0);expect(state.edges.every((edge:{first:number;last:number})=>edge.first===0&&edge.last===0)).toBe(true);
  expect(state.feeds.length).toBe(1);expect(state.drawers).toBe(0);expect(state.browserPrints).toBe(0);
 
  await page.evaluate(()=>{Object.getOwnPropertyDescriptor(window,'thermalState')!.value.status=7;});
  const failureJobResponse=page.waitForResponse(r=>r.url().endsWith('/api/daily-report-print')&&r.request().method()==='POST');
- await dialog.getByRole('button',{name:'พิมพ์ 58 มม.',exact:true}).click();
+ await dialog.getByRole('button',{name:`พิมพ์ ${profile.paperMm} มม.`,exact:true}).click();
  const failedJob=await (await failureJobResponse).json();
  await expect(dialog.getByRole('alert')).toContainText('กระดาษหมด');
  const pending=await (await page.request.get(`/api/print-jobs?terminal=${failedJob.terminalId}`)).json();
@@ -68,7 +69,7 @@ test('daily report uses 58 mm printer jobs and recovers paper-out without changi
  const recovered=await (await recoveredResponse).json();
  expect(recovered.isReprint).toBe(true);expect(recovered.payload.dailyReport).toEqual(failedJob.payload.dailyReport);
  expect((await recoveryResult).status()).toBe(200);
- await expect(page.locator('.pos-messages').getByRole('status')).toContainText('ส่งรายงาน 58 มม.');
+ await expect(page.locator('.pos-messages').getByRole('status')).toContainText(`ส่งรายงาน ${profile.paperMm} มม.`);
  const finalOrders=await (await page.request.get('/api/orders')).json();expect(finalOrders.count).toBe(initialOrders.count);
  await expect(page.locator('.cart-panel')).toHaveText(cart,{useInnerText:true});
 });

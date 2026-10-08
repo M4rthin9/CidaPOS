@@ -3,11 +3,11 @@ import {defaultSettings} from '../../src/lib/config';
 import type {Catalog,PrintJob,Receipt} from '../../src/lib/types';
 try{process.loadEnvFile('.env');}catch{}
 
-for(const paper of ['58','48'] as const){
+for(const paper of ['80','58','48'] as const){
  test(`full bill reprint has aligned amounts and readable metadata on ${paper} mm paper`,async({page,baseURL})=>{
   expect((await page.request.post('/api/login',{headers:{Origin:baseURL!},data:{username:'admin',password:process.env.SEED_ADMIN_PASSWORD}})).ok()).toBe(true);
   const catalog:Catalog=await (await page.request.get('/api/catalog')).json(),terminal=catalog.terminals.find(t=>t.id==='POS-01')!;
-  const config={...defaultSettings,profile:{...defaultSettings.profile,paperMm:paper,width:paper==='48'?320:384}};
+  const config={...defaultSettings,profile:{...defaultSettings.profile,paperMm:paper,width:paper==='80'?576:paper==='48'?320:384}};
   const receipt:Receipt={number:'POS-20261008-000125',queue:'A0125',date:'2026-10-08T06:42:00Z',terminal:'POS-01',cashier:'พนักงานขาย',subtotal:14000,discount:500,total:13500,isReprint:true,config,
    items:[{name:'ข้าวกะเพราไก่ผัดพริกแห้งสูตรพิเศษพร้อมไข่ดาว',quantity:2,unitPrice:5000,lineTotal:9500,note:'เผ็ดน้อย',modifiers:[{name:'ไข่ดาว',price:0}]},{name:'ชาไทย',quantity:1,unitPrice:4000,lineTotal:4000,note:'หวานน้อย',modifiers:[]}],
    payments:[{method:'CASH',amount:8500,received:10000,change:1500},{method:'QR',amount:5000,received:5000,change:0}]};
@@ -33,7 +33,7 @@ for(const paper of ['58','48'] as const){
    return {paperMm:bounds.width*25.4/96,left:parseFloat(style.paddingLeft),right:parseFloat(style.paddingRight),centerDifference:Math.abs(bounds.left+bounds.width/2-roll.left-roll.width/2),font:getComputedStyle(element.querySelector('.receipt-block')!).fontFamily};
   });
   expect(geometry.paperMm).toBeCloseTo(Number(paper),1);expect(geometry.left).toBeCloseTo(geometry.right,2);expect(geometry.left).toBeGreaterThan(0);expect(geometry.centerDifference).toBeLessThan(1);expect(geometry.font).toContain('Receipt Sarabun');
-  expect(await frame.locator('body').evaluate(element=>[...element.ownerDocument.styleSheets[0].cssRules].some(rule=>rule instanceof element.ownerDocument.defaultView!.CSSPageRule&&(rule as CSSPageRule).style.getPropertyValue('size').startsWith(element.getBoundingClientRect().width>200?'58mm':'48mm')))).toBe(true);
+  expect(await frame.locator('body').evaluate((element,paper)=>[...element.ownerDocument.styleSheets[0].cssRules].some(rule=>rule instanceof element.ownerDocument.defaultView!.CSSPageRule&&(rule as CSSPageRule).style.getPropertyValue('size').startsWith(`${paper}mm`)),paper)).toBe(true);
   const details=main.locator('.receipt-details .receipt-item');
   for(const [label,value] of [['รวมก่อนลด','140.00'],['ส่วนลด','5.00'],['ยอดสุทธิ','135.00'],['เงินสด','85.00'],['รับเงิน','100.00'],['QR/โอน','50.00'],['เงินทอน','15.00']]){
    await expect(details.filter({has:page.locator('.receipt-item-name',{hasText:label})}).locator('.receipt-item-amount')).toHaveText(value);
@@ -44,7 +44,12 @@ for(const paper of ['58','48'] as const){
   }))).toBe(true);
   const printHtml=await frame.locator('html').evaluate(element=>element.outerHTML),preview=await page.context().newPage();
   await preview.route('**/__bill-preview',route=>route.fulfill({contentType:'text/html',body:printHtml}));await preview.goto(`${baseURL}/__bill-preview`);await preview.evaluate(()=>document.fonts.ready);
-  await preview.locator('main').screenshot({path:`test-results/full-bill-${paper}mm.png`});await preview.close();
+  await preview.locator('main').screenshot({path:`test-results/full-bill-${paper}mm.png`});
+  const pdf=await preview.pdf({path:`test-results/full-bill-${paper}mm.pdf`,preferCSSPageSize:true});
+  const bounds=/\/MediaBox\s*\[\s*0\s+0\s+([\d.]+)\s+([\d.]+)/.exec(pdf.toString('latin1'))!;
+  expect(Number(bounds[1])*25.4/72).toBeCloseTo(Number(paper),0);
+  expect([...pdf.toString('latin1').matchAll(/\/Type\s*\/Page\b/g)]).toHaveLength(1);
+  await preview.close();
   await expect(dialog.getByRole('button',{name:'ยืนยันพิมพ์ออกแล้ว',exact:true})).toBeDisabled();
   await frame.locator('body').evaluate(element=>{element.ownerDocument.defaultView!.print=()=>{};});
   await dialog.getByRole('button',{name:'พิมพ์ใบเสร็จ',exact:true}).click();await dialog.getByRole('button',{name:'ยืนยันพิมพ์ออกแล้ว',exact:true}).click();

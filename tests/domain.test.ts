@@ -49,22 +49,24 @@ test('bill detail rows preserve discounted totals and mixed payment accounting',
  const hidden=receiptBlocks({...receipt,config:{...defaultSettings,blocks:defaultSettings.blocks.map(b=>({...b,visible:b.type==='TOTAL'?false:b.visible}))}});
  assert.equal(hidden.flatMap(b=>b.rows??[]).some(row=>row.name==='ยอดสุทธิ'),false);
 });
-test('58 mm browser bill uses the roll width independently of native dot width',()=>{
- const wide=receiptGeometry(defaultSettings.profile),legacy=receiptGeometry({...defaultSettings.profile,width:320});
- assert.equal(wide.paperMm,58);assert.equal(wide.contentMm,53);assert.deepEqual(legacy,wide);
+test('browser bills use the selected roll width independently of native dot width',()=>{
+ const wide=receiptGeometry(defaultSettings.profile),legacy=receiptGeometry({...defaultSettings.profile,width:384});
+ assert.equal(wide.paperMm,80);assert.equal(wide.contentMm,75);assert.deepEqual(legacy,wide);
+ const small=receiptGeometry({...defaultSettings.profile,paperMm:'58'});assert.equal(small.paperMm,58);assert.equal(small.contentMm,53);
  const narrow=receiptGeometry({...defaultSettings.profile,paperMm:'48'});assert.equal(narrow.paperMm,48);assert.equal(narrow.contentMm,43);
- const inset=receiptGeometry({...defaultSettings.profile,margin:8});assert.equal(inset.insetMm,3.5);assert.equal(inset.contentMm,51);
+ const inset=receiptGeometry({...defaultSettings.profile,margin:8});assert.equal(inset.insetMm,3.5);assert.equal(inset.contentMm,73);
 });
 test('cashier cannot discount, void, close or configure system',()=>{assert.ok(can('CASHIER','sell'));for(const p of ['discount','void','refund','close','settings.write'] as const)assert.equal(can('CASHIER',p),false);});
 test('cashier may create menus and read reports while catalog edits require their own permission',()=>{assert.ok(can('CASHIER','products.create'));assert.ok(can('CASHIER','reports.read'));assert.equal(can('CASHIER','catalog.write'),false);assert.ok(can('MANAGER','products.create'));});
 test('legacy settings load as daily settings without scheduled cutoffs',()=>{const parsed=settingsSchema.parse({...defaultSettings,cutoff1:'10:00',cutoff2:'14:00'});assert.equal(parsed.opening,'00:00');assert.equal('cutoff1' in parsed,false);assert.equal('cutoff2' in parsed,false);});
 test('only Super Admin can reset sales and dividers are independent of font width',()=>{assert.equal(can('SUPER_ADMIN','sales.reset'),true);for(const role of ['ADMIN','MANAGER','CASHIER','ACCOUNTING','VIEWER'])assert.equal(can(role,'sales.reset'),false);const blocks=receiptBlocks({number:'test',date:'2026-10-07T00:00:00Z',terminal:'POS-01',config:defaultSettings});assert.ok(blocks.some(b=>b.kind==='divider'&&b.text===''));});
 test('58 mm daily report reconciles totals, wraps Thai and omits sale-only fields',()=>{
+ const config={...defaultSettings,profile:{...defaultSettings.profile,paperMm:'58' as const,width:384,characters:32}};
  const refunded=order('11:00:00',2000);refunded.refunded=500;refunded.items[0].refunded=500;refunded.adjustments=[{method:'CASH',amount:500}];
  const voided=order('15:00:00',9000);voided.status='VOIDED';
  const summary=summarize([order('09:00:00',1000),refunded,voided]);
  summary.categories[0].name='หมวดสินค้าชื่อยาวสำหรับทดสอบการตัดบรรทัดภาษาไทยบนกระดาษแคบ';
- const blocks=receiptBlocks({date:'2026-10-06T12:00:00Z',terminal:'POS-01',cashier:'ผู้ขาย',config:defaultSettings,isReprint:true,dailyReport:{businessDate:'2026-10-06',closed:false,opening:'00:00',summary}});
+ const blocks=receiptBlocks({date:'2026-10-06T12:00:00Z',terminal:'POS-01',cashier:'ผู้ขาย',config,isReprint:true,dailyReport:{businessDate:'2026-10-06',closed:false,opening:'00:00',summary}});
  const text=blocks.map(b=>b.text).join('\n');
  assert.match(text,/สำเนารายงาน/);assert.match(text,/วันทำการ 2026-10-06/);
  assert.match(text,/รวมยอดขายประจำวัน\n25\.00 บาท/);

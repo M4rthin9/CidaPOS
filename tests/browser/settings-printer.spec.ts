@@ -39,21 +39,21 @@ test('Super Admin reset review and laptop receipt printing require explicit conf
  await page.route('**/api/catalog',route=>route.fulfill({json:{...catalog,terminals:catalog.terminals.map((t:{id:string;config:object})=>t.id===device.id?{...t,config:{...t.config,adapter:'browser'}}:t)}}));
  await page.goto('/pos');await expect(page.locator('.product-card').first()).toBeVisible();await page.getByRole('button',{name:'รายงานประจำวัน',exact:true}).click();
  const resultResponse=page.waitForResponse(r=>r.url().includes('/result')&&r.request().method()==='POST');
- await page.getByRole('dialog').getByRole('button',{name:'พิมพ์ 58 มม.',exact:true}).click();
+ await page.getByRole('dialog').getByRole('button',{name:`พิมพ์ ${catalog.config.profile.paperMm} มม.`,exact:true}).click();
  const printDialog=page.getByRole('dialog',{name:'พิมพ์ผ่านแล็ปท็อป'});await expect(printDialog).toBeVisible();
  const confirm=printDialog.getByRole('button',{name:'ยืนยันพิมพ์ออกแล้ว',exact:true});await expect(confirm).toBeDisabled();
  const frame=page.frameLocator('iframe[title="ใบเสร็จสำหรับเครื่องพิมพ์แล็ปท็อป"]');await expect(frame.locator('main')).toContainText('สรุปยอดขายประจำวัน');
  expect(await frame.locator('hr').first().evaluate(element=>Math.abs(element.getBoundingClientRect().width-(element.parentElement!.getBoundingClientRect().width-parseFloat(getComputedStyle(element.parentElement!).paddingLeft)*2))<1)).toBe(true);
  await expect(printDialog.getByRole('button',{name:'พิมพ์ใบเสร็จ',exact:true})).toBeEnabled();
  expect(await frame.locator('main').evaluate(element=>element.scrollWidth<=element.clientWidth)).toBe(true);
- expect(await frame.locator('body').evaluate(element=>[...element.ownerDocument.styleSheets[0].cssRules].filter(rule=>rule instanceof element.ownerDocument.defaultView!.CSSPageRule).map(rule=>(rule as CSSPageRule).style.getPropertyValue('size')).some(size=>size.includes('58mm')))).toBe(true);
+ expect(await frame.locator('body').evaluate((element,paper)=>[...element.ownerDocument.styleSheets[0].cssRules].filter(rule=>rule instanceof element.ownerDocument.defaultView!.CSSPageRule).map(rule=>(rule as CSSPageRule).style.getPropertyValue('size')).some(size=>size.includes(`${paper}mm`)),catalog.config.profile.paperMm)).toBe(true);
  await printDialog.screenshot({path:'test-results/laptop-receipt-print.png'});
  await frame.locator('body').evaluate(element=>{element.ownerDocument.defaultView!.print=()=>{};});
  await printDialog.getByRole('button',{name:'พิมพ์ใบเสร็จ',exact:true}).click();await expect(confirm).toBeEnabled();
  await confirm.click();const result=await resultResponse;expect(result.status()).toBe(200);expect(result.request().postDataJSON().success).toBe(true);
  await expect(printDialog).toHaveCount(0);
  const failedResponse=page.waitForResponse(r=>r.url().includes('/result')&&r.request().method()==='POST');
- await page.getByRole('dialog').getByRole('button',{name:'พิมพ์ 58 มม.',exact:true}).click();await expect(printDialog).toBeVisible();
+ await page.getByRole('dialog').getByRole('button',{name:`พิมพ์ ${catalog.config.profile.paperMm} มม.`,exact:true}).click();await expect(printDialog).toBeVisible();
  await printDialog.getByRole('button',{name:'ยกเลิก',exact:true}).click();expect((await failedResponse).request().postDataJSON().success).toBe(false);
  let receiptPaper:'48'|'58'='58';
  await page.route('**/api/daily-report-print',async route=>{
@@ -64,7 +64,7 @@ test('Super Admin reset review and laptop receipt printing require explicit conf
  for(const paper of ['58','48'] as const){
  receiptPaper=paper;
  const codedFailure=page.waitForResponse(r=>r.url().includes('/result')&&r.request().method()==='POST');
- await page.getByRole('dialog').getByRole('button',{name:'พิมพ์ 58 มม.',exact:true}).click();await expect(printDialog).toBeVisible();
+ await page.getByRole('dialog').getByRole('button',{name:`พิมพ์ ${catalog.config.profile.paperMm} มม.`,exact:true}).click();await expect(printDialog).toBeVisible();
  await expect(printDialog.getByRole('button',{name:'พิมพ์ใบเสร็จ',exact:true})).toBeEnabled();await expect(frame.locator('.receipt-code')).toHaveCount(2);
  await expect(frame.locator('main')).toContainText('ข้าวกะเพราไก่');await expect(frame.locator('main')).toContainText('110.00');
  const itemTable=frame.locator('.receipt-items');await expect(itemTable.locator('.receipt-item')).toHaveCount(4);
