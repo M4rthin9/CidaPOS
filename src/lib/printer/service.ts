@@ -6,29 +6,10 @@ import {printWithLaptop} from './laptop';
 import {CodesoftPrinterAdapter,findCodesoft,CodesoftUnavailable} from './codesoft';
 import {itemTableBitmap,imageBitmap,textBitmap} from './bitmaps';
 import {receiptFontFaces,receiptSizeScale} from './appearance';
+import {loadSDK,connectWithTimeout,ReceiptPrintedDrawerError,type SDK} from './imin-sdk';
 export interface PrinterAdapter {status():Promise<string>;print(receipt:Receipt):Promise<void>;}
-type SDK={PrintConnectType?:Record<string,unknown>;connect?:()=>Promise<boolean>;ws?:WebSocket;initPrinter:(type:unknown)=>void;getPrinterStatus:(type:unknown,callback?:(status:{value:number})=>void)=>Promise<{value:number}>|void;setTextWidth:(width:number)=>void;setPageFormat:(style:number)=>void;setAlignment:(align:number)=>void;setTextSize:(size:number)=>void;setTextStyle?:(style:number)=>void;setTextLineSpacing?:(spacing:number)=>void;printText:(text:string,type?:number)=>void;printAndFeedPaper:(height:number)=>void;partialCut?:()=>void;openCashBox?:()=>void;printSingleBitmap?:(data:string,alignment?:number)=>Promise<unknown>|void;printQrCode?:(text:string,alignment:number)=>void;printBarCode?:(type:number,text:string,alignment:number)=>void;};
-declare global {interface Window {IminPrintInstance?:SDK;IminPrinter?:new()=>SDK;}}
 const statusLabels:Record<number,string>={0:'เครื่องพิมพ์พร้อม',[-1]:'เครื่องพิมพ์ไม่พร้อม',1:'เครื่องพิมพ์ไม่พร้อม',3:'เปิดฝาเครื่องพิมพ์',7:'กระดาษหมด',8:'กระดาษใกล้หมด',99:'ตรวจสอบเครื่องพิมพ์'};
-let sdkPromise:Promise<void>|undefined;
-async function loadSDK(path:string){
- if(window.IminPrintInstance)return;
- if(!sdkPromise)sdkPromise=new Promise((resolve,reject)=>{
-  const script=document.createElement('script');script.src=path;
-  const fail=()=>{clearTimeout(timeout);script.onload=null;script.onerror=null;script.remove();sdkPromise=undefined;reject(new Error('ยังไม่ได้ติดตั้ง SDK iMin'));};
-  const timeout=setTimeout(fail,3000);
-  script.onload=()=>{clearTimeout(timeout);resolve();};script.onerror=fail;document.head.append(script);
- });
- await sdkPromise;
- if(!window.IminPrintInstance&&window.IminPrinter)window.IminPrintInstance=new window.IminPrinter();
- if(!window.IminPrintInstance)throw new Error('ไม่พบ iMin Printer SDK');
-}
 const laptopFallbackStatus='iMin ไม่พร้อม - พิมพ์ผ่านคอมพิวเตอร์';
-async function connectWithTimeout(sdk:SDK){
- let timeout:ReturnType<typeof setTimeout>|undefined;
- try{return await Promise.race([sdk.connect!(),new Promise<boolean>((_,reject)=>{timeout=setTimeout(()=>reject(new Error('ไม่สามารถเชื่อมต่อบริการพิมพ์ iMin ในเครื่อง')),3000);})]);}
- finally{if(timeout)clearTimeout(timeout);}
-}
 export class IminPrinterAdapter implements PrinterAdapter {
  private initialized=false;
  private operations=Promise.resolve();
@@ -71,4 +52,4 @@ export class NetworkPrinterAdapter implements PrinterAdapter {async status(){ret
 const adapters=new Map<string,PrinterAdapter>();
 export function printerFor(terminal:Terminal,printerId=terminal.config.printerId){if(printerId!==terminal.config.printerId)return new NetworkPrinterAdapter();const key=terminal.id+JSON.stringify(terminal.config);if(!adapters.has(key))adapters.set(key,terminal.config.adapter==='mock'?new MockPrinterAdapter():terminal.config.adapter==='browser'?new BrowserPrinterAdapter():terminal.config.adapter==='codesoft'?new CodesoftPrinterAdapter(terminal):new IminPrinterAdapter(terminal));return adapters.get(key)!;}
 let queue=Promise.resolve();
-export function sendPrintJob(job:PrintJob,terminal:Terminal){const run=queue.then(async()=>{const claimed=await api<PrintJob>(`print-jobs/${job.id}/claim`,{});let error:string|undefined;try{await printerFor(terminal,job.printerId).print(job.payload);}catch(e){error=e instanceof Error?e.message:'พิมพ์ไม่สำเร็จ';}await api(`print-jobs/${job.id}/result`,{claimToken:claimed.claimToken,success:!error,error});if(error)throw new Error(error);});queue=run.catch(()=>{});return run;}
+export function sendPrintJob(job:PrintJob,terminal:Terminal){const run=queue.then(async()=>{const claimed=await api<PrintJob>(`print-jobs/${job.id}/claim`,{});let error:string|undefined,receiptPrinted=false;try{await printerFor(terminal,job.printerId).print(job.payload);}catch(e){receiptPrinted=e instanceof ReceiptPrintedDrawerError;error=e instanceof Error?e.message:'พิมพ์ไม่สำเร็จ';}await api(`print-jobs/${job.id}/result`,{claimToken:claimed.claimToken,success:!error||receiptPrinted,error});if(error)throw new Error(error);});queue=run.catch(()=>{});return run;}

@@ -5,6 +5,7 @@ import {receiptBlocks} from './layout';
 import {itemTableBitmap,imageBitmap,textBitmap} from './bitmaps';
 import {receiptFontFaces,receiptSizeScale} from './appearance';
 import {rasterPackets} from './escpos';
+import {openIminCashDrawer,ReceiptPrintedDrawerError} from './imin-sdk';
 
 type Endpoint={endpointNumber:number;direction:'in'|'out';type:string};
 type Alternate={alternateSetting:number;interfaceClass:number;endpoints:Endpoint[]};
@@ -95,6 +96,11 @@ export async function codesoftReceiptBitmap(receipt:Receipt){
 export class CodesoftPrinterAdapter implements PrinterAdapter {
  constructor(private terminal:Terminal){}
  async status(){try{const device=await findCodesoft(this.terminal);return `Codesoft TP-3260VL ${device.interfaceClass===7?'พร้อม':'เชื่อมต่อ USB แล้ว'} · ${device.name}`;}catch(error){return error instanceof Error?error.message:'Codesoft ไม่พร้อม';}}
+ async openDrawer(){
+  if(!this.terminal.config.drawer)throw new Error('เปิดใช้งานลิ้นชักและบันทึกอุปกรณ์ก่อน');
+  if(this.terminal.config.drawerDevice==='imin')return openIminCashDrawer(this.terminal);
+  return exclusive(async()=>{const session=await sessionFor(this.terminal);try{await portStatus(session);const packet=new Uint8Array([0x1b,0x70,0,25,250]),result=await timed(session.device.transferOut(session.endpoint,packet),10000);if(result.status!=='ok'||result.bytesWritten!==packet.length)throw new Error('Codesoft ส่งคำสั่งเปิดลิ้นชักไม่สำเร็จ');}catch(error){await closeSession(this.terminal.id);throw error;}});
+ }
  async print(receipt:Receipt){await this.printTo(receipt,await findCodesoft(this.terminal));}
  async printTo(receipt:Receipt,_device:CodesoftDevice){return exclusive(async()=>{
   const session=await sessionFor(this.terminal);await portStatus(session);
@@ -105,9 +111,11 @@ export class CodesoftPrinterAdapter implements PrinterAdapter {
    const canvas=document.createElement('canvas');canvas.width=image.width;canvas.height=image.height;const ctx=canvas.getContext('2d')!;ctx.drawImage(image,0,0);
    const packets=[new Uint8Array([0x1b,0x40,0x1b,0x61,1]),...rasterPackets(ctx.getImageData(0,0,image.width,image.height).data,image.width,image.height),new Uint8Array([0x1b,0x64,2])];
    if(receipt.config.profile.cut&&this.terminal.config.cutter)packets.push(new Uint8Array([0x1d,0x56,66,0]));
-   if(this.terminal.config.drawer&&receipt.payments?.some(p=>p.method==='CASH'))packets.push(new Uint8Array([0x1b,0x70,0,25,250]));
+   const cashDrawer=this.terminal.config.drawer&&receipt.payments?.some(p=>p.method==='CASH');
+   if(cashDrawer&&this.terminal.config.drawerDevice!=='imin')packets.push(new Uint8Array([0x1b,0x70,0,25,250]));
    for(const packet of packets){const result=await timed(session.device.transferOut(session.endpoint,packet),10000);if(result.status!=='ok'||result.bytesWritten!==packet.byteLength)throw new Error('Codesoft USB ส่งข้อมูลไม่ครบ ตรวจสอบกระดาษก่อนพิมพ์ซ้ำ');}
    await portStatus(session);
+   if(cashDrawer&&this.terminal.config.drawerDevice==='imin')try{await openIminCashDrawer(this.terminal);}catch(error){throw new ReceiptPrintedDrawerError('ใบเสร็จพิมพ์แล้ว แต่เปิดลิ้นชัก iMin ไม่สำเร็จ: '+(error instanceof Error?error.message:'ตรวจสอบบริการ iMin')+' — ใช้ปุ่มทดสอบเปิดลิ้นชักโดยไม่ต้องพิมพ์บิลซ้ำ');}
   }catch(error){await closeSession(this.terminal.id);throw error;}
  });}
 }

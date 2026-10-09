@@ -1,13 +1,14 @@
 import {test,expect,type Page} from '@playwright/test';
 import type {Terminal,PrintJob} from '../../src/lib/types';
 try{process.loadEnvFile('.env');}catch{}
-type Mode='ready'|'disconnected'|'unpaired'|'paper-out'|'mid-print'|'short-write'|'imin-ready'|'imin-mid-print'|'busy-interface';
-async function setup(page:Page,mode:Mode,paper:'58'|'80'='80',direct=false){
+type Mode='ready'|'disconnected'|'unpaired'|'paper-out'|'mid-print'|'short-write'|'imin-ready'|'imin-mid-print'|'busy-interface'|'drawer-error'|'drawer-disconnected';
+async function setup(page:Page,mode:Mode,paper:'58'|'80'='80',direct=false,options:{drawerDevice?:'printer'|'imin';drawer?:boolean;payment?:'CASH'|'QR'|'REPORT'}={}){
  expect((await page.request.post('/api/login',{headers:{Origin:'http://localhost:3000'},data:{username:'admin',password:process.env.SEED_ADMIN_PASSWORD}})).ok()).toBe(true);
  const catalog=await (await page.request.get('/api/catalog')).json(),original:Terminal=catalog.terminals.find((t:Terminal)=>t.id==='POS-01');
- const terminal:Terminal={...original,config:{...original.config,adapter:direct?'codesoft':'imin',fallbackPrinter:'codesoft',codesoftPaperMm:paper,cutter:true,drawer:true}};
+ const terminal:Terminal={...original,config:{...original.config,adapter:direct?'codesoft':'imin',fallbackPrinter:'codesoft',codesoftPaperMm:paper,cutter:true,drawer:options.drawer??true,drawerDevice:options.drawerDevice??'printer'}};
  const config={...catalog.config,profile:{...catalog.config.profile,paperMm:'58',width:384,cut:true},qr:'https://example.com/codesoft',blocks:[...catalog.config.blocks,{id:'usb-qr',type:'QR_CODE',visible:true,align:'CENTER',size:'NORMAL',bold:false,before:0,after:0,divider:false,text:''},{id:'usb-barcode',type:'BARCODE',visible:true,align:'CENTER',size:'NORMAL',bold:false,before:0,after:0,divider:false,text:''}]};
- const job:PrintJob={id:`codesoft-${mode}`,orderId:null,terminalId:terminal.id,printerId:terminal.config.printerId,template:'CUSTOMER',status:'PENDING',createdAt:new Date().toISOString(),profile:catalog.config.profile,payload:{number:'USB-TEST-001',queue:'A001',date:new Date().toISOString(),terminal:terminal.name,subtotal:5000,discount:0,total:5000,items:[{name:'ไอศกรีม เนสเล่ คิทแคทมัจฉะ',quantity:1,unitPrice:5000,lineTotal:5000,note:'ทดสอบ USB',modifiers:[]}],payments:[{method:'CASH',amount:5000,received:10000,change:5000}],config}};
+ const job:PrintJob={id:`codesoft-${mode}`,orderId:null,terminalId:terminal.id,printerId:terminal.config.printerId,template:'CUSTOMER',status:'PENDING',createdAt:new Date().toISOString(),profile:catalog.config.profile,payload:{number:'USB-TEST-001',queue:'A001',date:new Date().toISOString(),terminal:terminal.name,subtotal:5000,discount:0,total:5000,items:[{name:'ไอศกรีม เนสเล่ คิทแคทมัจฉะ',quantity:1,unitPrice:5000,lineTotal:5000,note:'ทดสอบ USB',modifiers:[]}],payments:[{method:options.payment==='QR'?'QR':'CASH',amount:5000,received:10000,change:5000}],config}};
+ if(options.payment==='REPORT')delete job.payload.payments;
  const report=await (await page.request.get('/api/reports')).json(),results:{success:boolean;error?:string}[]=[],saved:Terminal[]=[];
  await page.route('**/api/catalog',route=>route.fulfill({json:{...catalog,terminals:[terminal],products:catalog.products.map((p:{image:string})=>({...p,image:''}))}}));
  await page.route('**/api/terminals',route=>{if(route.request().method()==='POST')saved.push(route.request().postDataJSON());return route.fulfill({json:[terminal]});});
@@ -17,7 +18,7 @@ async function setup(page:Page,mode:Mode,paper:'58'|'80'='80',direct=false){
  await page.route(`**/api/print-jobs/${job.id}/claim`,route=>route.fulfill({json:{...job,claimToken:'USB-TEST-CLAIM'}}));
  await page.route(`**/api/print-jobs/${job.id}/result`,route=>{results.push(route.request().postDataJSON());return route.fulfill({json:{ok:true}});});
  await page.addInitScript(({mode,terminalId})=>{
-  const state={usbGets:0,opens:0,claims:[] as number[],statuses:0,iminSent:0,packets:[] as {endpoint:number;bytes:number[]}[],draws:[] as {text:string;x:number;y:number;align:string}[]};Object.assign(window,{codesoftTestState:state});
+  const state={usbGets:0,opens:0,claims:[] as number[],statuses:0,iminSent:0,drawers:0,packets:[] as {endpoint:number;bytes:number[]}[],draws:[] as {text:string;x:number;y:number;align:string}[]};Object.assign(window,{codesoftTestState:state});
   const fillText=CanvasRenderingContext2D.prototype.fillText;
   CanvasRenderingContext2D.prototype.fillText=function(text,x,y,max){state.draws.push({text,x,y,align:this.textAlign});if(max===undefined)fillText.call(this,text,x,y);else fillText.call(this,text,x,y,max);};
   const alt={alternateSetting:2,interfaceClass:7,endpoints:[{endpointNumber:6,direction:'out',type:'bulk'}]},intf={interfaceNumber:3,claimed:false,alternate:alt,alternates:[alt]};
@@ -29,7 +30,7 @@ async function setup(page:Page,mode:Mode,paper:'58'|'80'='80',direct=false){
   };
   Object.defineProperty(navigator,'usb',{configurable:true,value:{async getDevices(){state.usbGets++;return mode==='disconnected'?[]:[{...device,vendorId:9999},device];},async requestDevice(){return device;}}});
   if(mode!=='unpaired')localStorage.setItem('cida-codesoft-usb-'+terminalId,JSON.stringify({vendorId:1000,productId:2000,serialNumber:'CODESOFT-TEST'}));
-  window.IminPrintInstance={initPrinter(){},getPrinterStatus:async()=>({value:mode==='imin-ready'||mode==='imin-mid-print'?0:-1}),setTextWidth(){},setPageFormat(){},setAlignment(){},setTextSize(){},printText(){state.iminSent++;},printAndFeedPaper(){},partialCut(){},openCashBox(){},printQrCode(){},printBarCode(){},async printSingleBitmap(){state.iminSent++;if(mode==='imin-mid-print')throw new Error('iMin partially printed');}};
+  window.IminPrintInstance={...(mode==='drawer-disconnected'?{connect:async()=>false}:{}),initPrinter(){},getPrinterStatus:async()=>({value:mode==='imin-ready'||mode==='imin-mid-print'?0:-1}),setTextWidth(){},setPageFormat(){},setAlignment(){},setTextSize(){},printText(){state.iminSent++;},printAndFeedPaper(){},partialCut(){},openCashBox(){state.drawers++;if(mode==='drawer-error')throw new Error('iMin drawer service error');},printQrCode(){},printBarCode(){},async printSingleBitmap(){state.iminSent++;if(mode==='imin-mid-print')throw new Error('iMin partially printed');}};
  },{mode,terminalId:terminal.id});
  return {results,terminal,saved};
 }
@@ -80,4 +81,20 @@ test('device settings pair Codesoft with browser USB permission and expose fallb
  await page.getByRole('combobox',{name:/^การพิมพ์/}).selectOption('codesoft');await page.getByRole('combobox',{name:/^กระดาษ Codesoft/}).selectOption('58');await page.getByRole('combobox',{name:/^เมื่อไม่พบเครื่องพิมพ์ iMin/}).selectOption('browser');
  await page.getByRole('button',{name:'บันทึกอุปกรณ์',exact:true}).click();await expect.poll(()=>saved.length).toBe(1);expect(saved[0].config).toMatchObject({adapter:'codesoft',fallbackPrinter:'browser',codesoftPaperMm:'58'});
  await page.getByRole('button',{name:'ยกเลิกการผูก Codesoft',exact:true}).click();expect(await page.evaluate(()=>localStorage.getItem('cida-codesoft-usb-POS-01'))).toBeNull();
+});
+
+for(const direct of [true,false])test(`Codesoft cash bill opens the drawer connected to iMin (direct=${direct})`,async({page})=>{
+ const {results}=await setup(page,'ready','80',direct,{drawerDevice:'imin'});await print(page);await expect.poll(()=>results.length).toBe(1);expect(results[0].success,results[0].error).toBe(true);
+ const state=await page.evaluate(()=>Object.getOwnPropertyDescriptor(window,'codesoftTestState')!.value);expect(state.drawers).toBe(1);expect(state.iminSent).toBe(0);expect(state.packets.length).toBeGreaterThan(0);expect(state.packets.some((p:{bytes:number[]})=>p.bytes[0]===0x1b&&p.bytes[1]===0x70)).toBe(false);
+});
+for(const payment of ['QR','REPORT','CASH'] as const)test(`iMin drawer stays closed for ${payment==='CASH'?'disabled drawer':payment}`,async({page})=>{
+ const {results}=await setup(page,'ready','80',true,{drawerDevice:'imin',payment,drawer:payment!=='CASH'});await print(page);await expect.poll(()=>results.length).toBe(1);expect(results[0].success,results[0].error).toBe(true);expect(await page.evaluate(()=>Object.getOwnPropertyDescriptor(window,'codesoftTestState')!.value.drawers)).toBe(0);
+});
+for(const mode of ['drawer-error','drawer-disconnected'] as const)test(`iMin ${mode} reports printed receipt and offers drawer-only retry`,async({page})=>{
+ const {results}=await setup(page,mode,'80',true,{drawerDevice:'imin'});await print(page);await expect.poll(()=>results.length,{timeout:10000}).toBe(1);expect(results[0].success).toBe(true);expect(results[0].error).toContain('ใบเสร็จพิมพ์แล้ว');expect(results[0].error).toContain('ไม่ต้องพิมพ์บิลซ้ำ');await expect(page.getByRole('dialog',{name:'พิมพ์ผ่านแล็ปท็อป'})).toHaveCount(0);
+});
+test('drawer-only iMin test does not print or require the Codesoft USB connection',async({page})=>{
+ const {saved}=await setup(page,'unpaired','80',true,{drawerDevice:'imin'});await page.goto('/admin/settings');await page.getByRole('button',{name:'อุปกรณ์ POS',exact:true}).click();await expect(page.getByRole('combobox',{name:/^ลิ้นชักเชื่อมต่อกับ/})).toHaveValue('imin');await page.getByRole('button',{name:'ทดสอบเปิดลิ้นชัก',exact:true}).click();await expect(page.getByRole('status').filter({hasText:'ส่งคำสั่งเปิดลิ้นชัก iMin แล้ว'})).toBeVisible();
+ const state=await page.evaluate(()=>Object.getOwnPropertyDescriptor(window,'codesoftTestState')!.value);expect(state.drawers).toBe(1);expect(state.packets).toHaveLength(0);expect(state.usbGets).toBe(0);expect(state.iminSent).toBe(0);
+ await page.getByRole('button',{name:'บันทึกอุปกรณ์',exact:true}).click();await expect.poll(()=>saved.length).toBe(1);expect(saved[0].config.drawerDevice).toBe('imin');
 });
