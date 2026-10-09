@@ -7,6 +7,20 @@ import {receiptGeometry} from '../src/lib/printer/appearance';
 import {defaultSettings,settingsSchema} from '../src/lib/config';
 import {can} from '../src/lib/permissions';
 import {reportDates} from '../src/lib/reporting';
+import {rasterPackets} from '../src/lib/printer/escpos';
+
+test('ESC/POS raster encodes monochrome pixels, alpha and partial byte padding',()=>{
+ const pixels=new Uint8ClampedArray([0,0,0,255,255,255,255,255,0,0,0,0,100,100,100,255,180,180,180,255,0,0,0,255,255,255,255,255,0,0,0,255,0,0,0,255]);
+ const [packet]=rasterPackets(pixels,9,1);
+ assert.deepEqual([...packet],[0x1d,0x76,0x30,0,2,0,1,0,0x95,0x80]);
+});
+test('80 mm ESC/POS stripes stay below the device buffer and preserve all rows',()=>{
+ const width=576,height=101,pixels=new Uint8ClampedArray(width*height*4);pixels.fill(255);
+ const packets=rasterPackets(pixels,width,height);
+ assert.deepEqual(packets.map(p=>p[6]),[48,48,5]);
+ assert.ok(packets.every(p=>p.length<8192&&p[4]===72&&p[5]===0&&p.slice(8).every(value=>value===0)));
+ assert.throws(()=>rasterPackets(pixels,577,height));assert.throws(()=>rasterPackets(new Uint8ClampedArray(),width,height));
+});
 test('acceptance total 110 baht, cash 200, change 90',()=>{const c=calculate([{price:5000,quantity:2},{price:1000,quantity:1}],0);assert.equal(c.total,11000);assert.equal(validatePayment(c.total,[{method:'CASH',amount:11000,received:20000}])[0].change,9000);});
 test('discount allocation preserves every satang deterministically',()=>{const c=calculate([{price:101,quantity:1},{price:102,quantity:1},{price:103,quantity:1}],100);assert.equal(c.total,206);assert.equal(c.lines.reduce((s,i)=>s+i.discount,0),100);assert.equal(c.lines.reduce((s,i)=>s+i.total,0),206);assert.deepEqual(allocate(2,[1,1,1]),[1,1,0]);});
 test('large allocations use exact integer arithmetic',()=>{const values=allocate(99999999,[33333333,33333333,33333334]);assert.equal(values.reduce((s,v)=>s+v,0),99999999);assert.deepEqual(values,[33333333,33333333,33333333]);assert.throws(()=>allocate(1,[-1,2]));});

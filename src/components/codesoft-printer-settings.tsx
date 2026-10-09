@@ -1,0 +1,16 @@
+'use client';
+import {useState} from 'react';
+import type {Terminal} from '@/lib/types';
+import {CodesoftPrinterAdapter,connectCodesoft,forgetCodesoft} from '@/lib/printer/codesoft';
+
+export default function CodesoftPrinterSettings({terminal,onChange}:{terminal:Terminal;onChange:(config:Terminal['config'])=>void}){
+ const [busy,setBusy]=useState(false),[status,setStatus]=useState('ยังไม่ได้ตรวจสอบ Codesoft USB');
+ const run=async(action:()=>Promise<string>)=>{if(busy)return;setBusy(true);try{setStatus(await action());}catch(error){setStatus(error instanceof Error?error.message:'เชื่อมต่อ Codesoft ไม่สำเร็จ');}finally{setBusy(false);}};
+ return <section className="codesoft-settings" aria-label="Codesoft TP-3260VL"><h3>Codesoft TP-3260VL · USB</h3>
+  <p className="info">เสียบสาย USB ของ Codesoft เข้ากับ iMin เปิด POS ด้วย Chrome แล้วกดเชื่อมต่อ เลือกเครื่องพิมพ์ Codesoft และอนุญาตให้เข้าถึง USB ระบบจะใช้เครื่องนี้เมื่อไม่พบเครื่องพิมพ์ iMin</p>
+  <label>เมื่อไม่พบเครื่องพิมพ์ iMin<select value={terminal.config.fallbackPrinter??'codesoft'} onChange={e=>onChange({...terminal.config,fallbackPrinter:e.target.value as 'codesoft'|'browser'})}><option value="codesoft">ตรวจสอบ Codesoft USB ก่อน</option><option value="browser">เปิดหน้าต่างพิมพ์ผ่านเบราว์เซอร์</option></select></label>
+  <label>กระดาษ Codesoft<select value={terminal.config.codesoftPaperMm??'80'} onChange={e=>onChange({...terminal.config,codesoftPaperMm:e.target.value as '58'|'80'})}><option value="80">80 มม.</option><option value="58">58 มม. (ต้องใส่ตัวกั้นกระดาษ)</option></select></label>
+  <div className="page-actions"><button className="primary" disabled={busy||!terminal.id} onClick={()=>void run(async()=>`เชื่อมต่อ ${await connectCodesoft(terminal.id)} แล้ว`)}>เชื่อมต่อ Codesoft USB</button><button className="secondary" disabled={busy} onClick={()=>void run(()=>new CodesoftPrinterAdapter(terminal).status())}>ตรวจสอบ Codesoft USB</button><button className="secondary" disabled={busy} onClick={()=>void run(async()=>{await forgetCodesoft(terminal.id);return 'ยกเลิกการผูก Codesoft กับเบราว์เซอร์นี้แล้ว';})}>ยกเลิกการผูก Codesoft</button></div>
+  <p role="status">{status}</p><p className="muted small">บันทึกอุปกรณ์หลังปรับตัวเลือก หากเครื่องพิมพ์ไม่ปรากฏ ให้ตรวจสอบสาย USB และเปิดหน้านี้ใน Chrome</p>
+ </section>;
+}
