@@ -1,0 +1,362 @@
+{
+  "retrievedAt": "2026-10-09T00:10:46.653Z",
+  "note": "Original brand/product photos. Candidate images are excluded from the import until their variant is confirmed.",
+  "products": [
+    {
+      "sku": "SEED-NESTLE-001",
+      "name": "เอสกี้มิสไซส์",
+      "sourceName": "เอสกี้มิสไซส์",
+      "matchedProduct": "Eski Power Missile",
+      "sourcePage": "https://www.lotuss.com/en/product/70586276",
+      "imageUrl": "https://o2o-static.lotuss.com/products/86593/70586276.jpg",
+      "status": "matched",
+      "asset": "/nestle-ice-cream/seed-nestle-001.webp",
+      "sha256": "dd70a10ce096f7d79feeba7b19bd21ffe17deefcf5266361f55caa974c48db20",
+      "previousSha256": [
+        "274732255ff879c160c7ff77fc3b5dc873a7dd795deafca94c0eefb1eda9b5c5"
+      ]
+    },
+    {
+      "sku": "SEED-NESTLE-002",
+      "name": "เอสกี้แพนด้า",
+      "sourceName": "เอสกี้แพนด้า",
+      "matchedProduct": "Eski Panda",
+      "sourcePage": "https://www.bigc.co.th/product/nestle-eskimo-panda-ice-cream-60-g.12474773",
+      "imageUrl": "https://st.bigc-cs.com/public/media/catalog/product/07/88/8850125073807/8850125073807_1-20260330160723-.jpg",
+      "status": "matched",
+      "asset": "/nestle-ice-cream/seed-nestle-002.webp",
+      "sha256": "f86421aa840e5ac1c2baf1ac1cd1a4891d77f4a00396dd6158f4fc51678d0c5e",
+      "previousSha256": [
+        "119cdf7a4a61d8b2cab009d5e0a3aafdbb2c895419b40213d3422856493a1490"
+      ]
+    },
+    {
+      "sku": "SEED-NESTLE-003",
+      "name": "เอสกิโม เทอร์โบ",
+      "sourceName": "เอสกี้เทอร์โบ",
+      "matchedProduct": "Eskimo Extra Turbo 50g",
+      "sourcePage": "https://napamarket.azurewebsites.net/Product/ProductDetail?ProductId=111257",
+      "imageUrl": "https://napamarket.azurewebsites.net/Images/Products/111257.webp",
+      "status": "matched",
+      "asset": "/nestle-ice-cream/seed-nestle-003.webp",
+      "sha256": "8dddecfd067158a4eebf01eb2ad5c2599b4b134b09336f4976991302491c9643",
+      "previousSha256": [
+        "ac51d49efb21d77c91e7acc56ebf4c9d87e1d0c10909f16df6dd150a8bbde7d1"
+      ]
+    },
+    {
+      "sku": "SEED-NESTLE-004",
+      "name": "เอสกี้สตอวานิลา",
+      "sourceName": "เอสกี้สตอวานิลา",
+      "matchedProduct": "Eski Vanilla Strawberry",
+      "sourcePage": "https://www.bigc.co.th/product/nestle-eskumo-vanilla-strawberry-55-g-8850453081901.63710",
+      "imageUrl": "https://st.bigc-cs.com/public/media/catalog/product/01/88/8850453081901/8850453081901_1-20260330171706-.jpg",
+      "status": "matched",
+      "asset": "/nestle-ice-cream/seed-nestle-004.webp",
+      "sha256": "cde265be8ec9714bc7187dea91652ffb0efbd4f544bfd5bedccdf3907e37553b",
+      "previousSha256": [
+        "535af8db75436a1730d0f4d51bfebfbabec217b82501692adb981ef4fa6d632e"
+      ]
+    },
+    {
+      "sku": "SEED-NESTLE-005",
+      "name": "เอสกี้ผีเสื้อ",
+      "sourceName": "เอสกี้ผีเสื้อ",
+      "matchedProduct": "Eski Butterfly",
+      "sourcePage": "https://www.bigc.co.th/product/nestle-eski-butterfly-80-g.11636870",
+      "imageUrl": "https://st.bigc-cs.com/public/media/catalog/product/50/88/8850453018150/8850453018150_1-20260330155751-.jpg",
+      "status": "matched",
+      "asset": "/nestle-ice-cream/seed-nestle-005.webp",
+      "sha256": "6797015ecf48f651de9c3393dee730412abf290b47ba017a6da3918829e58520",
+      "previousSha256": [
+        "18a00dabb1c344e05a67173b2b915e65192ce9a1ed9e0b9dab2698b31d268edc"
+      ]
+    },
+    {
+      "sku": "SEED-NESTLE-006",
+      "name": "เอสกี้แตงโม",
+      "sourceName": "เอสกี้แตงโม",
+      "matchedProduct": "Eski Watermelon",
+      "sourcePage": "https://www.halalthai.or.th/en/product/detail/549158",
+      "imageUrl": "https://www.halalthai.or.th/storages/products/549158.jpg",
+      "status": "matched",
+      "asset": "/nestle-ice-cream/seed-nestle-006.webp",
+      "sha256": "06551aad6288e707f2c21a99dcf142d74ff44a8e0765416ad06121dec0d43ea3",
+      "previousSha256": [
+        "1ab21803029b66dd0ac5c6804ee0163de7eb8e0a9a4293808be433043bfaeb13"
+      ]
+    },
+    {
+      "sku": "SEED-NESTLE-007",
+      "name": "โอริโอ้แซนวิช มินิ",
+      "sourceName": "โอริโอ้แซนวิช มินิ",
+      "matchedProduct": "Oreo Mini Sandwich",
+      "sourcePage": "https://www.bigc.co.th/product/nestle-mini-oreo-ice-cream-38-g-x-5-units.13715268",
+      "imageUrl": "https://st.bigc-cs.com/public/media/catalog/product/21/88/8850124019721/8850124019721_1-20260420105253-.jpg",
+      "status": "matched",
+      "asset": "/nestle-ice-cream/seed-nestle-007.webp",
+      "note": "Multipack of the same mini sandwich product.",
+      "sha256": "c4c1bec2d760439a204b19c5170b5fdaed84e83a3c225ec68d235db31bc6844a",
+      "previousSha256": [
+        "f8bea8279d341720246b2f36e905cb7720b0533dfce0784f4cf3fd25aa15090f"
+      ]
+    },
+    {
+      "sku": "SEED-NESTLE-008",
+      "name": "โอริโอ้แท่ง",
+      "sourceName": "โอริโอ้แท่ง",
+      "matchedProduct": "Oreo Stick",
+      "sourcePage": "https://lsplace.com.vn/products/nestle-kem-que-vi-oreo-so-co-la?view=en",
+      "imageUrl": "https://product.hstatic.net/200000438877/product/nestle-kem-que-vi-oreo-so-co-la_429a2b2a54194ac7a338372268e32e6b.jpg",
+      "status": "matched",
+      "asset": "/nestle-ice-cream/seed-nestle-008.webp",
+      "sha256": "79163f6bf5ecdce22c7b182c3137b412f87d3f1229b947d4a0828a8006491574",
+      "previousSha256": [
+        "6d8f8ccb7cbd1c3aa591da6da2e3f992620426555e744646024204575ffbf727"
+      ]
+    },
+    {
+      "sku": "SEED-NESTLE-009",
+      "name": "โคนวานิลา",
+      "sourceName": "โคนวานิลา",
+      "matchedProduct": "Extreme Vanilla Cone",
+      "sourcePage": "https://vb.com/museum/",
+      "imageUrl": "https://vb.com/museum/nestle-extreme-cone.jpg",
+      "status": "matched",
+      "asset": "/nestle-ice-cream/seed-nestle-009.webp",
+      "note": "Representative original Extreme Vanilla cone packaging; current Thai package design may differ.",
+      "sha256": "f5ce932002d9dfa50fd4b6ba907dbbc070e59749be756c2f2792c5314d3994a8",
+      "previousSha256": [
+        "8bdde85afaf746cbf8e4c12c7b24583c20909edf2679442adb0f958d70dfc332"
+      ]
+    },
+    {
+      "sku": "SEED-NESTLE-010",
+      "name": "โคนช็อคโกแลต",
+      "sourceName": "โคนช็อคโกแลต",
+      "matchedProduct": "Extreme Dark Chocolate Brownie Cone",
+      "sourcePage": "https://www.lotuss.com/th/product/50847575",
+      "imageUrl": "https://o2o-static.lotuss.com/products/86593/50847575.jpg",
+      "status": "matched",
+      "asset": "/nestle-ice-cream/seed-nestle-010.webp",
+      "sha256": "d7385536957e30702c4a6d54c760c16f555827352686ac36e799639155a83a2b",
+      "note": "Nestlé Extreme cone family and stated flavour matched; size/sub-variant not provided in workbook.",
+      "previousSha256": [
+        "ddc6b48570ed140a5157b6f771ced7f3578794e677282cd1e49d9af0b965dd8f"
+      ]
+    },
+    {
+      "sku": "SEED-NESTLE-011",
+      "name": "โคนสตอเบอร์รี่",
+      "sourceName": "โคนสตอเบอร์รี่",
+      "matchedProduct": "Extreme Strawberry Sundae Cone",
+      "sourcePage": "https://www.lotuss.com/en/smartx/product/75680010",
+      "imageUrl": "https://o2o-static.lotuss.com/products/86593/75680010.jpg",
+      "status": "matched",
+      "asset": "/nestle-ice-cream/seed-nestle-011.webp",
+      "sha256": "8b3b1675ea808b55861222330a1e6f9a1efa3ffe01abd40252c03c80c02028b6",
+      "note": "Nestlé Extreme cone family and stated flavour matched; size/sub-variant not provided in workbook.",
+      "previousSha256": [
+        "d842bae0226b64b4c63d1530acc3f53451c957e430040353aaceaa1f9e5942da"
+      ]
+    },
+    {
+      "sku": "SEED-NESTLE-012",
+      "name": "องุ่นเคียวโฮ",
+      "sourceName": "องุ่นเคียวโฮ",
+      "matchedProduct": "La Frutta Jolly Freeze Kyoho Grape",
+      "sourcePage": "https://shopee.co.th/product/1752464369/48109452380",
+      "imageUrl": "https://down-th.img.susercontent.com/file/sg-11134201-820od-mnfmnxssc4xs3b",
+      "status": "matched",
+      "asset": "/nestle-ice-cream/seed-nestle-012.webp",
+      "sha256": "40f031dc4c4ffc0e65c68958fb74c3c72a914dea0a39821710d2c299b773062a",
+      "previousSha256": [
+        "979ae0b78de0366d8c2ed67cf2d598cafe8e46a692830d5a6f7b9b679a5c9d4c"
+      ]
+    },
+    {
+      "sku": "SEED-NESTLE-013",
+      "name": "โจลี่ลิ้นจี่",
+      "sourceName": "โจลี่ลิ้นจี่",
+      "matchedProduct": "La Frutta Jolly Lychee Yoghurt",
+      "sourcePage": "https://www.lotuss.com/en/product/74552643",
+      "imageUrl": "https://o2o-static.lotuss.com/products/86593/74552643.jpg",
+      "status": "matched",
+      "asset": "/nestle-ice-cream/seed-nestle-013.webp",
+      "sha256": "51dac1cae0dd345ff28f1835b9773a91a499641763be6a122789488306b746de",
+      "previousSha256": [
+        "c42669ab4125b7f4b881fb535f23eaaeeda549ea8fe0f1ba77535822b150c6e2"
+      ]
+    },
+    {
+      "sku": "SEED-NESTLE-014",
+      "name": "ช็อคป๊อปช็อคโกแลต",
+      "sourceName": "ช็อคป๊อปช็อคโกแลต",
+      "matchedProduct": "Super Choc Pop Chocolate",
+      "sourcePage": "https://www.wongnai.com/restaurants/611649lb/photos/03937eed8df5491a80bbdaa069db305f",
+      "imageUrl": "https://img.wongnai.com/p/400x0/2021/10/15/03937eed8df5491a80bbdaa069db305f.jpg",
+      "status": "matched",
+      "asset": "/nestle-ice-cream/seed-nestle-014.webp",
+      "sha256": "c7ea963060fd4fb224f59f949fb7ce5a140657a3db9101f5144299cb75ad7109",
+      "previousSha256": [
+        "6175684d7c712472143ccfc90738cbc2b20326b6cded0a98da9b38cdcbfb3318"
+      ]
+    },
+    {
+      "sku": "SEED-NESTLE-015",
+      "name": "ช็อคป๊อปวานิลา",
+      "sourceName": "ช็อคป๊อปวานิลา",
+      "matchedProduct": "Super Choc Pop Vanilla",
+      "sourcePage": "https://www.bigc.co.th/product/nestle-super-choc-pop-vanilla-flavor-55-g-8850453001633.63704",
+      "imageUrl": "https://st.bigc-cs.com/public/media/catalog/product/33/88/8850453001633/8850453001633_1-20260330171703-.jpg",
+      "status": "matched",
+      "asset": "/nestle-ice-cream/seed-nestle-015.webp",
+      "sha256": "81c40e87bc6adec74c1321b9b7222961505517b061e79d564c8d4e24e18ca83e",
+      "previousSha256": [
+        "695e4fa7b24e3b10dd8c407eab10a672d652b0622c34311f3460c8a06876abc3"
+      ]
+    },
+    {
+      "sku": "SEED-NESTLE-016",
+      "name": "เอ็กซ์ตรีม ป๊อป คูลมิ้นต์",
+      "sourceName": "ป๊อปมิ้น",
+      "matchedProduct": "Extreme Pop Cool Mint",
+      "sourcePage": "https://www.lemon8-app.com/@chor.chuanuan2/7629602352831513096?region=th",
+      "imageUrl": "https://p16-lemon8-sign-sg.tiktokcdn.com/tos-alisg-v-a3e477-sg/oUyDFCI0c99AYDthEAA3EfE8Qy43pIE0kBetgj~tplv-sdweummd6v-wap-logo-v1:QGNob3IuY2h1YW51YW4y:1080:0.webp?lk3s=66c60501&source=wap_large_logo_image&x-expires=1794117600&x-signature=dW3mQS5Zjbxng%2FDrYS5GD89lE9k%3D",
+      "status": "matched",
+      "asset": "/nestle-ice-cream/seed-nestle-016.webp",
+      "note": "Review photograph showing Cool Mint packaging; source credit retained.",
+      "sha256": "f98d7f90cb7ce77bae144d3f029c0b4ba63c746ec074dda53c9207e1e0ab2130",
+      "previousSha256": [
+        "feaf5bab4118cbbe133c9a7b1b149a8861dcecfc81970b3bda4c0180d9b0ea70"
+      ]
+    },
+    {
+      "sku": "SEED-NESTLE-017",
+      "name": "Nestlé Extreme Nama ดาร์กช็อกโกแลต",
+      "sourceName": "นามะ",
+      "matchedProduct": "Extreme Nama Dark Chocolate",
+      "sourcePage": "https://www.halalthai.or.th/en/product/detail/624529",
+      "imageUrl": "https://www.halalthai.or.th/storages/products/624529.jpg",
+      "status": "matched",
+      "asset": "/nestle-ice-cream/seed-nestle-017.webp",
+      "sha256": "de2e2a2e24f77c025e97397de3cb903c9da26eab1e24491092d82557d4dd9a8e",
+      "previousSha256": [
+        "4805729fc925ce0cb60a08695a608e63133349d1b5df7d5ea0a12326ef16ae07"
+      ]
+    },
+    {
+      "sku": "SEED-NESTLE-018",
+      "name": "ไมโลเข็มข้นแท่ง",
+      "sourceName": "ไมโลเข็มข้นแท่ง",
+      "matchedProduct": "Milo Intense Stick",
+      "sourcePage": "https://www.bigc.co.th/en/product/nestle-milo-intense-stick-50-g.5356465",
+      "imageUrl": "https://st.bigc-cs.com/public/media/catalog/product/14/88/8850124046314/8850124046314_1-20260330152836-.jpg",
+      "status": "matched",
+      "asset": "/nestle-ice-cream/seed-nestle-018.webp",
+      "sha256": "95ba8e2a497f69743f99284ccaedc9fc0ac37659dd3b41b363a29a1381624c83",
+      "previousSha256": [
+        "26dc69576417be27e385f9d05fb2ddff359e98649aab7d1333ba4672c708b629"
+      ]
+    },
+    {
+      "sku": "SEED-NESTLE-019",
+      "name": "ไมโลแท่ง",
+      "sourceName": "ไมโลแท่ง",
+      "matchedProduct": "Milo Chocolate Malt Stick",
+      "sourcePage": "https://www.lotuss.com/th/product/26361728",
+      "imageUrl": "https://o2o-static.lotuss.com/products/86593/26361728.jpg",
+      "status": "matched",
+      "asset": "/nestle-ice-cream/seed-nestle-019.webp",
+      "sha256": "f929f91d9d9849dc1d34ef0b1208cfc60aae13b0f200e93bca5dc3d567164afe",
+      "previousSha256": [
+        "c5d2feb342c672ce584bd677a1e63ba6b8bf0de73549cd11382caa7b850435cb"
+      ]
+    },
+    {
+      "sku": "SEED-NESTLE-020",
+      "name": "ไมโลแซนวิช",
+      "sourceName": "ไมโลแซนวิช",
+      "matchedProduct": "Milo Sandwich",
+      "sourcePage": "https://shopping.lotuss.com/en/smartx/product/75735814",
+      "imageUrl": "https://o2o-static.lotuss.com/products/86593/75735814.jpg",
+      "status": "matched",
+      "asset": "/nestle-ice-cream/seed-nestle-020.webp",
+      "sha256": "d3777455af02671193e7862ff42fc214f0b4253c5ca0b1e503b6c0edd67b4e2e",
+      "previousSha256": [
+        "172cd7b28288eb6c28aafdff6396fe404af49ab653acd1c409443fd8029e851f"
+      ]
+    },
+    {
+      "sku": "SEED-NESTLE-021",
+      "name": "ไมโลแม็กม่า",
+      "sourceName": "ไมโลแม็กม่า",
+      "matchedProduct": "Milo Magma",
+      "sourcePage": "https://www.lotuss.com/en/product/72192011",
+      "imageUrl": "https://o2o-static.lotuss.com/products/86593/72192011.jpg",
+      "status": "matched",
+      "asset": "/nestle-ice-cream/seed-nestle-021.webp",
+      "sha256": "efde61b80d078db4a575b306711ae58b88fd12389c65f7e150f7dfb61424df47",
+      "previousSha256": [
+        "1b8fd22f6aaae48d8bc9557267383046f825a6e697c634071564c47a0c3996f6"
+      ]
+    },
+    {
+      "sku": "SEED-NESTLE-022",
+      "name": "คิทแคทมัจฉะ",
+      "sourceName": "คิทแคทมัจฉะ",
+      "matchedProduct": "KitKat Matcha Stick",
+      "sourcePage": "https://www.bigc.co.th/product/nestle-kit-kat-matcha-ice-cream-61-g.13715266",
+      "imageUrl": "https://st.bigc-cs.com/public/media/catalog/product/59/88/8850125006959/8850125006959_1-20260420102542-.jpg",
+      "status": "matched",
+      "asset": "/nestle-ice-cream/seed-nestle-022.webp",
+      "sha256": "3115232d9c10694bbfb19eb422d79382ddcb5f1719ae3c4749a57c141df3b547",
+      "previousSha256": [
+        "74b0e5c1617c5d7308e8a1d4d311add1964181b36eb15ff27b4c5e95c7db37ba"
+      ]
+    },
+    {
+      "sku": "SEED-NESTLE-023",
+      "name": "คิทแคทแท่ง",
+      "sourceName": "คิทแคทแท่ง",
+      "matchedProduct": "KitKat Stick 65g",
+      "sourcePage": "https://www.lotuss.com/th/product/nestl-kitkat-ice-cream-65g-50974959",
+      "imageUrl": "https://o2o-static.lotuss.com/products/86593/50974959.jpg",
+      "status": "matched",
+      "asset": "/nestle-ice-cream/seed-nestle-023.webp",
+      "sha256": "00a31fb8923630c6db521e3d6f5fcae1fec2c8243b7ce31f0da734385bb1395e",
+      "previousSha256": [
+        "47eccfbd10ac0094c518a221f3bee5716a8fd1a340936792e8d65325d44ebef6"
+      ]
+    },
+    {
+      "sku": "SEED-NESTLE-024",
+      "name": "คิทแคทมินิ",
+      "sourceName": "คิทแคทมินิ",
+      "matchedProduct": "KitKat Mini",
+      "sourcePage": "https://www.waltermartdelivery.com.ph/shop/nestle_kitkat_mini_ice_cream_stick_60ml/p/1764405684715448168",
+      "imageUrl": "https://images.freshop.ncrcloud.com/1764405684715448168/193efee5e29f70581a03e02556f427a5_large.png",
+      "status": "matched",
+      "asset": "/nestle-ice-cream/seed-nestle-024.webp",
+      "note": "Chocolate mini stick; Philippine wrapper (representative packaging).",
+      "sha256": "bce3746aec10f9240217979820029d6f87eda37616d10a0fa0ba555c6e9a5e02",
+      "previousSha256": [
+        "4005930940c53dfa0ad0df18f704fa7a0b4c52a0808c736a9c9c299260b839bb"
+      ]
+    },
+    {
+      "sku": "SEED-NESTLE-025",
+      "name": "คิทแคทไมโลแท่ง",
+      "sourceName": "คิทแคทไมโลแท่ง",
+      "matchedProduct": "KitKat Milo Stick",
+      "sourcePage": "https://www.lotuss.com/en/product/75710258",
+      "imageUrl": "https://o2o-static.lotuss.com/products/86593/75710258.jpg",
+      "status": "matched",
+      "asset": "/nestle-ice-cream/seed-nestle-025.webp",
+      "sha256": "57522a086888c7fd011101e8608fe49ccfffbc58e11a348239abbf8a2b00294a",
+      "previousSha256": [
+        "6a3e312c3ed8f74f2654aeadff41c9128f869c70db062930296127022981b6b5"
+      ]
+    }
+  ]
+}

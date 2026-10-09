@@ -1,0 +1,216 @@
+{
+  "version": 1,
+  "currency": "THB",
+  "priceUnit": "satang",
+  "category": {
+    "id": "menu-nestle-ice-cream",
+    "name": "ไอศกรีม เนสเล่",
+    "icon": "IceCreamBowl",
+    "color": "#d94678",
+    "shortcut": "F4",
+    "sort": 3,
+    "file": "ไอศกรีม เนสเล่.xlsx",
+    "products": [
+      {
+        "sku": "SEED-NESTLE-001",
+        "name": "เอสกี้มิสไซส์",
+        "sourceName": "เอสกี้มิสไซส์",
+        "price": 1000,
+        "sourceRow": 2,
+        "image": "/nestle-ice-cream/seed-nestle-001.webp"
+      },
+      {
+        "sku": "SEED-NESTLE-002",
+        "name": "เอสกี้แพนด้า",
+        "sourceName": "เอสกี้แพนด้า",
+        "price": 1000,
+        "sourceRow": 3,
+        "image": "/nestle-ice-cream/seed-nestle-002.webp"
+      },
+      {
+        "sku": "SEED-NESTLE-003",
+        "name": "เอสกิโม เทอร์โบ",
+        "sourceName": "เอสกี้เทอร์โบ",
+        "price": 1000,
+        "sourceRow": 4,
+        "image": "/nestle-ice-cream/seed-nestle-003.webp"
+      },
+      {
+        "sku": "SEED-NESTLE-004",
+        "name": "เอสกี้สตอวานิลา",
+        "sourceName": "เอสกี้สตอวานิลา",
+        "price": 1000,
+        "sourceRow": 5,
+        "image": "/nestle-ice-cream/seed-nestle-004.webp"
+      },
+      {
+        "sku": "SEED-NESTLE-005",
+        "name": "เอสกี้ผีเสื้อ",
+        "sourceName": "เอสกี้ผีเสื้อ",
+        "price": 1000,
+        "sourceRow": 6,
+        "image": "/nestle-ice-cream/seed-nestle-005.webp"
+      },
+      {
+        "sku": "SEED-NESTLE-006",
+        "name": "เอสกี้แตงโม",
+        "sourceName": "เอสกี้แตงโม",
+        "price": 1000,
+        "sourceRow": 7,
+        "image": "/nestle-ice-cream/seed-nestle-006.webp"
+      },
+      {
+        "sku": "SEED-NESTLE-007",
+        "name": "โอริโอ้แซนวิช มินิ",
+        "sourceName": "โอริโอ้แซนวิช มินิ",
+        "price": 2500,
+        "sourceRow": 8,
+        "image": "/nestle-ice-cream/seed-nestle-007.webp"
+      },
+      {
+        "sku": "SEED-NESTLE-008",
+        "name": "โอริโอ้แท่ง",
+        "sourceName": "โอริโอ้แท่ง",
+        "price": 4000,
+        "sourceRow": 9,
+        "image": "/nestle-ice-cream/seed-nestle-008.webp"
+      },
+      {
+        "sku": "SEED-NESTLE-009",
+        "name": "โคนวานิลา",
+        "sourceName": "โคนวานิลา",
+        "price": 2500,
+        "sourceRow": 10,
+        "image": "/nestle-ice-cream/seed-nestle-009.webp"
+      },
+      {
+        "sku": "SEED-NESTLE-010",
+        "name": "โคนช็อคโกแลต",
+        "sourceName": "โคนช็อคโกแลต",
+        "price": 2500,
+        "sourceRow": 11,
+        "image": "/nestle-ice-cream/seed-nestle-010.webp"
+      },
+      {
+        "sku": "SEED-NESTLE-011",
+        "name": "โคนสตอเบอร์รี่",
+        "sourceName": "โคนสตอเบอร์รี่",
+        "price": 2500,
+        "sourceRow": 12,
+        "image": "/nestle-ice-cream/seed-nestle-011.webp"
+      },
+      {
+        "sku": "SEED-NESTLE-012",
+        "name": "องุ่นเคียวโฮ",
+        "sourceName": "องุ่นเคียวโฮ",
+        "price": 1500,
+        "sourceRow": 13,
+        "image": "/nestle-ice-cream/seed-nestle-012.webp"
+      },
+      {
+        "sku": "SEED-NESTLE-013",
+        "name": "โจลี่ลิ้นจี่",
+        "sourceName": "โจลี่ลิ้นจี่",
+        "price": 1500,
+        "sourceRow": 14,
+        "image": "/nestle-ice-cream/seed-nestle-013.webp"
+      },
+      {
+        "sku": "SEED-NESTLE-014",
+        "name": "ช็อคป๊อปช็อคโกแลต",
+        "sourceName": "ช็อคป๊อปช็อคโกแลต",
+        "price": 1500,
+        "sourceRow": 15,
+        "image": "/nestle-ice-cream/seed-nestle-014.webp"
+      },
+      {
+        "sku": "SEED-NESTLE-015",
+        "name": "ช็อคป๊อปวานิลา",
+        "sourceName": "ช็อคป๊อปวานิลา",
+        "price": 1500,
+        "sourceRow": 16,
+        "image": "/nestle-ice-cream/seed-nestle-015.webp"
+      },
+      {
+        "sku": "SEED-NESTLE-016",
+        "name": "เอ็กซ์ตรีม ป๊อป คูลมิ้นต์",
+        "sourceName": "ป๊อปมิ้น",
+        "price": 2500,
+        "sourceRow": 17,
+        "image": "/nestle-ice-cream/seed-nestle-016.webp"
+      },
+      {
+        "sku": "SEED-NESTLE-017",
+        "name": "Nestlé Extreme Nama ดาร์กช็อกโกแลต",
+        "sourceName": "นามะ",
+        "price": 3000,
+        "sourceRow": 18,
+        "image": "/nestle-ice-cream/seed-nestle-017.webp"
+      },
+      {
+        "sku": "SEED-NESTLE-018",
+        "name": "ไมโลเข็มข้นแท่ง",
+        "sourceName": "ไมโลเข็มข้นแท่ง",
+        "price": 2000,
+        "sourceRow": 19,
+        "image": "/nestle-ice-cream/seed-nestle-018.webp"
+      },
+      {
+        "sku": "SEED-NESTLE-019",
+        "name": "ไมโลแท่ง",
+        "sourceName": "ไมโลแท่ง",
+        "price": 1000,
+        "sourceRow": 20,
+        "image": "/nestle-ice-cream/seed-nestle-019.webp"
+      },
+      {
+        "sku": "SEED-NESTLE-020",
+        "name": "ไมโลแซนวิช",
+        "sourceName": "ไมโลแซนวิช",
+        "price": 2500,
+        "sourceRow": 21,
+        "image": "/nestle-ice-cream/seed-nestle-020.webp"
+      },
+      {
+        "sku": "SEED-NESTLE-021",
+        "name": "ไมโลแม็กม่า",
+        "sourceName": "ไมโลแม็กม่า",
+        "price": 1500,
+        "sourceRow": 22,
+        "image": "/nestle-ice-cream/seed-nestle-021.webp"
+      },
+      {
+        "sku": "SEED-NESTLE-022",
+        "name": "คิทแคทมัจฉะ",
+        "sourceName": "คิทแคทมัจฉะ",
+        "price": 5000,
+        "sourceRow": 23,
+        "image": "/nestle-ice-cream/seed-nestle-022.webp"
+      },
+      {
+        "sku": "SEED-NESTLE-023",
+        "name": "คิทแคทแท่ง",
+        "sourceName": "คิทแคทแท่ง",
+        "price": 4000,
+        "sourceRow": 24,
+        "image": "/nestle-ice-cream/seed-nestle-023.webp"
+      },
+      {
+        "sku": "SEED-NESTLE-024",
+        "name": "คิทแคทมินิ",
+        "sourceName": "คิทแคทมินิ",
+        "price": 2500,
+        "sourceRow": 25,
+        "image": "/nestle-ice-cream/seed-nestle-024.webp"
+      },
+      {
+        "sku": "SEED-NESTLE-025",
+        "name": "คิทแคทไมโลแท่ง",
+        "sourceName": "คิทแคทไมโลแท่ง",
+        "price": 4000,
+        "sourceRow": 26,
+        "image": "/nestle-ice-cream/seed-nestle-025.webp"
+      }
+    ]
+  }
+}

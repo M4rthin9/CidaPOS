@@ -11,6 +11,7 @@
     "db:generate": "prisma generate",
     "db:migrate": "node scripts/cloudflare-command.mjs d1 migrations apply cida-pos --local",
     "db:seed": "tsx scripts/seed-d1.ts",
+    "db:import:nestle": "tsx scripts/import-nestle-menu.ts",
     "test:integration": "node scripts/test-d1.mjs",
     "test:browser": "playwright test",
     "db:migrate:remote": "node scripts/cloudflare-command.mjs d1 migrations apply cida-pos --remote",

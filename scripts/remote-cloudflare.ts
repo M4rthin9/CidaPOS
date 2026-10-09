@@ -14,7 +14,7 @@ export function remoteCloudflare(){
  const url=(key:string)=>base+key.split('/').map(encodeURIComponent).join('/');
  const FILES={
   put:async(key:string,body:any,options:any={})=>{const requestHeaders:Record<string,string>={'Content-Type':options.httpMetadata?.contentType??'application/octet-stream'};for(const [name,value] of Object.entries(options.customMetadata??{}))requestHeaders['x-amz-meta-'+name]=String(value);const response=await aws.fetch(url(key),{method:'PUT',body,headers:requestHeaders});if(!response.ok)throw new Error('R2 upload failed ('+response.status+')');return {key};},
-  get:async(key:string)=>{const response=await aws.fetch(url(key));if(response.status===404)return null;if(!response.ok)throw new Error('R2 read failed ('+response.status+')');return {text:()=>response.text()};},
+  get:async(key:string)=>{const response=await aws.fetch(url(key));if(response.status===404)return null;if(!response.ok)throw new Error('R2 read failed ('+response.status+')');return {text:()=>response.text(),arrayBuffer:()=>response.arrayBuffer()};},
   delete:async(key:string)=>{const response=await aws.fetch(url(key),{method:'DELETE'});if(!response.ok)throw new Error('R2 delete failed ('+response.status+')');}
  };
  return {connection,FILES,dispose:async()=>{}};
