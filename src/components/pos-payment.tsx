@@ -1,0 +1,13 @@
+'use client';
+import {ChevronRight,Wallet,Banknote,CheckCircle2} from 'lucide-react';
+import {money} from '@/lib/domain';
+import {Modal} from './ui';
+type Props={total:number;itemCount:number;method:string;received:string;tender:number;tenderValid:boolean;reference:string;busy:boolean;pending:boolean;online:boolean;discountValid:boolean;error:string;onMethod:(value:string)=>void;onReceived:(value:string)=>void;onReference:(value:string)=>void;onPay:()=>void;onClose:()=>void};
+export default function PosPayment(p:Props){const locked=p.busy||p.pending,shortfall=p.total-p.tender;
+ return <Modal title="รับชำระเงิน" onClose={p.onClose}><div className="payment-total"><span>ยอดที่ต้องชำระ · {p.itemCount} ชิ้น</span><strong>฿{money(p.total)}</strong></div>
+ <div className="payment-methods" role="group" aria-label="วิธีชำระเงิน">{[['CASH','เงินสด'],['QR','QR / โอน'],['OTHER','อื่น ๆ']].map(([value,label])=><button key={value} disabled={locked} aria-pressed={p.method===value} className={p.method===value?'selected':''} onClick={()=>p.onMethod(value)}>{value==='CASH'?<Banknote size={18}/>:<Wallet size={18}/>} {label}</button>)}</div>
+ {p.method==='CASH'?<><label>รับเงิน (บาท)<input className="tender-input" aria-describedby="cash-feedback" inputMode="decimal" type="number" min="0" step="0.01" autoFocus value={p.received} disabled={locked} onFocus={e=>e.currentTarget.select()} onChange={e=>p.onReceived(e.target.value)}/></label>
+ <div className="quick-cash">{[20,50,100,200,500,1000].map(value=><button key={value} disabled={locked||value*100<p.total} aria-pressed={p.tenderValid&&p.tender===value*100} onClick={()=>p.onReceived(String(value))}>{value}</button>)}<button disabled={locked} aria-pressed={p.tenderValid&&p.tender===p.total} onClick={()=>p.onReceived((p.total/100).toFixed(2))}>พอดี</button></div>
+ <div id="cash-feedback" className={p.tenderValid&&shortfall<=0?'change':'change cash-shortfall'} aria-live="polite"><span>{!p.tenderValid?'ระบุจำนวนเงินที่รับ':shortfall>0?'ยังขาดอีก':'เงินทอน'}</span><strong>{!p.tenderValid?'—':'฿'+money(Math.abs(shortfall))}</strong></div></>:<><p className="info"><CheckCircle2 size={18}/> ตรวจสอบว่าได้รับเงินแล้วก่อนยืนยัน</p><label>เลขอ้างอิงการชำระ<input value={p.reference} disabled={locked} onChange={e=>p.onReference(e.target.value)}/></label></>}
+ {p.error&&<div className="error">{p.error}</div>}<button className="primary wide payment-confirm" disabled={p.busy||!p.online||(!p.pending&&((p.method==='CASH'&&(!p.tenderValid||shortfall>0))||!p.discountValid))} onClick={p.onPay}>{p.busy?'กำลังบันทึก…':p.pending?'ตรวจสอบการชำระเดิม':'รับชำระเงิน'}<ChevronRight size={20}/></button><p className="muted small">ตรวจสอบยอดและเงินรับก่อนยืนยัน · Enter ในช่องจำนวนเงินเพื่อชำระ</p></Modal>;
+}
