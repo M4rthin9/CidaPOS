@@ -7,6 +7,7 @@ import { defaultSettings, settingsSchema, type Settings } from './config';
 import { businessDate, boundaries, calculate, validatePayment, summarize, allocate } from './domain';
 import type { Checkout } from './validation';
 import {reportDates,type DailyTrend} from './reporting';
+import {terminalSellsCategory} from './terminal-categories';
 export const json=(value:unknown)=>JSON.parse(JSON.stringify(value)) as Prisma.InputJsonValue;
 export type Tx=Prisma.TransactionClient;
 export const orderInclude={items:true,payments:true,adjustments:true,cashier:{select:{id:true,name:true}},terminal:true} as const;
@@ -41,6 +42,7 @@ export async function checkout(input:Checkout,user:Actor){
     const items=[];
     const products=await tx.product.findMany({where:{id:{in:input.items.map(line=>line.productId)}},include:{category:true,modifiers:true}});
     for(const line of input.items){const product=products.find(product=>product.id===line.productId);if(!product?.active||!product.available||!product.category.active)throw new AppError('สินค้าบางรายการไม่พร้อมขาย กรุณาตรวจสอบบิล');
+      if(!terminalSellsCategory(terminal.config,product.categoryId))throw new AppError(`หมวด ${product.category.name} ไม่ได้เปิดขายใน ${terminal.name} กรุณานำสินค้าออกจากบิล`);
       const ids=[...new Set(line.modifiers)];if(ids.length!==line.modifiers.length)throw new AppError('ตัวเลือกสินค้าซ้ำ');
       const mods=ids.map(id=>product.modifiers.find(m=>m.id===id&&m.active));if(mods.some(m=>!m))throw new AppError('ตัวเลือกสินค้าไม่พร้อมใช้งาน');
       const unitPrice=product.price+mods.reduce((s,m)=>s+(m?.price??0),0);
@@ -48,9 +50,10 @@ export async function checkout(input:Checkout,user:Actor){
     }
     const totals=calculate(items.map(i=>({price:i.unitPrice,quantity:i.quantity})),input.discount);
     const payments=validatePayment(totals.total,input.payments);
+    const printBill=input.printBill??config.autoPrint;
     const counter=(await tx.businessDay.update({where:{date},data:{counter:{increment:1}}})).counter;
-    const order=await tx.order.create({data:{key:input.key,requestHash,number:`POS-${date.replaceAll('-','')}-${String(counter).padStart(6,'0')}`,queue:`${config.queuePrefix}${String(counter).padStart(4,'0')}`,businessDate:date,cashierId:user.id,terminalId:input.terminalId,subtotal:totals.subtotal,discount:totals.discount,total:totals.total,note:input.note,receiptConfig:json(config),items:{create:items.map((i,n)=>({...i,discount:totals.lines[n].discount,lineTotal:totals.lines[n].total}))},payments:{create:payments}},include:orderInclude});
-    const jobs=config.autoPrint?await makeJobs(tx,order,user,config):[];
+    const order=await tx.order.create({data:{key:input.key,requestHash,number:`POS-${date.replaceAll('-','')}-${String(counter).padStart(6,'0')}`,queue:`${config.queuePrefix}${String(counter).padStart(4,'0')}`,businessDate:date,cashierId:user.id,terminalId:input.terminalId,subtotal:totals.subtotal,discount:totals.discount,total:totals.total,note:input.note,receiptConfig:json({...config,printBill}),items:{create:items.map((i,n)=>({...i,discount:totals.lines[n].discount,lineTotal:totals.lines[n].total}))},payments:{create:payments}},include:orderInclude});
+    const jobs=printBill?await makeJobs(tx,order,user,config):[];
     await audit(tx,user,'CHECKOUT','Order',order.id,undefined,{number:order.number,total:order.total,discount:order.discount},input.note);
     if(input.discount)await audit(tx,user,'DISCOUNT','Order',order.id,undefined,{amount:input.discount});
     return {order,jobs,replayed:false};
@@ -75,7 +78,7 @@ export async function report(date:string,tx:Tx=db):Promise<{date:string;config:S
  const day=await tx.businessDay.findUnique({where:{date}}),config=day?settingsSchema.parse(day.config):await settings(tx),cuts=boundaries(date,config.opening);
  const orders=await tx.order.findMany({where:{businessDate:date,createdAt:{gte:cuts.start,lt:cuts.end}},include:orderInclude}),summary=summarize(orders);
  const categories=await tx.category.findMany({where:{active:true},orderBy:{sort:'asc'}});
- summary.categories=[...categories.map(c=>summary.categories.find(row=>row.id===c.id)??{id:c.id,name:c.name,total:0,quantity:0,discount:0}),...summary.categories.filter(row=>!categories.some(c=>c.id===row.id))];
+ summary.categories=[...categories.map(c=>summary.categories.find(row=>row.id===c.id)??{id:c.id,name:c.name,total:0,quantity:0,discount:0,products:[]}),...summary.categories.filter(row=>!categories.some(c=>c.id===row.id))];
  return {date,config,summary,day};
 }
 export async function salesTrend(date:string,count:7|30,tx:Tx=db):Promise<DailyTrend[]>{

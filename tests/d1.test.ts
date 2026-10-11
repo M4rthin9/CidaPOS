@@ -7,11 +7,13 @@ import {hash as passwordHash} from 'bcryptjs';
 import {isolatedCloudflare} from './cloudflare-fixture';
 import {db} from '../src/lib/db';
 import {useTestBindings,type CloudflareBindings} from '../src/lib/cloudflare';
-import {checkout,adjustOrder,report,settings} from '../src/lib/sales';
+import {checkout,adjustOrder,report,settings,reprint} from '../src/lib/sales';
 import {resetPreview,resetSales,resetArchive} from '../src/lib/sales-reset';
 import {putImage} from '../src/lib/storage';
 import type {Actor} from '../src/lib/auth';
 import type {Checkout} from '../src/lib/validation';
+import {terminalSchema,checkoutSchema} from '../src/lib/validation';
+import {saveTerminal} from '../src/lib/terminals';
 let cloud:Awaited<ReturnType<typeof isolatedCloudflare>>,actor:Actor,input:Checkout,queryCount=0;
 let countedDB:typeof cloud.DB;
 const password='ISOLATED-TEST-PASSWORD';
@@ -67,4 +69,78 @@ test('paper correction restores the previous selection and preserves custom sett
  const custom={...legacy,profile:{...legacy.profile,paperMm:'80' as const,width:512}};
  await db.setting.update({where:{key:'system'},data:{value:custom}});
  await cloud.DB.prepare(correction).run();assert.deepEqual(await settings(),custom);
+});
+
+test('printer migration corrects legacy iMin USB defaults and preserves other device choices',async()=>{
+ const config={printerId:'existing-printer',adapter:'imin',connection:'USB',fallbackPrinter:'codesoft',drawer:true,cutter:true,sdkPath:'/vendor/imin-printer.min.js'};
+ const choices=[config,{...config,adapter:'codesoft'},{...config,connection:'Bluetooth'},{...config,connection:'SPI',fallbackPrinter:'codesoft'},{...config,adapter:'browser'}];
+ for(const [index,value] of choices.entries())await db.terminal.create({data:{id:`PRINTER-${index}`,name:`Printer ${index}`,config:value}});
+ const migration=readFileSync('d1/migrations/0005_imin_default_printer.sql','utf8').replace(/^--.*$/gm,'');
+ for(let repeat=0;repeat<2;repeat++){
+  await cloud.DB.prepare(migration).run();
+  for(const [index,value] of choices.entries())assert.deepEqual((await db.terminal.findUniqueOrThrow({where:{id:`PRINTER-${index}`}})).config,index===0?{...value,connection:'SPI',fallbackPrinter:'browser'}:value);
+ }
+});
+
+test('POS category assignments reject cross-POS sales atomically and preserve checkout replay',async()=>{
+ const first=await db.product.findUniqueOrThrow({where:{id:input.items[0].productId}});
+ const category=await db.category.create({data:{name:'POS2 drinks'}});
+ const second=await db.product.create({data:{sku:'POS2-DRINK',name:'POS2 drink',categoryId:category.id,price:1000}});
+ const config={printerId:'mock',adapter:'mock',connection:'SPI',sdkPath:'/vendor/imin-printer.min.js',drawer:false,cutter:false,sound:false,density:'comfortable'};
+ await db.terminal.create({data:{id:'CATEGORY-POS1',name:'POS1',config:{...config,categoryIds:[first.categoryId]}}});
+ await db.terminal.create({data:{id:'CATEGORY-POS2',name:'POS2',config:{...config,categoryIds:[second.categoryId]}}});
+ const salesVersion=((await db.setting.findUnique({where:{key:'sales-version'}}))?.value??'') as string;
+ const sale=(terminalId:string,productId:string)=>({...input,key:randomUUID(),salesVersion,terminalId,items:[{...input.items[0],productId}]});
+ const request=sale('CATEGORY-POS1',first.id),paid=await checkout(request,actor);
+ await checkout(sale('CATEGORY-POS2',second.id),actor);
+ const counts=async()=>Promise.all([db.order.count(),db.payment.count(),db.printJob.count(),db.auditLog.count()]);
+ const before=await counts();
+ await assert.rejects(()=>checkout(sale('CATEGORY-POS1',second.id),actor),/ไม่ได้เปิดขายใน POS1/);
+ await assert.rejects(()=>checkout(sale('CATEGORY-POS2',first.id),actor),/ไม่ได้เปิดขายใน POS2/);
+ await assert.rejects(()=>checkout({...sale('CATEGORY-POS1',first.id),items:[{...input.items[0],productId:first.id},{...input.items[0],productId:second.id}],payments:[{method:'CASH',amount:2000,received:2000,reference:''}]},actor),/ไม่ได้เปิดขาย/);
+ assert.deepEqual(await counts(),before);
+ await db.terminal.update({where:{id:'CATEGORY-POS1'},data:{config:{...config,categoryIds:[]}}});
+ await assert.rejects(()=>checkout(sale('CATEGORY-POS1',first.id),actor),/ไม่ได้เปิดขาย/);
+ const replay=await checkout(request,actor);assert.equal(replay.order.id,paid.order.id);assert.equal(replay.replayed,true);assert.deepEqual(await counts(),before);
+ // A category can be shared; new products in an assigned category work automatically.
+ await db.terminal.update({where:{id:'CATEGORY-POS1'},data:{config:{...config,categoryIds:[first.categoryId,second.categoryId]}}});
+ await checkout(sale('CATEGORY-POS1',second.id),actor);
+ const added=await db.product.create({data:{sku:'POS2-NEW',name:'New drink',categoryId:category.id,price:1000}});
+ await checkout(sale('CATEGORY-POS2',added.id),actor);
+ // Removing the assignment restores all categories for legacy/default devices.
+ await db.terminal.update({where:{id:'CATEGORY-POS2'},data:{config}});
+ await checkout(sale('CATEGORY-POS2',first.id),actor);
+});
+
+test('saved POS category assignments persist, reject unknown IDs and audit device changes',async()=>{
+ const product=await db.product.findUniqueOrThrow({where:{id:input.items[0].productId}});
+ const data=terminalSchema.parse({id:'ASSIGNED-POS',name:'Assigned POS',location:'Test',active:true,config:{printerId:'imin',adapter:'imin',connection:'SPI',sdkPath:'/vendor/imin-printer.min.js',drawer:true,cutter:true,sound:false,density:'comfortable',categoryIds:[product.categoryId]}});
+ await saveTerminal(data,actor);
+ assert.deepEqual((await db.terminal.findUniqueOrThrow({where:{id:data.id}})).config,data.config);
+ const auditCount=await db.auditLog.count({where:{entityId:data.id,action:'DEVICE_CHANGE'}});assert.equal(auditCount,1);
+ await assert.rejects(()=>saveTerminal({...data,config:{...data.config,categoryIds:['unknown-category']}},actor),/หมวดสินค้าบางรายการไม่พบ/);
+ assert.deepEqual((await db.terminal.findUniqueOrThrow({where:{id:data.id}})).config,data.config);assert.equal(await db.auditLog.count({where:{entityId:data.id,action:'DEVICE_CHANGE'}}),auditCount);
+ assert.equal(terminalSchema.safeParse({...data,config:{...data.config,categoryIds:[product.categoryId,product.categoryId]}}).success,false);
+ await saveTerminal({...data,config:{...data.config,categoryIds:[]}},actor);
+ assert.deepEqual((await db.terminal.findUniqueOrThrow({where:{id:data.id}})).config,{...data.config,categoryIds:[]});
+ const {categoryIds:_,...all}=data.config;await saveTerminal({...data,config:all},actor);assert.deepEqual((await db.terminal.findUniqueOrThrow({where:{id:data.id}})).config,all);
+});
+
+test('per-order bill printing overrides defaults, stays durable and creates no duplicate jobs on retry',async()=>{
+ const original=await settings(),salesVersion=((await db.setting.findUnique({where:{key:'sales-version'}}))?.value??'') as string;
+ const sale=(printBill?:boolean)=>({...input,key:randomUUID(),salesVersion,...(printBill===undefined?{}:{printBill})});
+ try{
+  await db.setting.update({where:{key:'system'},data:{value:{...original,autoPrint:true}}});
+  const request=checkoutSchema.parse(sale(false));const silent=await checkout(request,actor);assert.equal(silent.jobs.length,0);assert.equal((silent.order.receiptConfig as {printBill?:boolean}).printBill,false);assert.equal(await db.payment.count({where:{orderId:silent.order.id}}),1);
+  const replay=await checkout(request,actor);assert.equal(replay.order.id,silent.order.id);assert.equal(replay.jobs.length,0);assert.equal(await db.order.count({where:{key:request.key}}),1);
+  await assert.rejects(()=>checkout({...request,printBill:true},actor),/รหัสคำขอนี้ถูกใช้กับบิลอื่น/);
+  const printed=await checkout(checkoutSchema.parse(sale(true)),actor);assert.equal(printed.jobs.length,original.copies);assert.ok(printed.jobs.every(job=>job.template==='CUSTOMER'));assert.equal((printed.order.receiptConfig as {printBill?:boolean}).printBill,true);assert.equal(printed.order.total,silent.order.total);
+  const printedReplay=await checkout(checkoutSchema.parse({...sale(true),key:printed.order.key}),actor);assert.equal(printedReplay.jobs.length,printed.jobs.length);assert.equal(await db.printJob.count({where:{orderId:printed.order.id}}),printed.jobs.length);
+  const legacy=await checkout(checkoutSchema.parse(sale()),actor);assert.equal(legacy.jobs.length,original.copies);
+  await db.setting.update({where:{key:'system'},data:{value:{...original,autoPrint:false}}});
+  const off=await checkout(checkoutSchema.parse(sale()),actor);assert.equal(off.jobs.length,0);
+  const explicit=await checkout(checkoutSchema.parse(sale(true)),actor);assert.equal(explicit.jobs.length,original.copies);
+  const manual=await reprint(silent.order.id,actor);assert.equal(manual.length,1);assert.equal(manual[0].isReprint,true);assert.equal(await db.order.count({where:{key:request.key}}),1);
+  assert.equal(checkoutSchema.safeParse({...sale(),printBill:'false'}).success,false);
+ }finally{await db.setting.update({where:{key:'system'},data:{value:original}});}
 });

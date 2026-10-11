@@ -1,0 +1,636 @@
+{
+  "tool": "built-in image_gen",
+  "style": "Use case: product-mockup. Asset type: square restaurant POS menu photograph. Create one photorealistic appetizing Thai food photo. Consistent collection art direction: warm matte beige tabletop and background, plain ivory-white ceramic serving ware, soft natural studio light from upper left, gentle shadow, camera at 45 degrees looking down, centered complete dish filling 75% of square frame, realistic food colors and textures, clean minimal composition. No text, logos, watermark, people, cutlery, unrelated props or side dishes. Dish specification: ",
+  "jobs": [
+    {
+      "sku": "SEED-OUTSIDE-001",
+      "subject": "Fresh milk marinated Thai grilled pork bamboo skewers, caramelized tender meat, no rice",
+      "prompt": "Use case: product-mockup. Asset type: square restaurant POS menu photograph. Create one photorealistic appetizing Thai food photo. Consistent collection art direction: warm matte beige tabletop and background, plain ivory-white ceramic serving ware, soft natural studio light from upper left, gentle shadow, camera at 45 degrees looking down, centered complete dish filling 75% of square frame, realistic food colors and textures, clean minimal composition. No text, logos, watermark, people, cutlery, unrelated props or side dishes. Dish specification: Fresh milk marinated Thai grilled pork bamboo skewers, caramelized tender meat, no rice",
+      "name": "หมูปิ้งนมสด",
+      "category": "อาหารร้านนอก"
+    },
+    {
+      "sku": "SEED-OUTSIDE-002",
+      "subject": "Thai red-marinated grilled chicken, glossy reddish glaze and char, chopped bone-in pieces, no rice",
+      "prompt": "Use case: product-mockup. Asset type: square restaurant POS menu photograph. Create one photorealistic appetizing Thai food photo. Consistent collection art direction: warm matte beige tabletop and background, plain ivory-white ceramic serving ware, soft natural studio light from upper left, gentle shadow, camera at 45 degrees looking down, centered complete dish filling 75% of square frame, realistic food colors and textures, clean minimal composition. No text, logos, watermark, people, cutlery, unrelated props or side dishes. Dish specification: Thai red-marinated grilled chicken, glossy reddish glaze and char, chopped bone-in pieces, no rice",
+      "name": "ไก่ย่างแดง",
+      "category": "อาหารร้านนอก"
+    },
+    {
+      "sku": "SEED-OUTSIDE-003",
+      "subject": "Thai sun-dried fried pork strips, golden brown chewy crisp edges, no rice",
+      "prompt": "Use case: product-mockup. Asset type: square restaurant POS menu photograph. Create one photorealistic appetizing Thai food photo. Consistent collection art direction: warm matte beige tabletop and background, plain ivory-white ceramic serving ware, soft natural studio light from upper left, gentle shadow, camera at 45 degrees looking down, centered complete dish filling 75% of square frame, realistic food colors and textures, clean minimal composition. No text, logos, watermark, people, cutlery, unrelated props or side dishes. Dish specification: Thai sun-dried fried pork strips, golden brown chewy crisp edges, no rice",
+      "name": "หมูทอดแดดเดียว",
+      "category": "อาหารร้านนอก"
+    },
+    {
+      "sku": "SEED-OUTSIDE-004",
+      "subject": "Thai fluffy golden omelette with minced pork visibly inside, no rice",
+      "prompt": "Use case: product-mockup. Asset type: square restaurant POS menu photograph. Create one photorealistic appetizing Thai food photo. Consistent collection art direction: warm matte beige tabletop and background, plain ivory-white ceramic serving ware, soft natural studio light from upper left, gentle shadow, camera at 45 degrees looking down, centered complete dish filling 75% of square frame, realistic food colors and textures, clean minimal composition. No text, logos, watermark, people, cutlery, unrelated props or side dishes. Dish specification: Thai fluffy golden omelette with minced pork visibly inside, no rice",
+      "name": "ไข่เจียวหมูสับ",
+      "category": "อาหารร้านนอก"
+    },
+    {
+      "sku": "SEED-OUTSIDE-005",
+      "subject": "Plain steamed fragrant Thai jasmine rice in a small white bowl, nothing else",
+      "prompt": "Use case: product-mockup. Asset type: square restaurant POS menu photograph. Create one photorealistic appetizing Thai food photo. Consistent collection art direction: warm matte beige tabletop and background, plain ivory-white ceramic serving ware, soft natural studio light from upper left, gentle shadow, camera at 45 degrees looking down, centered complete dish filling 75% of square frame, realistic food colors and textures, clean minimal composition. No text, logos, watermark, people, cutlery, unrelated props or side dishes. Dish specification: Plain steamed fragrant Thai jasmine rice in a small white bowl, nothing else",
+      "name": "ข้าวสวยหอมมะลิ",
+      "category": "อาหารร้านนอก"
+    },
+    {
+      "sku": "SEED-OUTSIDE-006",
+      "subject": "Plain Thai steamed glutinous sticky rice, compact textured mound, no other food",
+      "prompt": "Use case: product-mockup. Asset type: square restaurant POS menu photograph. Create one photorealistic appetizing Thai food photo. Consistent collection art direction: warm matte beige tabletop and background, plain ivory-white ceramic serving ware, soft natural studio light from upper left, gentle shadow, camera at 45 degrees looking down, centered complete dish filling 75% of square frame, realistic food colors and textures, clean minimal composition. No text, logos, watermark, people, cutlery, unrelated props or side dishes. Dish specification: Plain Thai steamed glutinous sticky rice, compact textured mound, no other food",
+      "name": "ข้าวเหนียว",
+      "category": "อาหารร้านนอก"
+    },
+    {
+      "sku": "SEED-OUTSIDE-007",
+      "subject": "Mixed vegetables stir-fried with chicken slices, cabbage carrot broccoli baby corn, no rice",
+      "prompt": "Use case: product-mockup. Asset type: square restaurant POS menu photograph. Create one photorealistic appetizing Thai food photo. Consistent collection art direction: warm matte beige tabletop and background, plain ivory-white ceramic serving ware, soft natural studio light from upper left, gentle shadow, camera at 45 degrees looking down, centered complete dish filling 75% of square frame, realistic food colors and textures, clean minimal composition. No text, logos, watermark, people, cutlery, unrelated props or side dishes. Dish specification: Mixed vegetables stir-fried with chicken slices, cabbage carrot broccoli baby corn, no rice",
+      "name": "ผัดผักรวมไก่",
+      "category": "อาหารร้านนอก"
+    },
+    {
+      "sku": "SEED-OUTSIDE-008",
+      "subject": "Mixed vegetables stir-fried with pork slices, cabbage carrot broccoli baby corn, no rice",
+      "prompt": "Use case: product-mockup. Asset type: square restaurant POS menu photograph. Create one photorealistic appetizing Thai food photo. Consistent collection art direction: warm matte beige tabletop and background, plain ivory-white ceramic serving ware, soft natural studio light from upper left, gentle shadow, camera at 45 degrees looking down, centered complete dish filling 75% of square frame, realistic food colors and textures, clean minimal composition. No text, logos, watermark, people, cutlery, unrelated props or side dishes. Dish specification: Mixed vegetables stir-fried with pork slices, cabbage carrot broccoli baby corn, no rice",
+      "name": "ผัดผักรวมหมู",
+      "category": "อาหารร้านนอก"
+    },
+    {
+      "sku": "SEED-OUTSIDE-009",
+      "subject": "Tom kha gai, chicken coconut galangal soup, pale creamy broth with mushrooms chicken galangal lemongrass kaffir lime leaf",
+      "prompt": "Use case: product-mockup. Asset type: square restaurant POS menu photograph. Create one photorealistic appetizing Thai food photo. Consistent collection art direction: warm matte beige tabletop and background, plain ivory-white ceramic serving ware, soft natural studio light from upper left, gentle shadow, camera at 45 degrees looking down, centered complete dish filling 75% of square frame, realistic food colors and textures, clean minimal composition. No text, logos, watermark, people, cutlery, unrelated props or side dishes. Dish specification: Tom kha gai, chicken coconut galangal soup, pale creamy broth with mushrooms chicken galangal lemongrass kaffir lime leaf",
+      "name": "ต้มข่าไก่",
+      "category": "อาหารร้านนอก"
+    },
+    {
+      "sku": "SEED-OUTSIDE-010",
+      "subject": "Thai catfish slices stir-fried in red curry paste with green beans and kaffir lime leaves, no rice",
+      "prompt": "Use case: product-mockup. Asset type: square restaurant POS menu photograph. Create one photorealistic appetizing Thai food photo. Consistent collection art direction: warm matte beige tabletop and background, plain ivory-white ceramic serving ware, soft natural studio light from upper left, gentle shadow, camera at 45 degrees looking down, centered complete dish filling 75% of square frame, realistic food colors and textures, clean minimal composition. No text, logos, watermark, people, cutlery, unrelated props or side dishes. Dish specification: Thai catfish slices stir-fried in red curry paste with green beans and kaffir lime leaves, no rice",
+      "name": "ปลาดุกผัดพริกแกง",
+      "category": "อาหารร้านนอก"
+    },
+    {
+      "sku": "SEED-OUTSIDE-011",
+      "subject": "Panang chicken curry, thick creamy reddish curry coating chicken pieces, fine kaffir lime strips, no rice",
+      "prompt": "Use case: product-mockup. Asset type: square restaurant POS menu photograph. Create one photorealistic appetizing Thai food photo. Consistent collection art direction: warm matte beige tabletop and background, plain ivory-white ceramic serving ware, soft natural studio light from upper left, gentle shadow, camera at 45 degrees looking down, centered complete dish filling 75% of square frame, realistic food colors and textures, clean minimal composition. No text, logos, watermark, people, cutlery, unrelated props or side dishes. Dish specification: Panang chicken curry, thick creamy reddish curry coating chicken pieces, fine kaffir lime strips, no rice",
+      "name": "พะแนงไก่",
+      "category": "อาหารร้านนอก"
+    },
+    {
+      "sku": "SEED-OUTSIDE-012",
+      "subject": "Clear soup with thick bitter melon rings stuffed with minced pork, light broth and coriander",
+      "prompt": "Use case: product-mockup. Asset type: square restaurant POS menu photograph. Create one photorealistic appetizing Thai food photo. Consistent collection art direction: warm matte beige tabletop and background, plain ivory-white ceramic serving ware, soft natural studio light from upper left, gentle shadow, camera at 45 degrees looking down, centered complete dish filling 75% of square frame, realistic food colors and textures, clean minimal composition. No text, logos, watermark, people, cutlery, unrelated props or side dishes. Dish specification: Clear soup with thick bitter melon rings stuffed with minced pork, light broth and coriander",
+      "name": "ต้มจืดมะระยัดไส้",
+      "category": "อาหารร้านนอก"
+    },
+    {
+      "sku": "SEED-OUTSIDE-013",
+      "subject": "Isan larb minced pork salad with mint shallot chili and toasted rice, no rice side",
+      "prompt": "Use case: product-mockup. Asset type: square restaurant POS menu photograph. Create one photorealistic appetizing Thai food photo. Consistent collection art direction: warm matte beige tabletop and background, plain ivory-white ceramic serving ware, soft natural studio light from upper left, gentle shadow, camera at 45 degrees looking down, centered complete dish filling 75% of square frame, realistic food colors and textures, clean minimal composition. No text, logos, watermark, people, cutlery, unrelated props or side dishes. Dish specification: Isan larb minced pork salad with mint shallot chili and toasted rice, no rice side",
+      "name": "ลาบหมู",
+      "category": "อาหารร้านนอก"
+    },
+    {
+      "sku": "SEED-OUTSIDE-014",
+      "subject": "Whole deep-fried tilapia, crisp golden scales and fins, head and tail visible, no sauce coating",
+      "prompt": "Use case: product-mockup. Asset type: square restaurant POS menu photograph. Create one photorealistic appetizing Thai food photo. Consistent collection art direction: warm matte beige tabletop and background, plain ivory-white ceramic serving ware, soft natural studio light from upper left, gentle shadow, camera at 45 degrees looking down, centered complete dish filling 75% of square frame, realistic food colors and textures, clean minimal composition. No text, logos, watermark, people, cutlery, unrelated props or side dishes. Dish specification: Whole deep-fried tilapia, crisp golden scales and fins, head and tail visible, no sauce coating",
+      "name": "ปลานิลทอด",
+      "category": "อาหารร้านนอก"
+    },
+    {
+      "sku": "SEED-OUTSIDE-015",
+      "subject": "Som tam pu pla ra, shredded green papaya salad with small salted crab pieces tomato long beans chili and dark fermented fish dressing, no peanuts",
+      "prompt": "Use case: product-mockup. Asset type: square restaurant POS menu photograph. Create one photorealistic appetizing Thai food photo. Consistent collection art direction: warm matte beige tabletop and background, plain ivory-white ceramic serving ware, soft natural studio light from upper left, gentle shadow, camera at 45 degrees looking down, centered complete dish filling 75% of square frame, realistic food colors and textures, clean minimal composition. No text, logos, watermark, people, cutlery, unrelated props or side dishes. Dish specification: Som tam pu pla ra, shredded green papaya salad with small salted crab pieces tomato long beans chili and dark fermented fish dressing, no peanuts",
+      "name": "ส้มตำ ปูปลาร้า",
+      "category": "อาหารร้านนอก"
+    },
+    {
+      "sku": "SEED-OUTSIDE-016",
+      "subject": "One crispy golden deep-fried bone-in chicken thigh, no rice",
+      "prompt": "Use case: product-mockup. Asset type: square restaurant POS menu photograph. Create one photorealistic appetizing Thai food photo. Consistent collection art direction: warm matte beige tabletop and background, plain ivory-white ceramic serving ware, soft natural studio light from upper left, gentle shadow, camera at 45 degrees looking down, centered complete dish filling 75% of square frame, realistic food colors and textures, clean minimal composition. No text, logos, watermark, people, cutlery, unrelated props or side dishes. Dish specification: One crispy golden deep-fried bone-in chicken thigh, no rice",
+      "name": "สะโพกไก่ทอด",
+      "category": "อาหารร้านนอก"
+    },
+    {
+      "sku": "SEED-OUTSIDE-017",
+      "subject": "Thai grilled pork neck sliced into juicy strips with caramelized grill marks, no rice",
+      "prompt": "Use case: product-mockup. Asset type: square restaurant POS menu photograph. Create one photorealistic appetizing Thai food photo. Consistent collection art direction: warm matte beige tabletop and background, plain ivory-white ceramic serving ware, soft natural studio light from upper left, gentle shadow, camera at 45 degrees looking down, centered complete dish filling 75% of square frame, realistic food colors and textures, clean minimal composition. No text, logos, watermark, people, cutlery, unrelated props or side dishes. Dish specification: Thai grilled pork neck sliced into juicy strips with caramelized grill marks, no rice",
+      "name": "คอหมูย่าง",
+      "category": "อาหารร้านนอก"
+    },
+    {
+      "sku": "SEED-OUTSIDE-018",
+      "subject": "Nam tok pork, sliced grilled pork tossed with mint shallots chili toasted rice and lime dressing, no rice side",
+      "prompt": "Use case: product-mockup. Asset type: square restaurant POS menu photograph. Create one photorealistic appetizing Thai food photo. Consistent collection art direction: warm matte beige tabletop and background, plain ivory-white ceramic serving ware, soft natural studio light from upper left, gentle shadow, camera at 45 degrees looking down, centered complete dish filling 75% of square frame, realistic food colors and textures, clean minimal composition. No text, logos, watermark, people, cutlery, unrelated props or side dishes. Dish specification: Nam tok pork, sliced grilled pork tossed with mint shallots chili toasted rice and lime dressing, no rice side",
+      "name": "น้ำตกหมู",
+      "category": "อาหารร้านนอก"
+    },
+    {
+      "sku": "SEED-OUTSIDE-019",
+      "subject": "One entire Thai barrel-roasted chicken, intact roasted golden bird with both wings and legs, no rice",
+      "prompt": "Use case: product-mockup. Asset type: square restaurant POS menu photograph. Create one photorealistic appetizing Thai food photo. Consistent collection art direction: warm matte beige tabletop and background, plain ivory-white ceramic serving ware, soft natural studio light from upper left, gentle shadow, camera at 45 degrees looking down, centered complete dish filling 75% of square frame, realistic food colors and textures, clean minimal composition. No text, logos, watermark, people, cutlery, unrelated props or side dishes. Dish specification: One entire Thai barrel-roasted chicken, intact roasted golden bird with both wings and legs, no rice",
+      "name": "ไก่อบถัง 1 ตัว",
+      "category": "อาหารร้านนอก"
+    },
+    {
+      "sku": "SEED-OUTSIDE-020",
+      "subject": "One whole Thai chicken poached in fish sauce, pale golden moist skin, intact entire bird in shallow amber broth, no rice",
+      "prompt": "Use case: product-mockup. Asset type: square restaurant POS menu photograph. Create one photorealistic appetizing Thai food photo. Consistent collection art direction: warm matte beige tabletop and background, plain ivory-white ceramic serving ware, soft natural studio light from upper left, gentle shadow, camera at 45 degrees looking down, centered complete dish filling 75% of square frame, realistic food colors and textures, clean minimal composition. No text, logos, watermark, people, cutlery, unrelated props or side dishes. Dish specification: One whole Thai chicken poached in fish sauce, pale golden moist skin, intact entire bird in shallow amber broth, no rice",
+      "name": "ไก่ต้มน้ำปลา 1 ตัว",
+      "category": "อาหารร้านนอก"
+    },
+    {
+      "sku": "SEED-OUTSIDE-021",
+      "subject": "Som tam Thai, shredded green papaya tomato long beans red chili dried shrimp roasted peanuts, no crab",
+      "prompt": "Use case: product-mockup. Asset type: square restaurant POS menu photograph. Create one photorealistic appetizing Thai food photo. Consistent collection art direction: warm matte beige tabletop and background, plain ivory-white ceramic serving ware, soft natural studio light from upper left, gentle shadow, camera at 45 degrees looking down, centered complete dish filling 75% of square frame, realistic food colors and textures, clean minimal composition. No text, logos, watermark, people, cutlery, unrelated props or side dishes. Dish specification: Som tam Thai, shredded green papaya tomato long beans red chili dried shrimp roasted peanuts, no crab",
+      "name": "ส้มตำไทย",
+      "category": "อาหารร้านนอก"
+    },
+    {
+      "sku": "SEED-OUTSIDE-022",
+      "subject": "Thai holy basil stir fry with distinct chicken chunks, chilies garlic and basil, no rice or egg",
+      "prompt": "Use case: product-mockup. Asset type: square restaurant POS menu photograph. Create one photorealistic appetizing Thai food photo. Consistent collection art direction: warm matte beige tabletop and background, plain ivory-white ceramic serving ware, soft natural studio light from upper left, gentle shadow, camera at 45 degrees looking down, centered complete dish filling 75% of square frame, realistic food colors and textures, clean minimal composition. No text, logos, watermark, people, cutlery, unrelated props or side dishes. Dish specification: Thai holy basil stir fry with distinct chicken chunks, chilies garlic and basil, no rice or egg",
+      "name": "กะเพราไก่ชิ้น",
+      "category": "อาหารร้านนอก"
+    },
+    {
+      "sku": "SEED-OUTSIDE-023",
+      "subject": "Thai holy basil stir fry with chicken liver gizzards and hearts, dark organ meat chilies garlic basil, no rice or egg",
+      "prompt": "Use case: product-mockup. Asset type: square restaurant POS menu photograph. Create one photorealistic appetizing Thai food photo. Consistent collection art direction: warm matte beige tabletop and background, plain ivory-white ceramic serving ware, soft natural studio light from upper left, gentle shadow, camera at 45 degrees looking down, centered complete dish filling 75% of square frame, realistic food colors and textures, clean minimal composition. No text, logos, watermark, people, cutlery, unrelated props or side dishes. Dish specification: Thai holy basil stir fry with chicken liver gizzards and hearts, dark organ meat chilies garlic basil, no rice or egg",
+      "name": "กะเพราเครื่องในไก่",
+      "category": "อาหารร้านนอก"
+    },
+    {
+      "sku": "SEED-OUTSIDE-024",
+      "subject": "Thai holy basil stir fry with crispy pork belly chunks, visible crunchy skin fatty layers and basil chilies, no rice",
+      "prompt": "Use case: product-mockup. Asset type: square restaurant POS menu photograph. Create one photorealistic appetizing Thai food photo. Consistent collection art direction: warm matte beige tabletop and background, plain ivory-white ceramic serving ware, soft natural studio light from upper left, gentle shadow, camera at 45 degrees looking down, centered complete dish filling 75% of square frame, realistic food colors and textures, clean minimal composition. No text, logos, watermark, people, cutlery, unrelated props or side dishes. Dish specification: Thai holy basil stir fry with crispy pork belly chunks, visible crunchy skin fatty layers and basil chilies, no rice",
+      "name": "กะเพราหมูกรอบ",
+      "category": "อาหารร้านนอก"
+    },
+    {
+      "sku": "SEED-OUTSIDE-025",
+      "subject": "Thai holy basil stir fry with minced pork chilies garlic basil, no rice or egg",
+      "prompt": "Use case: product-mockup. Asset type: square restaurant POS menu photograph. Create one photorealistic appetizing Thai food photo. Consistent collection art direction: warm matte beige tabletop and background, plain ivory-white ceramic serving ware, soft natural studio light from upper left, gentle shadow, camera at 45 degrees looking down, centered complete dish filling 75% of square frame, realistic food colors and textures, clean minimal composition. No text, logos, watermark, people, cutlery, unrelated props or side dishes. Dish specification: Thai holy basil stir fry with minced pork chilies garlic basil, no rice or egg",
+      "name": "กะเพราหมูสับ",
+      "category": "อาหารร้านนอก"
+    },
+    {
+      "sku": "SEED-OUTSIDE-026",
+      "subject": "Thai fried chicken pieces with abundant golden fried garlic, no rice",
+      "prompt": "Use case: product-mockup. Asset type: square restaurant POS menu photograph. Create one photorealistic appetizing Thai food photo. Consistent collection art direction: warm matte beige tabletop and background, plain ivory-white ceramic serving ware, soft natural studio light from upper left, gentle shadow, camera at 45 degrees looking down, centered complete dish filling 75% of square frame, realistic food colors and textures, clean minimal composition. No text, logos, watermark, people, cutlery, unrelated props or side dishes. Dish specification: Thai fried chicken pieces with abundant golden fried garlic, no rice",
+      "name": "ไก่ทอดกระเทียม",
+      "category": "อาหารร้านนอก"
+    },
+    {
+      "sku": "SEED-OUTSIDE-027",
+      "subject": "Thai Chinese kale stir-fried with crispy pork belly, glossy thick kale stems and leaves with crispy pork pieces, no rice",
+      "prompt": "Use case: product-mockup. Asset type: square restaurant POS menu photograph. Create one photorealistic appetizing Thai food photo. Consistent collection art direction: warm matte beige tabletop and background, plain ivory-white ceramic serving ware, soft natural studio light from upper left, gentle shadow, camera at 45 degrees looking down, centered complete dish filling 75% of square frame, realistic food colors and textures, clean minimal composition. No text, logos, watermark, people, cutlery, unrelated props or side dishes. Dish specification: Thai Chinese kale stir-fried with crispy pork belly, glossy thick kale stems and leaves with crispy pork pieces, no rice",
+      "name": "คะน้าหมูกรอบ",
+      "category": "อาหารร้านนอก"
+    },
+    {
+      "sku": "SEED-OUTSIDE-028",
+      "subject": "Tom yum chicken, spicy sour orange-red broth with chicken mushrooms lemongrass galangal lime leaf",
+      "prompt": "Use case: product-mockup. Asset type: square restaurant POS menu photograph. Create one photorealistic appetizing Thai food photo. Consistent collection art direction: warm matte beige tabletop and background, plain ivory-white ceramic serving ware, soft natural studio light from upper left, gentle shadow, camera at 45 degrees looking down, centered complete dish filling 75% of square frame, realistic food colors and textures, clean minimal composition. No text, logos, watermark, people, cutlery, unrelated props or side dishes. Dish specification: Tom yum chicken, spicy sour orange-red broth with chicken mushrooms lemongrass galangal lime leaf",
+      "name": "ต้มยำไก่",
+      "category": "อาหารร้านนอก"
+    },
+    {
+      "sku": "SEED-OUTSIDE-029",
+      "subject": "Tom yum mixed seafood and meats, spicy sour orange-red broth with shrimp squid fish chicken mushrooms and Thai aromatics",
+      "prompt": "Use case: product-mockup. Asset type: square restaurant POS menu photograph. Create one photorealistic appetizing Thai food photo. Consistent collection art direction: warm matte beige tabletop and background, plain ivory-white ceramic serving ware, soft natural studio light from upper left, gentle shadow, camera at 45 degrees looking down, centered complete dish filling 75% of square frame, realistic food colors and textures, clean minimal composition. No text, logos, watermark, people, cutlery, unrelated props or side dishes. Dish specification: Tom yum mixed seafood and meats, spicy sour orange-red broth with shrimp squid fish chicken mushrooms and Thai aromatics",
+      "name": "ต้มยำรวมมิตร",
+      "category": "อาหารร้านนอก"
+    },
+    {
+      "sku": "SEED-OUTSIDE-030",
+      "subject": "Thai fried pork pieces topped with golden fried garlic, no rice",
+      "prompt": "Use case: product-mockup. Asset type: square restaurant POS menu photograph. Create one photorealistic appetizing Thai food photo. Consistent collection art direction: warm matte beige tabletop and background, plain ivory-white ceramic serving ware, soft natural studio light from upper left, gentle shadow, camera at 45 degrees looking down, centered complete dish filling 75% of square frame, realistic food colors and textures, clean minimal composition. No text, logos, watermark, people, cutlery, unrelated props or side dishes. Dish specification: Thai fried pork pieces topped with golden fried garlic, no rice",
+      "name": "หมูทอดกระเทียม",
+      "category": "อาหารร้านนอก"
+    },
+    {
+      "sku": "SEED-OUTSIDE-031",
+      "subject": "Thai minced chicken holy basil stir fry served alongside steamed jasmine rice on a single plate, no fried egg",
+      "prompt": "Use case: product-mockup. Asset type: square restaurant POS menu photograph. Create one photorealistic appetizing Thai food photo. Consistent collection art direction: warm matte beige tabletop and background, plain ivory-white ceramic serving ware, soft natural studio light from upper left, gentle shadow, camera at 45 degrees looking down, centered complete dish filling 75% of square frame, realistic food colors and textures, clean minimal composition. No text, logos, watermark, people, cutlery, unrelated props or side dishes. Dish specification: Thai minced chicken holy basil stir fry served alongside steamed jasmine rice on a single plate, no fried egg",
+      "name": "กะเพราไก่บด ราดข้าว",
+      "category": "อาหารร้านนอก"
+    },
+    {
+      "sku": "SEED-OUTSIDE-032",
+      "subject": "Thai chicken liver gizzards hearts holy basil stir fry served alongside jasmine rice on a single plate, no egg",
+      "prompt": "Use case: product-mockup. Asset type: square restaurant POS menu photograph. Create one photorealistic appetizing Thai food photo. Consistent collection art direction: warm matte beige tabletop and background, plain ivory-white ceramic serving ware, soft natural studio light from upper left, gentle shadow, camera at 45 degrees looking down, centered complete dish filling 75% of square frame, realistic food colors and textures, clean minimal composition. No text, logos, watermark, people, cutlery, unrelated props or side dishes. Dish specification: Thai chicken liver gizzards hearts holy basil stir fry served alongside jasmine rice on a single plate, no egg",
+      "name": "กะเพราเครื่องในไก่ ราดข้าว",
+      "category": "อาหารร้านนอก"
+    },
+    {
+      "sku": "SEED-OUTSIDE-033",
+      "subject": "Thai crispy pork belly holy basil stir fry served alongside jasmine rice on a single plate, no egg",
+      "prompt": "Use case: product-mockup. Asset type: square restaurant POS menu photograph. Create one photorealistic appetizing Thai food photo. Consistent collection art direction: warm matte beige tabletop and background, plain ivory-white ceramic serving ware, soft natural studio light from upper left, gentle shadow, camera at 45 degrees looking down, centered complete dish filling 75% of square frame, realistic food colors and textures, clean minimal composition. No text, logos, watermark, people, cutlery, unrelated props or side dishes. Dish specification: Thai crispy pork belly holy basil stir fry served alongside jasmine rice on a single plate, no egg",
+      "name": "กะเพราหมูกรอบ ราดข้าว",
+      "category": "อาหารร้านนอก"
+    },
+    {
+      "sku": "SEED-OUTSIDE-034",
+      "subject": "Thai minced pork holy basil stir fry served alongside jasmine rice on a single plate, no egg",
+      "prompt": "Use case: product-mockup. Asset type: square restaurant POS menu photograph. Create one photorealistic appetizing Thai food photo. Consistent collection art direction: warm matte beige tabletop and background, plain ivory-white ceramic serving ware, soft natural studio light from upper left, gentle shadow, camera at 45 degrees looking down, centered complete dish filling 75% of square frame, realistic food colors and textures, clean minimal composition. No text, logos, watermark, people, cutlery, unrelated props or side dishes. Dish specification: Thai minced pork holy basil stir fry served alongside jasmine rice on a single plate, no egg",
+      "name": "กะเพราหมูสับ ราดข้าว",
+      "category": "อาหารร้านนอก"
+    },
+    {
+      "sku": "SEED-OUTSIDE-035",
+      "subject": "Thai garlic fried chicken served alongside jasmine rice on a single plate, no egg",
+      "prompt": "Use case: product-mockup. Asset type: square restaurant POS menu photograph. Create one photorealistic appetizing Thai food photo. Consistent collection art direction: warm matte beige tabletop and background, plain ivory-white ceramic serving ware, soft natural studio light from upper left, gentle shadow, camera at 45 degrees looking down, centered complete dish filling 75% of square frame, realistic food colors and textures, clean minimal composition. No text, logos, watermark, people, cutlery, unrelated props or side dishes. Dish specification: Thai garlic fried chicken served alongside jasmine rice on a single plate, no egg",
+      "name": "ไก่ทอดกระเทียม ราดข้าว",
+      "category": "อาหารร้านนอก"
+    },
+    {
+      "sku": "SEED-OUTSIDE-036",
+      "subject": "Thai fluffy minced pork omelette over jasmine rice on a single plate",
+      "prompt": "Use case: product-mockup. Asset type: square restaurant POS menu photograph. Create one photorealistic appetizing Thai food photo. Consistent collection art direction: warm matte beige tabletop and background, plain ivory-white ceramic serving ware, soft natural studio light from upper left, gentle shadow, camera at 45 degrees looking down, centered complete dish filling 75% of square frame, realistic food colors and textures, clean minimal composition. No text, logos, watermark, people, cutlery, unrelated props or side dishes. Dish specification: Thai fluffy minced pork omelette over jasmine rice on a single plate",
+      "name": "ข้าวไข่เจียวหมูสับ ราดข้าว",
+      "category": "อาหารร้านนอก"
+    },
+    {
+      "sku": "SEED-OUTSIDE-037",
+      "subject": "Thai garlic fried pork served alongside jasmine rice on a single plate, no egg",
+      "prompt": "Use case: product-mockup. Asset type: square restaurant POS menu photograph. Create one photorealistic appetizing Thai food photo. Consistent collection art direction: warm matte beige tabletop and background, plain ivory-white ceramic serving ware, soft natural studio light from upper left, gentle shadow, camera at 45 degrees looking down, centered complete dish filling 75% of square frame, realistic food colors and textures, clean minimal composition. No text, logos, watermark, people, cutlery, unrelated props or side dishes. Dish specification: Thai garlic fried pork served alongside jasmine rice on a single plate, no egg",
+      "name": "หมูทอดกระเทียม ราดข้าว",
+      "category": "อาหารร้านนอก"
+    },
+    {
+      "sku": "SEED-OUTSIDE-038",
+      "subject": "Thai pork crackling snacks, puffed crisp curled golden pork rinds on a small plate, no rice",
+      "prompt": "Use case: product-mockup. Asset type: square restaurant POS menu photograph. Create one photorealistic appetizing Thai food photo. Consistent collection art direction: warm matte beige tabletop and background, plain ivory-white ceramic serving ware, soft natural studio light from upper left, gentle shadow, camera at 45 degrees looking down, centered complete dish filling 75% of square frame, realistic food colors and textures, clean minimal composition. No text, logos, watermark, people, cutlery, unrelated props or side dishes. Dish specification: Thai pork crackling snacks, puffed crisp curled golden pork rinds on a small plate, no rice",
+      "name": "แคปหมู",
+      "category": "อาหารร้านนอก"
+    },
+    {
+      "sku": "SEED-OUTSIDE-039",
+      "subject": "Thai shrimp fried rice, visible pink whole shrimp egg and scallion in golden rice, cucumber and lime at plate edge",
+      "prompt": "Use case: product-mockup. Asset type: square restaurant POS menu photograph. Create one photorealistic appetizing Thai food photo. Consistent collection art direction: warm matte beige tabletop and background, plain ivory-white ceramic serving ware, soft natural studio light from upper left, gentle shadow, camera at 45 degrees looking down, centered complete dish filling 75% of square frame, realistic food colors and textures, clean minimal composition. No text, logos, watermark, people, cutlery, unrelated props or side dishes. Dish specification: Thai shrimp fried rice, visible pink whole shrimp egg and scallion in golden rice, cucumber and lime at plate edge",
+      "name": "ข้าวผัดกุ้ง",
+      "category": "อาหารร้านนอก"
+    },
+    {
+      "sku": "SEED-OUTSIDE-040",
+      "subject": "Thai fried garlic chive rice cakes, cut square pieces with crispy browned exterior and green chive-filled inside, not dumplings",
+      "prompt": "Use case: product-mockup. Asset type: square restaurant POS menu photograph. Create one photorealistic appetizing Thai food photo. Consistent collection art direction: warm matte beige tabletop and background, plain ivory-white ceramic serving ware, soft natural studio light from upper left, gentle shadow, camera at 45 degrees looking down, centered complete dish filling 75% of square frame, realistic food colors and textures, clean minimal composition. No text, logos, watermark, people, cutlery, unrelated props or side dishes. Dish specification: Thai fried garlic chive rice cakes, cut square pieces with crispy browned exterior and green chive-filled inside, not dumplings",
+      "name": "กุยช่ายทอด",
+      "category": "อาหารร้านนอก"
+    },
+    {
+      "sku": "SEED-OUTSIDE-041",
+      "subject": "Thai roasted duck, generous portion glossy brown roast duck sliced with skin attached, no rice",
+      "prompt": "Use case: product-mockup. Asset type: square restaurant POS menu photograph. Create one photorealistic appetizing Thai food photo. Consistent collection art direction: warm matte beige tabletop and background, plain ivory-white ceramic serving ware, soft natural studio light from upper left, gentle shadow, camera at 45 degrees looking down, centered complete dish filling 75% of square frame, realistic food colors and textures, clean minimal composition. No text, logos, watermark, people, cutlery, unrelated props or side dishes. Dish specification: Thai roasted duck, generous portion glossy brown roast duck sliced with skin attached, no rice",
+      "name": "เป็ดย่าง",
+      "category": "อาหารร้านนอก"
+    },
+    {
+      "sku": "SEED-OUTSIDE-042",
+      "subject": "Isan sharing meal set: papaya salad, grilled chicken, minced pork larb and sticky rice in separate matching white dishes, compact coherent composition",
+      "prompt": "Use case: product-mockup. Asset type: square restaurant POS menu photograph. Create one photorealistic appetizing Thai food photo. Consistent collection art direction: warm matte beige tabletop and background, plain ivory-white ceramic serving ware, soft natural studio light from upper left, gentle shadow, camera at 45 degrees looking down, centered complete dish filling 75% of square frame, realistic food colors and textures, clean minimal composition. No text, logos, watermark, people, cutlery, unrelated props or side dishes. Dish specification: Isan sharing meal set: papaya salad, grilled chicken, minced pork larb and sticky rice in separate matching white dishes, compact coherent composition",
+      "name": "ชุดอีสาน",
+      "category": "อาหารร้านนอก"
+    },
+    {
+      "sku": "SEED-OUTSIDE-043",
+      "subject": "Muslim Isan sharing meal set: papaya salad without crab, grilled chicken, chicken larb and sticky rice in separate matching white dishes. Strictly no pork, no pork fat, no alcohol",
+      "prompt": "Use case: product-mockup. Asset type: square restaurant POS menu photograph. Create one photorealistic appetizing Thai food photo. Consistent collection art direction: warm matte beige tabletop and background, plain ivory-white ceramic serving ware, soft natural studio light from upper left, gentle shadow, camera at 45 degrees looking down, centered complete dish filling 75% of square frame, realistic food colors and textures, clean minimal composition. No text, logos, watermark, people, cutlery, unrelated props or side dishes. Dish specification: Muslim Isan sharing meal set: papaya salad without crab, grilled chicken, chicken larb and sticky rice in separate matching white dishes. Strictly no pork, no pork fat, no alcohol",
+      "name": "ชุดอีสาน อิสลาม",
+      "category": "อาหารร้านนอก"
+    },
+    {
+      "sku": "SEED-OUTSIDE-044",
+      "subject": "Thai gaeng pa pork jungle curry, thin spicy red broth without coconut milk, pork pieces eggplant long beans green peppercorns Thai herbs",
+      "prompt": "Use case: product-mockup. Asset type: square restaurant POS menu photograph. Create one photorealistic appetizing Thai food photo. Consistent collection art direction: warm matte beige tabletop and background, plain ivory-white ceramic serving ware, soft natural studio light from upper left, gentle shadow, camera at 45 degrees looking down, centered complete dish filling 75% of square frame, realistic food colors and textures, clean minimal composition. No text, logos, watermark, people, cutlery, unrelated props or side dishes. Dish specification: Thai gaeng pa pork jungle curry, thin spicy red broth without coconut milk, pork pieces eggplant long beans green peppercorns Thai herbs",
+      "name": "แกงป่าหมู",
+      "category": "อาหารร้านนอก"
+    },
+    {
+      "sku": "SEED-OUTSIDE-045",
+      "subject": "Thai gaeng pa chicken jungle curry, thin spicy red broth without coconut milk, chicken pieces eggplant long beans green peppercorns Thai herbs",
+      "prompt": "Use case: product-mockup. Asset type: square restaurant POS menu photograph. Create one photorealistic appetizing Thai food photo. Consistent collection art direction: warm matte beige tabletop and background, plain ivory-white ceramic serving ware, soft natural studio light from upper left, gentle shadow, camera at 45 degrees looking down, centered complete dish filling 75% of square frame, realistic food colors and textures, clean minimal composition. No text, logos, watermark, people, cutlery, unrelated props or side dishes. Dish specification: Thai gaeng pa chicken jungle curry, thin spicy red broth without coconut milk, chicken pieces eggplant long beans green peppercorns Thai herbs",
+      "name": "แกงป่าไก่",
+      "category": "อาหารร้านนอก"
+    },
+    {
+      "sku": "SEED-OUTSIDE-046",
+      "subject": "Isan gaeng om pork, rustic clear green-brown herb broth with pork cabbage eggplant dill scallions, no coconut milk",
+      "prompt": "Use case: product-mockup. Asset type: square restaurant POS menu photograph. Create one photorealistic appetizing Thai food photo. Consistent collection art direction: warm matte beige tabletop and background, plain ivory-white ceramic serving ware, soft natural studio light from upper left, gentle shadow, camera at 45 degrees looking down, centered complete dish filling 75% of square frame, realistic food colors and textures, clean minimal composition. No text, logos, watermark, people, cutlery, unrelated props or side dishes. Dish specification: Isan gaeng om pork, rustic clear green-brown herb broth with pork cabbage eggplant dill scallions, no coconut milk",
+      "name": "แกงอ่อมหมู",
+      "category": "อาหารร้านนอก"
+    },
+    {
+      "sku": "SEED-OUTSIDE-047",
+      "subject": "Isan gaeng om chicken, rustic clear green-brown herb broth with chicken cabbage eggplant dill scallions, no coconut milk",
+      "prompt": "Use case: product-mockup. Asset type: square restaurant POS menu photograph. Create one photorealistic appetizing Thai food photo. Consistent collection art direction: warm matte beige tabletop and background, plain ivory-white ceramic serving ware, soft natural studio light from upper left, gentle shadow, camera at 45 degrees looking down, centered complete dish filling 75% of square frame, realistic food colors and textures, clean minimal composition. No text, logos, watermark, people, cutlery, unrelated props or side dishes. Dish specification: Isan gaeng om chicken, rustic clear green-brown herb broth with chicken cabbage eggplant dill scallions, no coconut milk",
+      "name": "แกงอ่อมไก่",
+      "category": "อาหารร้านนอก"
+    },
+    {
+      "sku": "SEED-OUTSIDE-048",
+      "subject": "Thai pork fried rice, pork slices egg scallion in golden rice with cucumber lime on plate edge",
+      "prompt": "Use case: product-mockup. Asset type: square restaurant POS menu photograph. Create one photorealistic appetizing Thai food photo. Consistent collection art direction: warm matte beige tabletop and background, plain ivory-white ceramic serving ware, soft natural studio light from upper left, gentle shadow, camera at 45 degrees looking down, centered complete dish filling 75% of square frame, realistic food colors and textures, clean minimal composition. No text, logos, watermark, people, cutlery, unrelated props or side dishes. Dish specification: Thai pork fried rice, pork slices egg scallion in golden rice with cucumber lime on plate edge",
+      "name": "ข้าวผัดหมู",
+      "category": "อาหารร้านนอก"
+    },
+    {
+      "sku": "SEED-OUTSIDE-049",
+      "subject": "Thai chicken fried rice, chicken pieces egg scallion in golden rice with cucumber lime on plate edge",
+      "prompt": "Use case: product-mockup. Asset type: square restaurant POS menu photograph. Create one photorealistic appetizing Thai food photo. Consistent collection art direction: warm matte beige tabletop and background, plain ivory-white ceramic serving ware, soft natural studio light from upper left, gentle shadow, camera at 45 degrees looking down, centered complete dish filling 75% of square frame, realistic food colors and textures, clean minimal composition. No text, logos, watermark, people, cutlery, unrelated props or side dishes. Dish specification: Thai chicken fried rice, chicken pieces egg scallion in golden rice with cucumber lime on plate edge",
+      "name": "ข้าวผัดไก่",
+      "category": "อาหารร้านนอก"
+    },
+    {
+      "sku": "SEED-OUTSIDE-050",
+      "subject": "Thai shelled baby clam meat stir-fried with roasted chili paste and Thai basil, glossy red-brown sauce, mostly clam meat with NO shells, no rice",
+      "prompt": "Use case: product-mockup. Asset type: square restaurant POS menu photograph. Create one photorealistic appetizing Thai food photo. Consistent collection art direction: warm matte beige tabletop and background, plain ivory-white ceramic serving ware, soft natural studio light from upper left, gentle shadow, camera at 45 degrees looking down, centered complete dish filling 75% of square frame, realistic food colors and textures, clean minimal composition. No text, logos, watermark, people, cutlery, unrelated props or side dishes. Dish specification: Thai shelled baby clam meat stir-fried with roasted chili paste and Thai basil, glossy red-brown sauce, mostly clam meat with NO shells, no rice",
+      "name": "เนื้อหอยลายผัดพริกเผา",
+      "category": "อาหารร้านนอก"
+    },
+    {
+      "sku": "SEED-OUTSIDE-051",
+      "subject": "Thai chicken stir fried with thin ginger matchsticks wood ear mushrooms scallions, glossy light brown sauce, no rice",
+      "prompt": "Use case: product-mockup. Asset type: square restaurant POS menu photograph. Create one photorealistic appetizing Thai food photo. Consistent collection art direction: warm matte beige tabletop and background, plain ivory-white ceramic serving ware, soft natural studio light from upper left, gentle shadow, camera at 45 degrees looking down, centered complete dish filling 75% of square frame, realistic food colors and textures, clean minimal composition. No text, logos, watermark, people, cutlery, unrelated props or side dishes. Dish specification: Thai chicken stir fried with thin ginger matchsticks wood ear mushrooms scallions, glossy light brown sauce, no rice",
+      "name": "ไก่ผัดขิง",
+      "category": "อาหารร้านนอก"
+    },
+    {
+      "sku": "SEED-OUTSIDE-052",
+      "subject": "Tom saep beef, Isan spicy sour clear brown broth with beef chunks chili lime Thai aromatics",
+      "prompt": "Use case: product-mockup. Asset type: square restaurant POS menu photograph. Create one photorealistic appetizing Thai food photo. Consistent collection art direction: warm matte beige tabletop and background, plain ivory-white ceramic serving ware, soft natural studio light from upper left, gentle shadow, camera at 45 degrees looking down, centered complete dish filling 75% of square frame, realistic food colors and textures, clean minimal composition. No text, logos, watermark, people, cutlery, unrelated props or side dishes. Dish specification: Tom saep beef, Isan spicy sour clear brown broth with beef chunks chili lime Thai aromatics",
+      "name": "ต้มแซ่บเนื้อ",
+      "category": "อาหารร้านนอก"
+    },
+    {
+      "sku": "SEED-OUTSIDE-053",
+      "subject": "Whole fried tilapia topped with glossy Thai sweet spicy red chili garlic sauce, whole fish head tail visible",
+      "prompt": "Use case: product-mockup. Asset type: square restaurant POS menu photograph. Create one photorealistic appetizing Thai food photo. Consistent collection art direction: warm matte beige tabletop and background, plain ivory-white ceramic serving ware, soft natural studio light from upper left, gentle shadow, camera at 45 degrees looking down, centered complete dish filling 75% of square frame, realistic food colors and textures, clean minimal composition. No text, logos, watermark, people, cutlery, unrelated props or side dishes. Dish specification: Whole fried tilapia topped with glossy Thai sweet spicy red chili garlic sauce, whole fish head tail visible",
+      "name": "ปลานิลทอดราดพริก",
+      "category": "อาหารร้านนอก"
+    },
+    {
+      "sku": "SEED-OUTSIDE-054",
+      "subject": "Thai deep-fried chicken offal, golden brown liver gizzards and hearts, no rice",
+      "prompt": "Use case: product-mockup. Asset type: square restaurant POS menu photograph. Create one photorealistic appetizing Thai food photo. Consistent collection art direction: warm matte beige tabletop and background, plain ivory-white ceramic serving ware, soft natural studio light from upper left, gentle shadow, camera at 45 degrees looking down, centered complete dish filling 75% of square frame, realistic food colors and textures, clean minimal composition. No text, logos, watermark, people, cutlery, unrelated props or side dishes. Dish specification: Thai deep-fried chicken offal, golden brown liver gizzards and hearts, no rice",
+      "name": "เครื่องในไก่ทอด",
+      "category": "อาหารร้านนอก"
+    },
+    {
+      "sku": "SEED-OUTSIDE-055",
+      "subject": "Thai deep-fried chicken carcass/frame with crispy bony ribs and backbone visible, not whole meaty chicken, no rice",
+      "prompt": "Use case: product-mockup. Asset type: square restaurant POS menu photograph. Create one photorealistic appetizing Thai food photo. Consistent collection art direction: warm matte beige tabletop and background, plain ivory-white ceramic serving ware, soft natural studio light from upper left, gentle shadow, camera at 45 degrees looking down, centered complete dish filling 75% of square frame, realistic food colors and textures, clean minimal composition. No text, logos, watermark, people, cutlery, unrelated props or side dishes. Dish specification: Thai deep-fried chicken carcass/frame with crispy bony ribs and backbone visible, not whole meaty chicken, no rice",
+      "name": "โครงไก่ทอด",
+      "category": "อาหารร้านนอก"
+    },
+    {
+      "sku": "SEED-OUTSIDE-056",
+      "subject": "Tom yum chicken carcass soup, chicken frame rib and back pieces in spicy sour broth with mushrooms lemongrass galangal",
+      "prompt": "Use case: product-mockup. Asset type: square restaurant POS menu photograph. Create one photorealistic appetizing Thai food photo. Consistent collection art direction: warm matte beige tabletop and background, plain ivory-white ceramic serving ware, soft natural studio light from upper left, gentle shadow, camera at 45 degrees looking down, centered complete dish filling 75% of square frame, realistic food colors and textures, clean minimal composition. No text, logos, watermark, people, cutlery, unrelated props or side dishes. Dish specification: Tom yum chicken carcass soup, chicken frame rib and back pieces in spicy sour broth with mushrooms lemongrass galangal",
+      "name": "ต้มยำโครงไก่",
+      "category": "อาหารร้านนอก"
+    },
+    {
+      "sku": "SEED-OUTSIDE-057",
+      "subject": "Thai chicken palo stew, chicken pieces with boiled eggs in dark amber five-spice soy broth, no pork",
+      "prompt": "Use case: product-mockup. Asset type: square restaurant POS menu photograph. Create one photorealistic appetizing Thai food photo. Consistent collection art direction: warm matte beige tabletop and background, plain ivory-white ceramic serving ware, soft natural studio light from upper left, gentle shadow, camera at 45 degrees looking down, centered complete dish filling 75% of square frame, realistic food colors and textures, clean minimal composition. No text, logos, watermark, people, cutlery, unrelated props or side dishes. Dish specification: Thai chicken palo stew, chicken pieces with boiled eggs in dark amber five-spice soy broth, no pork",
+      "name": "พะโล้ไก่",
+      "category": "อาหารร้านนอก"
+    },
+    {
+      "sku": "SEED-FRONT-001",
+      "subject": "Thai rice with ONE curry topping: mound of white rice alongside one portion chicken red curry on one plate, exactly one curry",
+      "prompt": "Use case: product-mockup. Asset type: square restaurant POS menu photograph. Create one photorealistic appetizing Thai food photo. Consistent collection art direction: warm matte beige tabletop and background, plain ivory-white ceramic serving ware, soft natural studio light from upper left, gentle shadow, camera at 45 degrees looking down, centered complete dish filling 75% of square frame, realistic food colors and textures, clean minimal composition. No text, logos, watermark, people, cutlery, unrelated props or side dishes. Dish specification: Thai rice with ONE curry topping: mound of white rice alongside one portion chicken red curry on one plate, exactly one curry",
+      "name": "ข้าวราดแกง 1 อย่าง",
+      "category": "อาหารหน้าร้าน"
+    },
+    {
+      "sku": "SEED-FRONT-002",
+      "subject": "Thai rice with TWO separate toppings: white rice with chicken red curry and stir-fried mixed vegetables on one plate, exactly two toppings",
+      "prompt": "Use case: product-mockup. Asset type: square restaurant POS menu photograph. Create one photorealistic appetizing Thai food photo. Consistent collection art direction: warm matte beige tabletop and background, plain ivory-white ceramic serving ware, soft natural studio light from upper left, gentle shadow, camera at 45 degrees looking down, centered complete dish filling 75% of square frame, realistic food colors and textures, clean minimal composition. No text, logos, watermark, people, cutlery, unrelated props or side dishes. Dish specification: Thai rice with TWO separate toppings: white rice with chicken red curry and stir-fried mixed vegetables on one plate, exactly two toppings",
+      "name": "ข้าวราดแกง 2 อย่าง",
+      "category": "อาหารหน้าร้าน"
+    },
+    {
+      "sku": "SEED-FRONT-003",
+      "subject": "Thai rice with THREE separate toppings: white rice with chicken red curry, mixed vegetable stir fry and a pork omelette portion, exactly three toppings",
+      "prompt": "Use case: product-mockup. Asset type: square restaurant POS menu photograph. Create one photorealistic appetizing Thai food photo. Consistent collection art direction: warm matte beige tabletop and background, plain ivory-white ceramic serving ware, soft natural studio light from upper left, gentle shadow, camera at 45 degrees looking down, centered complete dish filling 75% of square frame, realistic food colors and textures, clean minimal composition. No text, logos, watermark, people, cutlery, unrelated props or side dishes. Dish specification: Thai rice with THREE separate toppings: white rice with chicken red curry, mixed vegetable stir fry and a pork omelette portion, exactly three toppings",
+      "name": "ข้าวราดแกง 3 อย่าง",
+      "category": "อาหารหน้าร้าน"
+    },
+    {
+      "sku": "SEED-FRONT-004",
+      "subject": "Thai yum gai zaep crispy fried chicken spicy salad with shallots mint chili toasted rice, served alongside steamed jasmine rice",
+      "prompt": "Use case: product-mockup. Asset type: square restaurant POS menu photograph. Create one photorealistic appetizing Thai food photo. Consistent collection art direction: warm matte beige tabletop and background, plain ivory-white ceramic serving ware, soft natural studio light from upper left, gentle shadow, camera at 45 degrees looking down, centered complete dish filling 75% of square frame, realistic food colors and textures, clean minimal composition. No text, logos, watermark, people, cutlery, unrelated props or side dishes. Dish specification: Thai yum gai zaep crispy fried chicken spicy salad with shallots mint chili toasted rice, served alongside steamed jasmine rice",
+      "name": "ข้าวยำไก่แซบ",
+      "category": "อาหารหน้าร้าน"
+    },
+    {
+      "sku": "SEED-FRONT-005",
+      "subject": "Thai yum gai zaep crispy fried chicken spicy salad with shallots mint chili toasted rice, no rice",
+      "prompt": "Use case: product-mockup. Asset type: square restaurant POS menu photograph. Create one photorealistic appetizing Thai food photo. Consistent collection art direction: warm matte beige tabletop and background, plain ivory-white ceramic serving ware, soft natural studio light from upper left, gentle shadow, camera at 45 degrees looking down, centered complete dish filling 75% of square frame, realistic food colors and textures, clean minimal composition. No text, logos, watermark, people, cutlery, unrelated props or side dishes. Dish specification: Thai yum gai zaep crispy fried chicken spicy salad with shallots mint chili toasted rice, no rice",
+      "name": "ยำไก่แซบ",
+      "category": "อาหารหน้าร้าน"
+    },
+    {
+      "sku": "SEED-FRONT-006",
+      "subject": "Plain fluffy golden Thai omelette over steamed jasmine rice, no meat or added fillings",
+      "prompt": "Use case: product-mockup. Asset type: square restaurant POS menu photograph. Create one photorealistic appetizing Thai food photo. Consistent collection art direction: warm matte beige tabletop and background, plain ivory-white ceramic serving ware, soft natural studio light from upper left, gentle shadow, camera at 45 degrees looking down, centered complete dish filling 75% of square frame, realistic food colors and textures, clean minimal composition. No text, logos, watermark, people, cutlery, unrelated props or side dishes. Dish specification: Plain fluffy golden Thai omelette over steamed jasmine rice, no meat or added fillings",
+      "name": "ข้าวไข่เจียวธรรมดา",
+      "category": "อาหารหน้าร้าน"
+    },
+    {
+      "sku": "SEED-FRONT-007",
+      "subject": "Thai loaded omelette with visible minced pork diced tomato onion scallion over steamed jasmine rice",
+      "prompt": "Use case: product-mockup. Asset type: square restaurant POS menu photograph. Create one photorealistic appetizing Thai food photo. Consistent collection art direction: warm matte beige tabletop and background, plain ivory-white ceramic serving ware, soft natural studio light from upper left, gentle shadow, camera at 45 degrees looking down, centered complete dish filling 75% of square frame, realistic food colors and textures, clean minimal composition. No text, logos, watermark, people, cutlery, unrelated props or side dishes. Dish specification: Thai loaded omelette with visible minced pork diced tomato onion scallion over steamed jasmine rice",
+      "name": "ข้าวไข่เจียวทรงเครื่อง",
+      "category": "อาหารหน้าร้าน"
+    },
+    {
+      "sku": "SEED-FRONT-008",
+      "subject": "One Thai golden fluffy omelette made from exactly one egg on a small plate, no rice or filling",
+      "prompt": "Use case: product-mockup. Asset type: square restaurant POS menu photograph. Create one photorealistic appetizing Thai food photo. Consistent collection art direction: warm matte beige tabletop and background, plain ivory-white ceramic serving ware, soft natural studio light from upper left, gentle shadow, camera at 45 degrees looking down, centered complete dish filling 75% of square frame, realistic food colors and textures, clean minimal composition. No text, logos, watermark, people, cutlery, unrelated props or side dishes. Dish specification: One Thai golden fluffy omelette made from exactly one egg on a small plate, no rice or filling",
+      "name": "ไข่เจียว 1 ฟอง",
+      "category": "อาหารหน้าร้าน"
+    },
+    {
+      "sku": "SEED-FRONT-009",
+      "subject": "Exactly one Thai fried egg, one golden yolk with crisp lacy white edges on a small plate, no rice",
+      "prompt": "Use case: product-mockup. Asset type: square restaurant POS menu photograph. Create one photorealistic appetizing Thai food photo. Consistent collection art direction: warm matte beige tabletop and background, plain ivory-white ceramic serving ware, soft natural studio light from upper left, gentle shadow, camera at 45 degrees looking down, centered complete dish filling 75% of square frame, realistic food colors and textures, clean minimal composition. No text, logos, watermark, people, cutlery, unrelated props or side dishes. Dish specification: Exactly one Thai fried egg, one golden yolk with crisp lacy white edges on a small plate, no rice",
+      "name": "ไข่ดาว 1 ฟอง",
+      "category": "อาหารหน้าร้าน"
+    },
+    {
+      "sku": "SEED-FRONT-010",
+      "subject": "Plain steamed Thai white rice in a small white bowl, no other food",
+      "prompt": "Use case: product-mockup. Asset type: square restaurant POS menu photograph. Create one photorealistic appetizing Thai food photo. Consistent collection art direction: warm matte beige tabletop and background, plain ivory-white ceramic serving ware, soft natural studio light from upper left, gentle shadow, camera at 45 degrees looking down, centered complete dish filling 75% of square frame, realistic food colors and textures, clean minimal composition. No text, logos, watermark, people, cutlery, unrelated props or side dishes. Dish specification: Plain steamed Thai white rice in a small white bowl, no other food",
+      "name": "ข้าวสวย",
+      "category": "อาหารหน้าร้าน"
+    },
+    {
+      "sku": "SEED-FRONT-011",
+      "subject": "Thai grilled pork bamboo skewers, caramelized grilled pork, small snack serving, no rice",
+      "prompt": "Use case: product-mockup. Asset type: square restaurant POS menu photograph. Create one photorealistic appetizing Thai food photo. Consistent collection art direction: warm matte beige tabletop and background, plain ivory-white ceramic serving ware, soft natural studio light from upper left, gentle shadow, camera at 45 degrees looking down, centered complete dish filling 75% of square frame, realistic food colors and textures, clean minimal composition. No text, logos, watermark, people, cutlery, unrelated props or side dishes. Dish specification: Thai grilled pork bamboo skewers, caramelized grilled pork, small snack serving, no rice",
+      "name": "หมูปิ้ง",
+      "category": "อาหารหน้าร้าน"
+    },
+    {
+      "sku": "SEED-FRONT-012",
+      "subject": "One golden crispy fried bone-in chicken thigh, no rice",
+      "prompt": "Use case: product-mockup. Asset type: square restaurant POS menu photograph. Create one photorealistic appetizing Thai food photo. Consistent collection art direction: warm matte beige tabletop and background, plain ivory-white ceramic serving ware, soft natural studio light from upper left, gentle shadow, camera at 45 degrees looking down, centered complete dish filling 75% of square frame, realistic food colors and textures, clean minimal composition. No text, logos, watermark, people, cutlery, unrelated props or side dishes. Dish specification: One golden crispy fried bone-in chicken thigh, no rice",
+      "name": "สะโพกไก่ทอด",
+      "category": "อาหารหน้าร้าน"
+    },
+    {
+      "sku": "SEED-FRONT-013",
+      "subject": "Golden crispy French fries on white plate, no burgers",
+      "prompt": "Use case: product-mockup. Asset type: square restaurant POS menu photograph. Create one photorealistic appetizing Thai food photo. Consistent collection art direction: warm matte beige tabletop and background, plain ivory-white ceramic serving ware, soft natural studio light from upper left, gentle shadow, camera at 45 degrees looking down, centered complete dish filling 75% of square frame, realistic food colors and textures, clean minimal composition. No text, logos, watermark, people, cutlery, unrelated props or side dishes. Dish specification: Golden crispy French fries on white plate, no burgers",
+      "name": "เฟรนช์ฟรายส์",
+      "category": "อาหารหน้าร้าน"
+    },
+    {
+      "sku": "SEED-FRONT-014",
+      "subject": "Golden crispy chicken nuggets on white plate, no fries",
+      "prompt": "Use case: product-mockup. Asset type: square restaurant POS menu photograph. Create one photorealistic appetizing Thai food photo. Consistent collection art direction: warm matte beige tabletop and background, plain ivory-white ceramic serving ware, soft natural studio light from upper left, gentle shadow, camera at 45 degrees looking down, centered complete dish filling 75% of square frame, realistic food colors and textures, clean minimal composition. No text, logos, watermark, people, cutlery, unrelated props or side dishes. Dish specification: Golden crispy chicken nuggets on white plate, no fries",
+      "name": "นัคเก็ตทอด",
+      "category": "อาหารหน้าร้าน"
+    },
+    {
+      "sku": "SEED-FRONT-015",
+      "subject": "Chicken nuggets and French fries together on a white plate, balanced half nuggets half fries",
+      "prompt": "Use case: product-mockup. Asset type: square restaurant POS menu photograph. Create one photorealistic appetizing Thai food photo. Consistent collection art direction: warm matte beige tabletop and background, plain ivory-white ceramic serving ware, soft natural studio light from upper left, gentle shadow, camera at 45 degrees looking down, centered complete dish filling 75% of square frame, realistic food colors and textures, clean minimal composition. No text, logos, watermark, people, cutlery, unrelated props or side dishes. Dish specification: Chicken nuggets and French fries together on a white plate, balanced half nuggets half fries",
+      "name": "นักเก็ต + เฟรนช์ฟรายส์",
+      "category": "อาหารหน้าร้าน"
+    },
+    {
+      "sku": "SEED-FRONT-016",
+      "subject": "One unbranded paper cup of Thai instant noodles with cooked curly noodles and broth, plain ivory-white cup without writing or logo, warm beige backdrop",
+      "prompt": "Use case: product-mockup. Asset type: square restaurant POS menu photograph. Create one photorealistic appetizing Thai food photo. Consistent collection art direction: warm matte beige tabletop and background, plain ivory-white ceramic serving ware, soft natural studio light from upper left, gentle shadow, camera at 45 degrees looking down, centered complete dish filling 75% of square frame, realistic food colors and textures, clean minimal composition. No text, logos, watermark, people, cutlery, unrelated props or side dishes. Dish specification: One unbranded paper cup of Thai instant noodles with cooked curly noodles and broth, plain ivory-white cup without writing or logo, warm beige backdrop",
+      "name": "มาม่าคัพ",
+      "category": "อาหารหน้าร้าน"
+    },
+    {
+      "sku": "SEED-ISAN-001",
+      "subject": "Som tam cucumber salad with thick cucumber strips tomato long beans red chili savory dressing, no green papaya",
+      "prompt": "Use case: product-mockup. Asset type: square restaurant POS menu photograph. Create one photorealistic appetizing Thai food photo. Consistent collection art direction: warm matte beige tabletop and background, plain ivory-white ceramic serving ware, soft natural studio light from upper left, gentle shadow, camera at 45 degrees looking down, centered complete dish filling 75% of square frame, realistic food colors and textures, clean minimal composition. No text, logos, watermark, people, cutlery, unrelated props or side dishes. Dish specification: Som tam cucumber salad with thick cucumber strips tomato long beans red chili savory dressing, no green papaya",
+      "name": "ตำแตง",
+      "category": "อาหารอีสาน"
+    },
+    {
+      "sku": "SEED-ISAN-002",
+      "subject": "Som tam Thai green papaya salad with tomato long beans roasted peanuts dried shrimp red chilies, no crab",
+      "prompt": "Use case: product-mockup. Asset type: square restaurant POS menu photograph. Create one photorealistic appetizing Thai food photo. Consistent collection art direction: warm matte beige tabletop and background, plain ivory-white ceramic serving ware, soft natural studio light from upper left, gentle shadow, camera at 45 degrees looking down, centered complete dish filling 75% of square frame, realistic food colors and textures, clean minimal composition. No text, logos, watermark, people, cutlery, unrelated props or side dishes. Dish specification: Som tam Thai green papaya salad with tomato long beans roasted peanuts dried shrimp red chilies, no crab",
+      "name": "ตำไทย",
+      "category": "อาหารอีสาน"
+    },
+    {
+      "sku": "SEED-ISAN-003",
+      "subject": "Som tam Thai green papaya salad with salted egg quarters, visible yellow salted yolks, peanuts dried shrimp tomato beans",
+      "prompt": "Use case: product-mockup. Asset type: square restaurant POS menu photograph. Create one photorealistic appetizing Thai food photo. Consistent collection art direction: warm matte beige tabletop and background, plain ivory-white ceramic serving ware, soft natural studio light from upper left, gentle shadow, camera at 45 degrees looking down, centered complete dish filling 75% of square frame, realistic food colors and textures, clean minimal composition. No text, logos, watermark, people, cutlery, unrelated props or side dishes. Dish specification: Som tam Thai green papaya salad with salted egg quarters, visible yellow salted yolks, peanuts dried shrimp tomato beans",
+      "name": "ตำไทย ไข่เค็ม",
+      "category": "อาหารอีสาน"
+    },
+    {
+      "sku": "SEED-ISAN-004",
+      "subject": "Som tam pu pla ra green papaya salad with small salted crab pieces tomato long beans chili dark fermented fish dressing, no peanuts",
+      "prompt": "Use case: product-mockup. Asset type: square restaurant POS menu photograph. Create one photorealistic appetizing Thai food photo. Consistent collection art direction: warm matte beige tabletop and background, plain ivory-white ceramic serving ware, soft natural studio light from upper left, gentle shadow, camera at 45 degrees looking down, centered complete dish filling 75% of square frame, realistic food colors and textures, clean minimal composition. No text, logos, watermark, people, cutlery, unrelated props or side dishes. Dish specification: Som tam pu pla ra green papaya salad with small salted crab pieces tomato long beans chili dark fermented fish dressing, no peanuts",
+      "name": "ตำปูปลาร้า",
+      "category": "อาหารอีสาน"
+    },
+    {
+      "sku": "SEED-ISAN-005",
+      "subject": "Som tam long bean salad, crushed cut long bean segments tomato chili savory dressing, long beans primary ingredient not papaya",
+      "prompt": "Use case: product-mockup. Asset type: square restaurant POS menu photograph. Create one photorealistic appetizing Thai food photo. Consistent collection art direction: warm matte beige tabletop and background, plain ivory-white ceramic serving ware, soft natural studio light from upper left, gentle shadow, camera at 45 degrees looking down, centered complete dish filling 75% of square frame, realistic food colors and textures, clean minimal composition. No text, logos, watermark, people, cutlery, unrelated props or side dishes. Dish specification: Som tam long bean salad, crushed cut long bean segments tomato chili savory dressing, long beans primary ingredient not papaya",
+      "name": "ตำถั่ว",
+      "category": "อาหารอีสาน"
+    },
+    {
+      "sku": "SEED-ISAN-006",
+      "subject": "Tam sua pla krop: green papaya salad mixed with white fermented rice noodles and crisp small fish pieces, tomato long beans chili savory dressing",
+      "prompt": "Use case: product-mockup. Asset type: square restaurant POS menu photograph. Create one photorealistic appetizing Thai food photo. Consistent collection art direction: warm matte beige tabletop and background, plain ivory-white ceramic serving ware, soft natural studio light from upper left, gentle shadow, camera at 45 degrees looking down, centered complete dish filling 75% of square frame, realistic food colors and textures, clean minimal composition. No text, logos, watermark, people, cutlery, unrelated props or side dishes. Dish specification: Tam sua pla krop: green papaya salad mixed with white fermented rice noodles and crisp small fish pieces, tomato long beans chili savory dressing",
+      "name": "ตำซั่วปลากรอบ",
+      "category": "อาหารอีสาน"
+    },
+    {
+      "sku": "SEED-ISAN-007",
+      "subject": "Som tam pickled mussel salad, green papaya with visible orange pickled mussel meat tomato chili long beans, not clams",
+      "prompt": "Use case: product-mockup. Asset type: square restaurant POS menu photograph. Create one photorealistic appetizing Thai food photo. Consistent collection art direction: warm matte beige tabletop and background, plain ivory-white ceramic serving ware, soft natural studio light from upper left, gentle shadow, camera at 45 degrees looking down, centered complete dish filling 75% of square frame, realistic food colors and textures, clean minimal composition. No text, logos, watermark, people, cutlery, unrelated props or side dishes. Dish specification: Som tam pickled mussel salad, green papaya with visible orange pickled mussel meat tomato chili long beans, not clams",
+      "name": "ตำหอยดอง",
+      "category": "อาหารอีสาน"
+    },
+    {
+      "sku": "SEED-ISAN-008",
+      "subject": "Isan larb minced pork salad with mint shallot chili toasted rice lime dressing, no rice side",
+      "prompt": "Use case: product-mockup. Asset type: square restaurant POS menu photograph. Create one photorealistic appetizing Thai food photo. Consistent collection art direction: warm matte beige tabletop and background, plain ivory-white ceramic serving ware, soft natural studio light from upper left, gentle shadow, camera at 45 degrees looking down, centered complete dish filling 75% of square frame, realistic food colors and textures, clean minimal composition. No text, logos, watermark, people, cutlery, unrelated props or side dishes. Dish specification: Isan larb minced pork salad with mint shallot chili toasted rice lime dressing, no rice side",
+      "name": "ลาบหมู",
+      "category": "อาหารอีสาน"
+    },
+    {
+      "sku": "SEED-ISAN-009",
+      "subject": "Isan larb minced chicken salad with mint shallot chili toasted rice lime dressing, no rice side",
+      "prompt": "Use case: product-mockup. Asset type: square restaurant POS menu photograph. Create one photorealistic appetizing Thai food photo. Consistent collection art direction: warm matte beige tabletop and background, plain ivory-white ceramic serving ware, soft natural studio light from upper left, gentle shadow, camera at 45 degrees looking down, centered complete dish filling 75% of square frame, realistic food colors and textures, clean minimal composition. No text, logos, watermark, people, cutlery, unrelated props or side dishes. Dish specification: Isan larb minced chicken salad with mint shallot chili toasted rice lime dressing, no rice side",
+      "name": "ลาบไก่",
+      "category": "อาหารอีสาน"
+    },
+    {
+      "sku": "SEED-ISAN-010",
+      "subject": "Nam tok grilled pork neck salad, tender sliced grilled neck with mint shallots chili toasted rice, no rice",
+      "prompt": "Use case: product-mockup. Asset type: square restaurant POS menu photograph. Create one photorealistic appetizing Thai food photo. Consistent collection art direction: warm matte beige tabletop and background, plain ivory-white ceramic serving ware, soft natural studio light from upper left, gentle shadow, camera at 45 degrees looking down, centered complete dish filling 75% of square frame, realistic food colors and textures, clean minimal composition. No text, logos, watermark, people, cutlery, unrelated props or side dishes. Dish specification: Nam tok grilled pork neck salad, tender sliced grilled neck with mint shallots chili toasted rice, no rice",
+      "name": "น้ำตกคอหมูย่าง",
+      "category": "อาหารอีสาน"
+    },
+    {
+      "sku": "SEED-ISAN-011",
+      "subject": "Thai grilled pork neck sliced with charred caramelized edges, juicy fatty marbling, no rice",
+      "prompt": "Use case: product-mockup. Asset type: square restaurant POS menu photograph. Create one photorealistic appetizing Thai food photo. Consistent collection art direction: warm matte beige tabletop and background, plain ivory-white ceramic serving ware, soft natural studio light from upper left, gentle shadow, camera at 45 degrees looking down, centered complete dish filling 75% of square frame, realistic food colors and textures, clean minimal composition. No text, logos, watermark, people, cutlery, unrelated props or side dishes. Dish specification: Thai grilled pork neck sliced with charred caramelized edges, juicy fatty marbling, no rice",
+      "name": "คอหมูย่าง",
+      "category": "อาหารอีสาน"
+    },
+    {
+      "sku": "SEED-ISAN-012",
+      "subject": "One whole Thai grilled catfish, long slim dark charred skin head tail visible, not tilapia, no rice",
+      "prompt": "Use case: product-mockup. Asset type: square restaurant POS menu photograph. Create one photorealistic appetizing Thai food photo. Consistent collection art direction: warm matte beige tabletop and background, plain ivory-white ceramic serving ware, soft natural studio light from upper left, gentle shadow, camera at 45 degrees looking down, centered complete dish filling 75% of square frame, realistic food colors and textures, clean minimal composition. No text, logos, watermark, people, cutlery, unrelated props or side dishes. Dish specification: One whole Thai grilled catfish, long slim dark charred skin head tail visible, not tilapia, no rice",
+      "name": "ปลาดุกย่าง",
+      "category": "อาหารอีสาน"
+    },
+    {
+      "sku": "SEED-ISAN-013",
+      "subject": "Isan catfish larb, flaked grilled catfish meat tossed with mint shallots chili toasted rice, no whole fish or rice",
+      "prompt": "Use case: product-mockup. Asset type: square restaurant POS menu photograph. Create one photorealistic appetizing Thai food photo. Consistent collection art direction: warm matte beige tabletop and background, plain ivory-white ceramic serving ware, soft natural studio light from upper left, gentle shadow, camera at 45 degrees looking down, centered complete dish filling 75% of square frame, realistic food colors and textures, clean minimal composition. No text, logos, watermark, people, cutlery, unrelated props or side dishes. Dish specification: Isan catfish larb, flaked grilled catfish meat tossed with mint shallots chili toasted rice, no whole fish or rice",
+      "name": "ลาบปลาดุก",
+      "category": "อาหารอีสาน"
+    },
+    {
+      "sku": "SEED-ISAN-014",
+      "subject": "One Thai grilled bone-in chicken thigh with caramelized skin and char, no rice",
+      "prompt": "Use case: product-mockup. Asset type: square restaurant POS menu photograph. Create one photorealistic appetizing Thai food photo. Consistent collection art direction: warm matte beige tabletop and background, plain ivory-white ceramic serving ware, soft natural studio light from upper left, gentle shadow, camera at 45 degrees looking down, centered complete dish filling 75% of square frame, realistic food colors and textures, clean minimal composition. No text, logos, watermark, people, cutlery, unrelated props or side dishes. Dish specification: One Thai grilled bone-in chicken thigh with caramelized skin and char, no rice",
+      "name": "สะโพกไก่ย่าง",
+      "category": "อาหารอีสาน"
+    },
+    {
+      "sku": "SEED-ISAN-015",
+      "subject": "One golden crispy deep-fried bone-in chicken thigh, no rice",
+      "prompt": "Use case: product-mockup. Asset type: square restaurant POS menu photograph. Create one photorealistic appetizing Thai food photo. Consistent collection art direction: warm matte beige tabletop and background, plain ivory-white ceramic serving ware, soft natural studio light from upper left, gentle shadow, camera at 45 degrees looking down, centered complete dish filling 75% of square frame, realistic food colors and textures, clean minimal composition. No text, logos, watermark, people, cutlery, unrelated props or side dishes. Dish specification: One golden crispy deep-fried bone-in chicken thigh, no rice",
+      "name": "สะโพกไก่ทอด",
+      "category": "อาหารอีสาน"
+    },
+    {
+      "sku": "SEED-ISAN-016",
+      "subject": "Plain steamed glutinous sticky rice compact textured mound on white small plate, no other food",
+      "prompt": "Use case: product-mockup. Asset type: square restaurant POS menu photograph. Create one photorealistic appetizing Thai food photo. Consistent collection art direction: warm matte beige tabletop and background, plain ivory-white ceramic serving ware, soft natural studio light from upper left, gentle shadow, camera at 45 degrees looking down, centered complete dish filling 75% of square frame, realistic food colors and textures, clean minimal composition. No text, logos, watermark, people, cutlery, unrelated props or side dishes. Dish specification: Plain steamed glutinous sticky rice compact textured mound on white small plate, no other food",
+      "name": "ข้าวเหนียว",
+      "category": "อาหารอีสาน"
+    },
+    {
+      "sku": "SEED-ISAN-017",
+      "subject": "Plain khanom jeen Thai fermented thin white rice noodles arranged in soft coils on white plate, no sauce or curry",
+      "prompt": "Use case: product-mockup. Asset type: square restaurant POS menu photograph. Create one photorealistic appetizing Thai food photo. Consistent collection art direction: warm matte beige tabletop and background, plain ivory-white ceramic serving ware, soft natural studio light from upper left, gentle shadow, camera at 45 degrees looking down, centered complete dish filling 75% of square frame, realistic food colors and textures, clean minimal composition. No text, logos, watermark, people, cutlery, unrelated props or side dishes. Dish specification: Plain khanom jeen Thai fermented thin white rice noodles arranged in soft coils on white plate, no sauce or curry",
+      "name": "ขนมจีน",
+      "category": "อาหารอีสาน"
+    }
+  ]
+}

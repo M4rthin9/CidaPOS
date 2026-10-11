@@ -1,0 +1,7 @@
+Each POS can sell a different set of categories. Open **Backoffice → Settings → POS devices**, select the device to edit (or add POS2), and use **Category selection → Selected categories**. Check its categories and click **Save device**. Repeat for each POS. A category can be assigned to several POS devices. New products in an assigned category automatically appear on those devices.
+
+Use **Bind POS to this browser** on each physical device to select its terminal, then reload its selling screen. Product lists, category shortcuts, favorites and the add-menu category selector use that terminal's assignments. Parked-bill lists are scoped to the current terminal.
+
+Existing devices default to **All categories**. Selecting no categories explicitly gives a POS an empty menu. Assignments live in the existing terminal configuration, so no database schema migration is needed. Saving device settings validates category IDs and records the existing device-change audit.
+
+Checkout validates each product's current category against the current terminal assignment inside the sale transaction. Unassigned categories reject the whole sale without saving orders, payments or print jobs. Existing carts stay visible for correction and cannot be paid until restricted items are removed. An uncertain checkout that already committed can still replay its original request after assignments change, preserving the existing duplicate-sale protection. Historical sales and reprints remain available.

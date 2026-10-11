@@ -9,6 +9,9 @@ async function prepare(page:Page,role='admin',long=false){
  const catalog=await (await page.request.get('/api/catalog')).json();
  const source:SalesReport=await (await page.request.get('/api/reports')).json();
  const categories=long?Array.from({length:72},(_,i)=>({id:`print-category-${i}`,name:`หมวดอาหารทดสอบชื่อยาวสำหรับรายงานหลายหน้า ลำดับ ${i+1}`,total:1000,quantity:1,discount:0})):[{id:'menu-outside',name:'อาหารร้านนอก',total:80025,quantity:28,discount:1000},{id:'menu-front',name:'อาหารหน้าร้าน',total:25000,quantity:14,discount:500},{id:'menu-isan',name:'อาหารอีสาน',total:20025,quantity:10,discount:0}];
+ if(!long)Object.assign(categories[0],{products:[{id:'outside-grill',name:'หมูปิ้งนมสด',quantity:8,total:64000},{id:'outside-other',name:'อาหารอื่น ๆ',quantity:20,total:16025}]});
+ if(!long)Object.assign(categories[1],{products:[{id:'front-rice',name:'ข้าวราดแกง 2 อย่าง',quantity:5,total:10000},{id:'front-other',name:'อาหารอื่น ๆ',quantity:9,total:15000}]});
+ if(!long)Object.assign(categories[2],{products:[{id:'isan-other',name:'อาหารอื่น ๆ',quantity:10,total:20025}]});
  const total=categories.reduce((sum,c)=>sum+c.total,0);
  const fixture:SalesReport={...source,date:'2026-10-07',from:'2026-10-07',to:'2026-10-07',generatedAt:'2026-10-07T03:30:00Z',day:{closed:false},filters:false,summary:{...source.summary,total,gross:total+5000,count:18,quantity:categories.reduce((sum,c)=>sum+c.quantity,0),average:Math.round(total/18),discount:1500,voided:3000,refunded:500,categories,products:long?[]:[{name:'หมูปิ้งนมสด',quantity:8,total:64000},{name:'ข้าวราดแกง 2 อย่าง',quantity:5,total:25000},{name:'อาหารอื่น ๆ',quantity:39,total:36050}],payments:{CASH:total-25050,QR:25050,OTHER:0},cashiers:{},terminals:{}}};
  await page.route('**/api/reports?*',route=>{
@@ -53,6 +56,7 @@ test('live report API provides complete daily trend points matching its financia
   expect(report.trend!.at(-1)).toMatchObject({date:report.date,total:report.summary.total,count:report.summary.count});
   expect(report.trend!.map(d=>d.date)).toEqual(reportDates(report.date,days as 7|30));
   expect(report.summary.categories.reduce((sum,c)=>sum+c.total,0)).toBe(report.summary.total);
+  for(const category of report.summary.categories){expect(category.products).toBeDefined();expect(category.products!.reduce((sum,p)=>sum+p.total,0)).toBe(category.total);expect(category.products!.reduce((sum,p)=>sum+p.quantity,0)).toBe(category.quantity);}
  }
  expect((await page.request.get('/api/reports?trend=8')).status()).toBe(400);
 });
@@ -118,6 +122,46 @@ test('A4 category tables paginate with repeatable headers and unsplit rows',asyn
  expect([...pdf.toString('latin1').matchAll(/\/Type\s*\/Page\b/g)].length).toBeGreaterThan(1);
 });
 
+test('cashier expands category products independently and refreshes details for the selected day',async({page})=>{
+ const {fixture}=await prepare(page,'cashier');
+ await page.goto('/pos');await page.getByRole('button',{name:'รายงานประจำวัน',exact:true}).click();
+ const dialog=page.getByRole('dialog',{name:'รายงานประจำวัน'}),outside=dialog.getByRole('button',{name:'รายละเอียดหมวด อาหารร้านนอก',exact:true}),front=dialog.getByRole('button',{name:'รายละเอียดหมวด อาหารหน้าร้าน',exact:true});
+ await expect(outside).toHaveAttribute('aria-expanded','false');
+ await expect(dialog.getByRole('table',{name:'สินค้าที่ขายในหมวด อาหารร้านนอก'})).toHaveCount(0);
+ await outside.focus();await page.keyboard.press('Enter');await expect(outside).toHaveAttribute('aria-expanded','true');
+ const outsideTable=dialog.getByRole('table',{name:'สินค้าที่ขายในหมวด อาหารร้านนอก'});
+ await expect(outsideTable.locator('tbody tr').first()).toHaveText(['หมูปิ้งนมสด8640.00']);
+ await expect(outsideTable.locator('tbody tr').last()).toHaveText(['อาหารอื่น ๆ20160.25']);
+ await front.click();await expect(front).toHaveAttribute('aria-expanded','true');await expect(outside).toHaveAttribute('aria-expanded','true');
+ await expect(dialog.getByRole('table',{name:'สินค้าที่ขายในหมวด อาหารหน้าร้าน'}).locator('tbody tr').last()).toHaveText(['อาหารอื่น ๆ9150.00']);
+ await outside.focus();await page.keyboard.press('Space');await expect(outside).toHaveAttribute('aria-expanded','false');await expect(front).toHaveAttribute('aria-expanded','true');
+ fixture.summary.categories[1].products![0].name='รายละเอียดที่อัปเดต';
+ await dialog.getByRole('button',{name:'รีเฟรช',exact:true}).click();
+ await expect(dialog.getByRole('table',{name:'สินค้าที่ขายในหมวด อาหารหน้าร้าน'})).toContainText('รายละเอียดที่อัปเดต');
+ const date=dialog.getByLabel('วันทำการ');await date.fill('2026-10-06');
+ await expect(front).toHaveAttribute('aria-expanded','false');
+ await expect(dialog.getByRole('table',{name:'สินค้าที่ขายในหมวด อาหารหน้าร้าน'})).toHaveCount(0);
+ await front.click();await expect(dialog.getByRole('table',{name:'สินค้าที่ขายในหมวด อาหารหน้าร้าน'})).toContainText('รายละเอียดที่อัปเดต');
+});
+
+test('category details fit mobile and distinguish no sales from fully refunded sales',async({page})=>{
+ const {fixture}=await prepare(page,'cashier');
+ fixture.summary.categories.push({id:'no-sales',name:'หมวดที่ยังไม่มีการขาย',total:0,quantity:0,discount:0,products:[]},{id:'refunded',name:'หมวดคืนเงินทั้งหมด',total:0,quantity:2,discount:0,products:[{id:'refunded-product',name:'สินค้าชื่อยาวสำหรับตรวจสอบรายละเอียดภาษาไทยในหน้าจอขนาดเล็ก',quantity:2,total:0}]});
+ await page.setViewportSize({width:390,height:844});await page.goto('/pos');await page.getByRole('button',{name:'รายงานประจำวัน',exact:true}).click();
+ const dialog=page.getByRole('dialog',{name:'รายงานประจำวัน'});
+ await dialog.getByRole('button',{name:'รายละเอียดหมวด หมวดที่ยังไม่มีการขาย',exact:true}).click();
+ await expect(dialog.getByRole('region',{name:'รายละเอียดหมวด หมวดที่ยังไม่มีการขาย',exact:true})).toContainText('ยังไม่มีสินค้าที่ขายในหมวดนี้');
+ await dialog.getByRole('button',{name:'รายละเอียดหมวด หมวดคืนเงินทั้งหมด',exact:true}).click();
+ await expect(dialog.getByRole('table',{name:'สินค้าที่ขายในหมวด หมวดคืนเงินทั้งหมด'}).locator('tbody tr')).toHaveText(['สินค้าชื่อยาวสำหรับตรวจสอบรายละเอียดภาษาไทยในหน้าจอขนาดเล็ก20.00']);
+ await dialog.getByRole('button',{name:'รายละเอียดหมวด อาหารร้านนอก',exact:true}).click();
+ await dialog.screenshot({path:'test-results/cashier-category-details-mobile.png'});
+ for(const width of [390,320]){
+  await page.setViewportSize({width,height:844});
+  expect(await dialog.locator('.table-scroll').evaluate(e=>e.scrollWidth<=e.clientWidth)).toBe(true);
+  expect(await dialog.evaluate(e=>e.scrollWidth<=e.clientWidth)).toBe(true);
+ }
+});
+
 test('cashier prints only category amounts and the daily total on an 80 mm report',async({page,baseURL})=>{
  const {catalog,fixture}=await prepare(page,'cashier');
  catalog.config.profile={...catalog.config.profile,paperMm:'80',width:576,characters:48};
@@ -137,12 +181,14 @@ test('cashier prints only category amounts and the daily total on an 80 mm repor
  await expect(dialog.locator('.category-report th')).toHaveCount(2);
  await expect(dialog.locator('.category-report')).toContainText('1,250.50');
  await expect(dialog.getByRole('button',{name:'พิมพ์ A4',exact:true})).toHaveCount(0);
+ await dialog.getByRole('button',{name:'รายละเอียดหมวด อาหารร้านนอก',exact:true}).click();
+ await expect(dialog.getByRole('table',{name:'สินค้าที่ขายในหมวด อาหารร้านนอก'})).toContainText('หมูปิ้งนมสด');
  await dialog.screenshot({path:'test-results/cashier-category-report.png'});
  await dialog.getByRole('button',{name:'พิมพ์ 80 มม.',exact:true}).click();
  const laptop=page.getByRole('dialog',{name:'พิมพ์ผ่านแล็ปท็อป'});await expect(laptop).toBeVisible({timeout:15000});
  const frame=page.frameLocator('iframe[title="ใบเสร็จสำหรับเครื่องพิมพ์แล็ปท็อป"]');
  const receipt=frame.locator('main');await expect(receipt).toContainText('อาหารร้านนอก');await expect(receipt).toContainText('800.25 บาท');await expect(receipt).toContainText('250.00 บาท');await expect(receipt).toContainText('200.25 บาท');await expect(receipt).toContainText('รวมยอดขายประจำวัน');await expect(receipt).toContainText('1,250.50 บาท');
- await expect(receipt).not.toContainText(/จำนวนบิล|ชิ้น|การชำระเงิน|เงินสด|คืนเงิน|ส่วนลด|CASHIER SHOULD NOT PRINT|POS-01/);
+ await expect(receipt).not.toContainText(/หมูปิ้งนมสด|อาหารอื่น ๆ|จำนวนบิล|ชิ้น|การชำระเงิน|เงินสด|คืนเงิน|ส่วนลด|CASHIER SHOULD NOT PRINT|POS-01/);
  await expect(laptop.getByRole('button',{name:'พิมพ์ใบเสร็จ',exact:true})).toBeEnabled();
  expect(await receipt.evaluate(element=>[...element.querySelectorAll('.receipt-details')].every(table=>table.scrollWidth<=table.clientWidth&&[...table.querySelectorAll('.receipt-item-amount')].every(value=>Math.abs(value.getBoundingClientRect().right-table.getBoundingClientRect().right)<1)))).toBe(true);
  const printHtml=await frame.locator('html').evaluate(element=>element.outerHTML),preview=await page.context().newPage();

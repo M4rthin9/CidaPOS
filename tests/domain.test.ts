@@ -30,6 +30,22 @@ test('Bangkok business dates cross UTC midnight and respect opening',()=>{assert
 const order=(time:string,total:number,category='future-category'):ReportOrder=>({id:time,createdAt:`2026-10-06T${time}+07:00`,subtotal:total,discount:0,total,refunded:0,status:'COMPLETED',cashierId:'user',terminalId:'POS-01',items:[{id:time,productId:'p',name:'สินค้า',categoryId:category,categoryName:'หมวดใหม่',quantity:1,lineTotal:total,discount:0,refunded:0}],payments:[{method:'CASH',amount:total}],adjustments:[]});
 test('daily totals include every sale and reconcile categories without timed periods',()=>{const s=summarize([order('09:59:59',100),order('10:00:00',200),order('13:59:59',300),order('14:00:00',400)]);assert.equal(s.total,1000);assert.equal(s.categories[0].id,'future-category');assert.equal(s.categories.reduce((a,c)=>a+c.total,0),s.total);assert.equal(s.payments.CASH,s.total);assert.equal('periods' in s,false);assert.equal('cumulative14' in s,false);assert.equal('periods' in s.categories[0],false);const day=boundaries('2026-10-06','06:00');assert.equal(day.start.toISOString(),'2026-10-05T23:00:00.000Z');assert.equal(day.end.toISOString(),'2026-10-06T23:00:00.000Z');});
 test('voids excluded, partial refunds reduce item/category/payment totals',()=>{const a=order('09:00:00',1000),b=order('11:00:00',2000);a.status='VOIDED';b.status='PARTIALLY_REFUNDED';b.refunded=500;b.items[0].refunded=500;b.adjustments=[{method:'CASH',amount:500}];const s=summarize([a,b]);assert.equal(s.total,1500);assert.equal(s.count,1);assert.equal(s.voided,1000);assert.equal(s.refunded,500);assert.equal(s.categories[0].total,1500);assert.equal(s.payments.CASH,1500);});
+test('category product details use saved category and product IDs and reconcile net sales',()=>{
+ const first=order('09:00:00',900,'old-category'),repeat=order('10:00:00',600,'old-category'),moved=order('11:00:00',400,'new-category'),sameName=order('12:00:00',500,'old-category'),voided=order('13:00:00',999,'old-category');
+ first.items[0].quantity=3;first.items[0].discount=100;first.discount=100;first.subtotal=1000;
+ repeat.status='PARTIALLY_REFUNDED';repeat.refunded=200;repeat.items[0].refunded=200;repeat.items[0].name='Renamed product';
+ sameName.items[0].productId='different-product';voided.status='VOIDED';
+ const summary=summarize([first,repeat,moved,sameName,voided]);
+ const old=summary.categories.find(c=>c.id==='old-category')!,current=summary.categories.find(c=>c.id==='new-category')!;
+ assert.deepEqual(old.products,[{id:'p',name:'สินค้า',quantity:4,total:1300},{id:'different-product',name:'สินค้า',quantity:1,total:500}]);
+ assert.deepEqual(current.products,[{id:'p',name:'สินค้า',quantity:1,total:400}]);
+ for(const category of summary.categories){assert.equal(category.products!.reduce((sum,p)=>sum+p.total,0),category.total);assert.equal(category.products!.reduce((sum,p)=>sum+p.quantity,0),category.quantity);}
+ assert.equal(summary.total,2200);assert.deepEqual(summarize([]).categories,[]);
+});
+test('fully refunded products remain visible with zero net sales',()=>{
+ const refunded=order('09:00:00',1000);refunded.status='REFUNDED';refunded.refunded=1000;refunded.items[0].refunded=1000;
+ const summary=summarize([refunded]);assert.deepEqual(summary.categories[0].products,[{id:'p',name:'สินค้า',quantity:1,total:0}]);assert.equal(summary.total,0);
+});
 test('receipt wrapping preserves Thai combining marks and kitchen tickets omit prices',()=>{const text='ทัณฑสถานบำบัดพิเศษกลาง';assert.equal(wrapThai(text,8).replaceAll('\n',''),text);const blocks=receiptBlocks({kitchen:true,number:'test',queue:'A0123',date:'2026-10-06T04:00:00Z',terminal:'POS-01',config:defaultSettings,items:[{name:'กะเพราไก่',quantity:2,unitPrice:5000,lineTotal:10000,modifiers:[{name:'ไข่ดาว',price:1000}],note:'เผ็ดน้อย'}]});const joined=blocks.map(b=>b.text).join('\n');assert.match(joined,/A0123/);assert.match(joined,/ไข่ดาว/);assert.doesNotMatch(joined,/100\.00|50\.00/);});
 test('compact receipt rows retain saved totals, quantities, modifiers and notes',()=>{
  const blocks=receiptBlocks({date:'2026-10-08T04:00:00Z',terminal:'POS-01',config:{...defaultSettings,blocks:defaultSettings.blocks.filter(b=>b.type==='ITEM_TABLE').map(b=>({...b,align:'CENTER',before:1,after:2}))},items:[

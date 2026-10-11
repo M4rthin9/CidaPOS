@@ -10,7 +10,8 @@ import { AppError, requireUser, login, logout, checkOrigin } from '@/lib/auth';
 import { can, roles } from '@/lib/permissions';
 import { settings, checkout, report, salesTrend, dailyReportPrint, closeDay, reopenDay, adjustOrder, reprint, claimJob, audit, json, orderInclude, getOrder } from '@/lib/sales';
 import { settingsSchema } from '@/lib/config';
-import { checkoutSchema, categorySchema, productSchema, dateSchema } from '@/lib/validation';
+import {saveTerminal} from '@/lib/terminals';
+import { checkoutSchema, categorySchema, productSchema, dateSchema, terminalSchema } from '@/lib/validation';
 import { businessDate, summarize, money } from '@/lib/domain';
 import {resetPreview,resetSales,resetArchives,resetArchive} from '@/lib/sales-reset';
 export const runtime='nodejs';
@@ -79,7 +80,7 @@ async function handle(request:NextRequest,context:{params:Promise<{path:string[]
   }
   if(resource==='closings'){need(action==='reopen'?'reopen':'close');const data=z.object({date:dateSchema,actualCash:z.number().int().min(0).max(100_000_000).default(0),note:z.string().max(1000).default('')}).parse(body);if(action==='reopen'){if(data.note.trim().length<3)throw new AppError('ระบุเหตุผลการเปิดรอบแก้ไข');await reopenDay(data.date,data.note,user);return answer({ok:true});}return answer(await closeDay(data.date,data.actualCash,data.note,user));}
   if(resource==='parked'){
-   need('sell');if(!mutation)return answer(await db.parkedOrder.findMany({where:{userId:user.id},orderBy:{createdAt:'desc'}}));
+   need('sell');if(!mutation)return answer(await db.parkedOrder.findMany({where:{userId:user.id,...(q.get('terminal')?{terminalId:q.get('terminal')!}:{})},orderBy:{createdAt:'desc'}}));
    if(id){const row=await db.parkedOrder.findUniqueOrThrow({where:{id}});if(row.userId!==user.id)throw new AppError('ไม่มีสิทธิ์เรียกบิลนี้',403);await db.parkedOrder.delete({where:{id}});return answer(row);}
    const data=z.object({terminalId:z.string().max(100),label:z.string().min(1).max(100),cart:z.array(z.object({productId:z.string(),quantity:z.number().int().min(1).max(999),modifiers:z.array(z.string()),note:z.string().max(300)})).min(1).max(100)}).parse(body);return answer(await db.parkedOrder.create({data:{userId:user.id,terminalId:data.terminalId,label:data.label,cart:json(data.cart)}}));
   }
@@ -97,7 +98,7 @@ async function handle(request:NextRequest,context:{params:Promise<{path:string[]
    need('settings.write');if(!mutation)return answer(await settings());const data=settingsSchema.parse(body);if(data.logo&&!/^data:image\/(png|jpeg|webp);base64,/.test(data.logo)&&!/^\/api\/media\/logos\/[-a-f0-9]{36}\.(png|jpg|webp)$/.test(data.logo))throw new AppError('โลโก้ต้องเป็นภาพ PNG/JPEG/WebP');return answer(await db.$transaction(async tx=>{const before=await settings(tx);if(before.opening!==data.opening&&await tx.order.count())throw new AppError('เวลาเริ่มวันทำการเปลี่ยนได้ก่อนเริ่มบันทึกการขายเท่านั้น');await tx.setting.upsert({where:{key:'system'},create:{key:'system',value:json(data)},update:{value:json(data)}});await audit(tx,user,'SETTINGS_CHANGE','Setting','system',before,data);return data;}));
   }
   if(resource==='terminals'){
-   need('settings.write');if(!mutation)return answer(await db.terminal.findMany());const data=z.object({id:z.string().regex(/^[A-Za-z0-9-]{1,30}$/),name:z.string().min(1).max(100),location:z.string().max(100),active:z.boolean(),config:z.object({printerId:z.string().min(1).max(100),adapter:z.enum(['imin','mock','browser','codesoft']),connection:z.enum(['USB','SPI','Bluetooth']),sdkPath:z.string().regex(/^\/vendor\/[a-zA-Z0-9._-]+\.js$/),drawer:z.boolean(),cutter:z.boolean(),sound:z.boolean(),density:z.enum(['comfortable','compact']),fallbackPrinter:z.enum(['codesoft','browser']).optional(),codesoftPaperMm:z.enum(['58','80']).optional(),drawerDevice:z.enum(['printer','imin']).optional()})}).parse(body);return answer(await db.$transaction(async tx=>{const before=await tx.terminal.findUnique({where:{id:data.id}});const row=await tx.terminal.upsert({where:{id:data.id},create:{...data,config:json(data.config)},update:{...data,config:json(data.config)}});await audit(tx,user,'DEVICE_CHANGE','Terminal',row.id,before,row);return row;}));
+   need('settings.write');if(!mutation)return answer(await db.terminal.findMany());return answer(await saveTerminal(terminalSchema.parse(body),user));
   }
   if(resource==='printer-routes'){
    need('settings.write');if(!mutation)return answer(await db.printerRoute.findMany());const data=z.object({categoryId:z.string(),terminalId:z.string(),printerId:z.string().min(1).max(100),template:z.enum(['KITCHEN','DRINK']),copies:z.number().int().min(1).max(3),enabled:z.boolean()}).parse(body);return answer(await db.$transaction(async tx=>{const row=id?await tx.printerRoute.update({where:{id},data}):await tx.printerRoute.create({data});await audit(tx,user,'ROUTE_CHANGE','PrinterRoute',row.id,undefined,row);return row;}));

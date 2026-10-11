@@ -43,8 +43,11 @@ export function validatePayment(total:number, payments:{method:string;amount:num
   return payments.map(p=>({...p,change:p.received-p.amount}));
 }
 export type ReportOrder = {id:string;createdAt:Date|string;subtotal:number;discount:number;total:number;refunded:number;status:string;cashierId:string;terminalId:string;items:{id:string;productId:string;name:string;categoryId:string;categoryName:string;quantity:number;lineTotal:number;discount:number;refunded:number}[];payments:{method:string;amount:number}[];adjustments:{method:string;amount:number}[]};
+export type CategorySalesProduct = {id:string;name:string;quantity:number;total:number};
+export type CategorySales = {id:string;name:string;total:number;quantity:number;discount:number;products?:CategorySalesProduct[]};
 export function summarize(orders:ReportOrder[]) {
-  const categories = new Map<string,{id:string;name:string;total:number;quantity:number;discount:number}>();
+  const categories = new Map<string,CategorySales>();
+  const categoryProducts = new Map<string,Map<string,CategorySalesProduct>>();
   const products = new Map<string,{name:string;quantity:number;total:number}>();
   const payments:Record<string,number> = {CASH:0,QR:0,OTHER:0};
   const cashiers:Record<string,number> = {}, terminals:Record<string,number> = {};
@@ -63,9 +66,13 @@ export function summarize(orders:ReportOrder[]) {
       const cat=categories.get(item.categoryId)??{id:item.categoryId,name:item.categoryName,total:0,quantity:0,discount:0};
       const value=item.lineTotal-item.refunded;
       cat.total+=value;cat.quantity+=item.quantity;cat.discount+=item.discount;categories.set(item.categoryId,cat);
+      const sold=categoryProducts.get(item.categoryId)??new Map<string,CategorySalesProduct>();
+      const detail=sold.get(item.productId)??{id:item.productId,name:item.name,quantity:0,total:0};
+      detail.quantity+=item.quantity;detail.total+=value;sold.set(item.productId,detail);categoryProducts.set(item.categoryId,sold);
       const product=products.get(item.productId)??{name:item.name,quantity:0,total:0};product.quantity+=item.quantity;product.total+=value;products.set(item.productId,product);
       quantity+=item.quantity;
     }
   }
+  for(const category of categories.values())category.products=[...categoryProducts.get(category.id)!.values()].sort((a,b)=>b.total-a.total);
   return {total,gross,discount,count,quantity,voided,refunded,average:count?Math.round(total/count):0,categories:[...categories.values()],products:[...products.values()].sort((a,b)=>b.total-a.total),payments,cashiers,terminals};
 }

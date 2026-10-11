@@ -3,6 +3,7 @@ import {resolve} from 'node:path';
 import {randomUUID} from 'node:crypto';
 import type {Prisma, PrismaClient} from '@prisma/client';
 import menuData from './menu-data.json';
+import menuImages from '../src/lib/menu-images.json';
 
 const legacyCategoryIds = Array.from({length:5}, (_,i)=>`category-${i+1}`);
 // Only these SKUs belong to the old bundled demo. User-created menus are preserved.
@@ -53,7 +54,7 @@ export async function seedMenu(db:PrismaClient) {
    for(const [sort,product] of category.products.entries()){
     const existing=await tx.product.findUnique({where:{sku:product.sku},select:{id:true}});
     if(!existing){
-     await tx.product.create({data:{sku:product.sku,name:product.name,price:product.price,categoryId:category.id,sort,description:`นำเข้าจาก ${category.file} - แถว ${product.sourceRow}`}});
+     await tx.product.create({data:{sku:product.sku,name:product.name,price:product.price,categoryId:category.id,sort,image:(menuImages as Record<string,string>)[product.sku]??'',description:`นำเข้าจาก ${category.file} - แถว ${product.sourceRow}`}});
      createdProducts++;
     }
    }
