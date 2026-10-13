@@ -54,6 +54,7 @@
   .pos-shell [data-tone='4'] { --menu-accent: #9e80a3; }
   .pos-shell .product-visual { height: 126px; border: 0; background: color-mix(in srgb, var(--menu-accent, var(--category-color)) 11%, #fafaf9); color: var(--menu-accent, var(--category-color)); }
   .pos-shell .product-visual > svg { stroke-width: 1.35; }
+  .pos-shell .product-number { position: absolute; top: 10px; left: 10px; display: flex; align-items: center; justify-content: center; min-width: 36px; height: 36px; padding: 0 8px; border: 2px solid #fff; border-radius: 10px; background: #a92928; color: #fff; box-shadow: 0 2px 6px #24293626; font-size: 18px; font-weight: 700; line-height: 1; font-variant-numeric: tabular-nums; }
   .pos-shell .product-category { background: #fffffff0; color: #526074; border: 1px solid #ffffffb0; padding: 4px 8px; border-radius: 6px; font-size: 10px; }
   .pos-shell .favorite-star { background: #fff8e7; color: #b08433; width: 27px; height: 27px; padding: 5px; border-radius: 8px; }
   .pos-shell .product-count { background: var(--primary); min-width: 28px; height: 28px; border: 2px solid #fff; font-size: 12px; }
