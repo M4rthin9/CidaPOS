@@ -4,6 +4,7 @@ import {api} from '../client';
 import {receiptBlocks} from './layout';
 import {printWithLaptop} from './laptop';
 import {UsbPrinterAdapter,findUsbPrinter,UsbPrinterUnavailable} from './usb-escpos';
+import {CposBridgePrinterAdapter} from './cpos-bridge';
 import {itemTableBitmap,imageBitmap,textBitmap} from './bitmaps';
 import {receiptFontFaces,receiptSizeScale} from './appearance';
 import {loadSDK,connectWithTimeout,ReceiptPrintedDrawerError,type SDK} from './imin-sdk';
@@ -50,6 +51,6 @@ export class MockPrinterAdapter implements PrinterAdapter {async status(){return
 export class BrowserPrinterAdapter implements PrinterAdapter {async status(){return 'เครื่องพิมพ์ผ่านแล็ปท็อป';}async print(receipt:Receipt){await printWithLaptop(receipt);}}
 export class NetworkPrinterAdapter implements PrinterAdapter {async status(){return 'ยังไม่ได้ติดตั้งตัวเชื่อมเครื่องพิมพ์เครือข่าย';}async print(){throw new Error('ยังไม่ได้ติดตั้งตัวเชื่อมเครื่องพิมพ์เครือข่าย');}}
 const adapters=new Map<string,PrinterAdapter>();
-export function printerFor(terminal:Terminal,printerId=terminal.config.printerId){if(printerId!==terminal.config.printerId)return new NetworkPrinterAdapter();const key=terminal.id+JSON.stringify(terminal.config);if(!adapters.has(key))adapters.set(key,terminal.config.adapter==='mock'?new MockPrinterAdapter():terminal.config.adapter==='browser'?new BrowserPrinterAdapter():(terminal.config.adapter==='codesoft'||terminal.config.adapter==='icod')?new UsbPrinterAdapter(terminal):new IminPrinterAdapter(terminal));return adapters.get(key)!;}
+export function printerFor(terminal:Terminal,printerId=terminal.config.printerId){if(printerId!==terminal.config.printerId)return new NetworkPrinterAdapter();const key=terminal.id+JSON.stringify(terminal.config);if(!adapters.has(key))adapters.set(key,terminal.config.adapter==='mock'?new MockPrinterAdapter():terminal.config.adapter==='browser'?new BrowserPrinterAdapter():terminal.config.adapter==='cpos'?new CposBridgePrinterAdapter(terminal):(terminal.config.adapter==='codesoft'||terminal.config.adapter==='icod')?new UsbPrinterAdapter(terminal):new IminPrinterAdapter(terminal));return adapters.get(key)!;}
 let queue=Promise.resolve();
 export function sendPrintJob(job:PrintJob,terminal:Terminal){const run=queue.then(async()=>{const claimed=await api<PrintJob>(`print-jobs/${job.id}/claim`,{});let error:string|undefined,receiptPrinted=false;try{await printerFor(terminal,job.printerId).print(job.payload);}catch(e){receiptPrinted=e instanceof ReceiptPrintedDrawerError;error=e instanceof Error?e.message:'พิมพ์ไม่สำเร็จ';}await api(`print-jobs/${job.id}/result`,{claimToken:claimed.claimToken,success:!error||receiptPrinted,error});if(error)throw new Error(error);});queue=run.catch(()=>{});return run;}

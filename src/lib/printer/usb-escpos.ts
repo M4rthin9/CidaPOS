@@ -99,6 +99,16 @@ export async function usbReceiptBitmap(receipt:Receipt){
  for(const {image,align} of parts){const width=Math.min(image.width,p.width-p.margin*2),height=image.height*width/image.width;const x=align==='LEFT'?p.margin:align==='RIGHT'?p.width-p.margin-width:(p.width-width)/2;ctx.drawImage(image,x,y,width,height);y+=height+4;}
  return canvas.toDataURL('image/png');
 }
+export async function receiptEscposPackets(receipt:Receipt,paperMm:'58'|'80',cutter:boolean,drawer:boolean){
+ const width=paperMm==='80'?576:384;
+ const adapted={...receipt,config:{...receipt.config,profile:{...receipt.config.profile,paperMm,width,characters:paperMm==='80'?48:32}}};
+ const image=new Image();image.src=await usbReceiptBitmap(adapted);await image.decode();
+ const canvas=document.createElement('canvas');canvas.width=image.width;canvas.height=image.height;const ctx=canvas.getContext('2d')!;ctx.drawImage(image,0,0);
+ const packets=[new Uint8Array([0x1b,0x40,0x1b,0x61,1]),...rasterPackets(ctx.getImageData(0,0,image.width,image.height).data,image.width,image.height),new Uint8Array([0x1b,0x64,2])];
+ if(receipt.config.profile.cut&&cutter)packets.push(new Uint8Array([0x1d,0x56,66,0]));
+ if(drawer)packets.push(new Uint8Array([0x1b,0x70,0,25,250]));
+ return packets;
+}
 export class UsbPrinterAdapter implements PrinterAdapter {
  constructor(private terminal:Terminal){}
  async status(){try{const device=await findUsbPrinter(this.terminal);return `${usbPrinterName(this.terminal)} ${device.interfaceClass===7?'พร้อม':'เชื่อมต่อ USB แล้ว'} · ${device.name}`;}catch(error){return error instanceof Error?error.message:'เครื่องพิมพ์ USB ไม่พร้อม';}}
@@ -111,14 +121,8 @@ export class UsbPrinterAdapter implements PrinterAdapter {
  async printTo(receipt:Receipt,_device:UsbPrinterDevice){return exclusive(async()=>{
   const session=await sessionFor(this.terminal);await portStatus(session);
   try{
-   const paperMm=(this.terminal.config.adapter==='icod'?this.terminal.config.icodPaperMm:this.terminal.config.codesoftPaperMm)??'80',width=paperMm==='80'?576:384;
-   const adapted={...receipt,config:{...receipt.config,profile:{...receipt.config.profile,paperMm,width,characters:paperMm==='80'?48:32}}};
-   const image=new Image();image.src=await usbReceiptBitmap(adapted);await image.decode();
-   const canvas=document.createElement('canvas');canvas.width=image.width;canvas.height=image.height;const ctx=canvas.getContext('2d')!;ctx.drawImage(image,0,0);
-   const packets=[new Uint8Array([0x1b,0x40,0x1b,0x61,1]),...rasterPackets(ctx.getImageData(0,0,image.width,image.height).data,image.width,image.height),new Uint8Array([0x1b,0x64,2])];
-   if(receipt.config.profile.cut&&this.terminal.config.cutter)packets.push(new Uint8Array([0x1d,0x56,66,0]));
    const cashDrawer=this.terminal.config.drawer&&receipt.payments?.some(p=>p.method==='CASH');
-   if(cashDrawer&&this.terminal.config.drawerDevice!=='imin')packets.push(new Uint8Array([0x1b,0x70,0,25,250]));
+   const packets=await receiptEscposPackets(receipt,(this.terminal.config.adapter==='icod'?this.terminal.config.icodPaperMm:this.terminal.config.codesoftPaperMm)??'80',this.terminal.config.cutter,!!cashDrawer&&this.terminal.config.drawerDevice!=='imin');
    for(const packet of packets){const result=await timed(session.device.transferOut(session.endpoint,packet),10000);if(result.status!=='ok'||result.bytesWritten!==packet.byteLength)throw new Error('เครื่องพิมพ์ USB ส่งข้อมูลไม่ครบ ตรวจสอบกระดาษก่อนพิมพ์ซ้ำ');}
    await portStatus(session);
    if(cashDrawer&&this.terminal.config.drawerDevice==='imin')try{await openIminCashDrawer(this.terminal);}catch(error){throw new ReceiptPrintedDrawerError('ใบเสร็จพิมพ์แล้ว แต่เปิดลิ้นชัก iMin ไม่สำเร็จ: '+(error instanceof Error?error.message:'ตรวจสอบบริการ iMin')+' — ใช้ปุ่มทดสอบเปิดลิ้นชักโดยไม่ต้องพิมพ์บิลซ้ำ');}

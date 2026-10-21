@@ -16,6 +16,12 @@ test('ICOD terminal settings retain the printer choice and reject unsupported pa
  assert.equal(terminalSchema.safeParse({...terminal,config:{...terminal.config,icodPaperMm:'48'}}).success,false);
 });
 
+test('CPOS bridge settings persist 58/80 mm paper without changing USB presets',()=>{
+ const terminal={id:'CPOS-TH-C9PD',name:'CPOS TH C9PD',location:'',active:true,config:{printerId:'CPOS-Print-Bridge',adapter:'cpos',connection:'USB',sdkPath:'/vendor/imin-printer.min.js',drawer:false,cutter:true,sound:false,density:'comfortable',cposPaperMm:'80'}};
+ assert.deepEqual(terminalSchema.parse(terminal),terminal);
+ assert.equal(terminalSchema.safeParse({...terminal,config:{...terminal.config,cposPaperMm:'48'}}).success,false);
+});
+
 test('ESC/POS raster encodes monochrome pixels, alpha and partial byte padding',()=>{
  const pixels=new Uint8ClampedArray([0,0,0,255,255,255,255,255,0,0,0,0,100,100,100,255,180,180,180,255,0,0,0,255,255,255,255,255,0,0,0,255,0,0,0,255]);
  const [packet]=rasterPackets(pixels,9,1);
