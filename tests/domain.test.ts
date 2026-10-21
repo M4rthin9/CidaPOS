@@ -8,6 +8,13 @@ import {defaultSettings,settingsSchema} from '../src/lib/config';
 import {can} from '../src/lib/permissions';
 import {reportDates} from '../src/lib/reporting';
 import {rasterPackets} from '../src/lib/printer/escpos';
+import {terminalSchema} from '../src/lib/validation';
+
+test('ICOD terminal settings retain the printer choice and reject unsupported paper sizes',()=>{
+ const terminal={id:'CPOS-TH-C9PD',name:'CPOS TH C9PD',location:'',active:true,config:{printerId:'ICOD_Thermal_Printer',adapter:'icod',connection:'USB',sdkPath:'/vendor/imin-printer.min.js',drawer:false,cutter:false,sound:false,density:'comfortable',icodPaperMm:'58'}};
+ assert.deepEqual(terminalSchema.parse(terminal),terminal);
+ assert.equal(terminalSchema.safeParse({...terminal,config:{...terminal.config,icodPaperMm:'48'}}).success,false);
+});
 
 test('ESC/POS raster encodes monochrome pixels, alpha and partial byte padding',()=>{
  const pixels=new Uint8ClampedArray([0,0,0,255,255,255,255,255,0,0,0,0,100,100,100,255,180,180,180,255,0,0,0,255,255,255,255,255,0,0,0,255,0,0,0,255]);

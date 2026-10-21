@@ -7,7 +7,9 @@ import {hash as passwordHash} from 'bcryptjs';
 import {isolatedCloudflare} from './cloudflare-fixture';
 import {db} from '../src/lib/db';
 import {useTestBindings,type CloudflareBindings} from '../src/lib/cloudflare';
-import {checkout,adjustOrder,report,settings,reprint} from '../src/lib/sales';
+import {checkout,adjustOrder,report,settings,reprint,dailyReportPrint} from '../src/lib/sales';
+import {businessDate} from '../src/lib/domain';
+import {accountCatalog,accountProductIds,accountCategoryIds,saveAccountProducts,saveAccountCategories} from '../src/lib/account-products';
 import {resetPreview,resetSales,resetArchive} from '../src/lib/sales-reset';
 import {putImage} from '../src/lib/storage';
 import type {Actor} from '../src/lib/auth';
@@ -28,6 +30,70 @@ before(async()=>{
  input={key:randomUUID(),terminalId:'TEST',items:[{productId:product.id,quantity:1,modifiers:[],note:''}],discount:0,note:'',payments:[{method:'CASH',amount:1000,received:1000,reference:''}]};
 });
 after(async()=>{await cloud?.mf.dispose();});
+
+test('outside drinks migration adds the 20 supplied prices and preserves edits on rerun',async()=>{
+ const drinks=await db.product.findMany({where:{sku:{startsWith:'OUTSIDE-DRINK-'}},orderBy:{sort:'asc'}});
+ assert.equal(drinks.length,20);
+ assert.deepEqual(drinks.map(p=>p.price),[2000,1000,2000,2500,2500,2500,2500,2500,2500,2500,2500,2500,2500,2500,2500,2500,2500,1200,2500,1200]);
+ assert.equal(drinks[14].name,'ชามะนาว');assert.equal(drinks[8].name,'สตรอว์เบอร์รี่โซดา');
+ const category=await db.category.findUniqueOrThrow({where:{id:drinks[0].categoryId}});assert.equal(category.name,'เครื่องดื่มร้านค้านอก (ต้นขาม)');
+ await db.product.update({where:{id:drinks[0].id},data:{price:2100,active:false}});
+ const sql=readFileSync('d1/migrations/0006_outside_drinks.sql','utf8').split(/\n\s*\n/).map(s=>s.replace(/^--.*$/gm,'').trim()).filter(Boolean);
+ await cloud.DB.batch(sql.map(s=>cloud.DB.prepare(s)));
+ assert.equal(await db.product.count({where:{categoryId:category.id}}),20);
+ const retained=await db.product.findUniqueOrThrow({where:{id:drinks[0].id}});assert.equal(retained.price,2100);assert.equal(retained.active,false);
+ await db.product.update({where:{id:drinks[0].id},data:{price:2000,active:true}});
+});
+
+test('account product assignments filter catalogs and reject unauthorized sales while daily reports combine all accounts',async()=>{
+ const first=await db.user.create({data:{username:'food-account',name:'Food',role:'CASHIER',passwordHash:'test-only'}});
+ const second=await db.user.create({data:{username:'cash02',name:'Drinks',role:'CASHIER',passwordHash:'test-only'}});
+ const food=input.items[0].productId,drink=(await db.product.findUniqueOrThrow({where:{sku:'OUTSIDE-DRINK-004'}})).id;
+ await saveAccountProducts(first.id,[food]);await saveAccountProducts(second.id,[drink]);
+ assert.deepEqual((await accountCatalog(first.id)).products.map(p=>p.id),[food]);
+ assert.deepEqual((await accountCatalog(second.id)).products.map(p=>p.id),[drink]);
+ assert.ok((await accountCatalog(actor.id)).products.length>2);
+ const date=businessDate(new Date(),(await settings()).opening),before=await report(date);
+ const sale=(productId:string,amount:number)=>({...input,key:randomUUID(),items:[{...input.items[0],productId}],payments:[{method:'CASH' as const,amount,received:amount,reference:''}]});
+ const paid=await checkout(sale(food,1000),first);
+ await checkout(sale(drink,2500),second);
+ const counts=async()=>[await db.order.count(),await db.payment.count(),await db.printJob.count()];
+ const saved=await counts();
+ await assert.rejects(()=>checkout(sale(food,1000),second),/ไม่ได้รับสิทธิ์ขาย/);
+ await assert.rejects(()=>checkout(sale(drink,2500),first),/ไม่ได้รับสิทธิ์ขาย/);
+ assert.deepEqual(await counts(),saved);
+ await assert.rejects(()=>saveAccountProducts(second.id,['missing-product']),/สินค้าบางรายการไม่พบ/);
+ assert.deepEqual(await accountProductIds(second.id),[drink]);
+ await saveAccountProducts(first.id,[]);assert.deepEqual((await accountCatalog(first.id)).products,[]);
+ await assert.rejects(()=>checkout(sale(food,1000),first),/ไม่ได้รับสิทธิ์ขาย/);
+ const replay=await checkout({...sale(food,1000),key:paid.order.key},first);assert.equal(replay.order.id,paid.order.id);
+ const combined=await report(date);assert.equal(combined.summary.total-before.summary.total,3500);
+ assert.equal(combined.summary.cashiers[first.id],1000);assert.equal(combined.summary.cashiers[second.id],2500);
+ const printed=await dailyReportPrint(date,'TEST',second);assert.equal((printed.payload as {dailyReport:{summary:{total:number}}}).dailyReport.summary.total,combined.summary.total);
+ await saveAccountProducts(first.id,null);assert.equal(await accountProductIds(first.id),null);
+ assert.ok((await accountCatalog(first.id)).products.some(p=>p.id===drink));
+});
+test('account categories include new products automatically and block other categories at checkout',async()=>{
+ const user=await db.user.create({data:{username:'category-cashier',name:'Category cashier',role:'CASHIER',passwordHash:'test-only'}});
+ const category=await db.category.create({data:{name:'Account category test'}});
+ await saveAccountCategories(user.id,[category.id]);
+ assert.deepEqual(await accountCategoryIds(user.id),[category.id]);
+ assert.deepEqual((await accountCatalog(user.id)).categories.map(c=>c.id),[category.id]);
+ assert.equal((await accountCatalog(user.id)).products.length,0);
+ const added=await db.product.create({data:{sku:'ACCOUNT-CATEGORY-NEW',name:'New category drink',categoryId:category.id,price:1000}});
+ assert.deepEqual((await accountCatalog(user.id)).products.map(p=>p.id),[added.id]);
+ const sale=(productId:string)=>({...input,key:randomUUID(),items:[{...input.items[0],productId}]});
+ await checkout(sale(added.id),user);
+ const counts=async()=>[await db.order.count(),await db.payment.count(),await db.printJob.count()];const before=await counts();
+ await assert.rejects(()=>checkout(sale(input.items[0].productId),user),/ไม่ได้รับสิทธิ์ขายหมวด/);assert.deepEqual(await counts(),before);
+ await assert.rejects(()=>saveAccountCategories(user.id,['missing-category']),/หมวดสินค้าบางรายการไม่พบ/);
+ assert.deepEqual(await accountCategoryIds(user.id),[category.id]);
+ await saveAccountCategories(user.id,[]);assert.deepEqual((await accountCatalog(user.id)).products,[]);
+ await assert.rejects(()=>checkout(sale(added.id),user),/ไม่ได้รับสิทธิ์ขายหมวด/);
+ await saveAccountCategories(user.id,null);assert.equal(await accountCategoryIds(user.id),null);
+ assert.ok((await accountCatalog(user.id)).products.some(p=>p.id===input.items[0].productId));
+});
+
 test('100-line checkout and refund stay within D1 Free query budget and roll back a late failure',async()=>{
  const large={...input,key:randomUUID(),items:Array.from({length:100},()=>input.items[0]),payments:[{method:'CASH' as const,amount:100000,received:100000,reference:''}]};
  queryCount=0;const result=await checkout(large,actor);assert.equal(result.order.items.length,100);assert.ok(queryCount<=45,'checkout used '+queryCount+' queries');

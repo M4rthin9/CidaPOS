@@ -9,6 +9,7 @@ import {can} from '@/lib/permissions';
 import type {Catalog} from '@/lib/types';
 import {Modal} from './ui';
 import Reports from './reports';
+import InstallPosApp from './install-pos-app';
 
 type Tool = 'menu' | 'daily';
 const titles:Record<Tool,string>={menu:'เพิ่มเมนูตามหมวด',daily:'รายงานประจำวัน'};
@@ -53,6 +54,7 @@ export default function PosTools({catalog,categoryId,disabled,onCatalogUpdated}:
   }
   return <>
     <div className="pos-tools" aria-label="เครื่องมือพนักงานขาย">
+      <InstallPosApp/>
       {can(catalog.user.role,'products.create')&&<button className="secondary pos-menu-tool" disabled={disabled||!catalog.categories.length} onClick={openMenu}><Plus size={18}/>เพิ่มเมนู</button>}
       {can(catalog.user.role,'reports.read')&&<>
         <button className="secondary pos-report-tool" disabled={disabled} onClick={()=>setTool('daily')}><ReceiptText size={18}/>รายงานประจำวัน</button>

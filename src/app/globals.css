@@ -66,6 +66,11 @@
 .pos-category-toggle svg{flex-shrink:0;transition:transform .15s}
 .pos-category-toggle[aria-expanded="true"] svg{transform:rotate(180deg)}
 .pos-category-open{background:#f5f3ef}
+.account-product-list{max-height:320px;overflow:auto;border:1px solid var(--border);border-radius:10px;padding:10px;margin-bottom:12px}
+.account-product-list fieldset{border:0;border-bottom:1px solid var(--border);padding:8px;margin:0 0 12px}
+.account-product-list legend{font-weight:600}
+.account-product-list .check-label{display:flex;gap:8px;align-items:center;padding:5px 0}
+.account-product-list input[type=checkbox]{flex-shrink:0}
 .cashier-daily-report .category-report .pos-category-detail-row>td{padding:0 22px 18px;background:#f5f3ef}
 .cashier-daily-report .category-report .pos-category-details table{table-layout:fixed;white-space:normal;background:white;border-radius:8px}
 .cashier-daily-report .category-report .pos-category-details td,.cashier-daily-report .category-report .pos-category-details th{padding:10px 12px;overflow-wrap:anywhere}

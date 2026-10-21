@@ -8,6 +8,7 @@ import { businessDate, boundaries, calculate, validatePayment, summarize, alloca
 import type { Checkout } from './validation';
 import {reportDates,type DailyTrend} from './reporting';
 import {terminalSellsCategory} from './terminal-categories';
+import {accountProductIds,accountCategoryIds} from './account-products';
 export const json=(value:unknown)=>JSON.parse(JSON.stringify(value)) as Prisma.InputJsonValue;
 export type Tx=Prisma.TransactionClient;
 export const orderInclude={items:true,payments:true,adjustments:true,cashier:{select:{id:true,name:true}},terminal:true} as const;
@@ -40,9 +41,13 @@ export async function checkout(input:Checkout,user:Actor){
     if(input.discount&&!can(user.role,'discount'))throw new AppError('คุณไม่มีสิทธิ์ให้ส่วนลด',403);
     const terminal=await tx.terminal.findUnique({where:{id:input.terminalId}});if(!terminal?.active)throw new AppError('เครื่อง POS ยังไม่ได้เปิดใช้งาน');
     const items=[];
+    const allowedProducts=await accountProductIds(user.id,tx);
+    const allowedCategories=await accountCategoryIds(user.id,tx);
+    if(allowedProducts!==null&&input.items.some(line=>!allowedProducts.includes(line.productId)))throw new AppError('บัญชีนี้ไม่ได้รับสิทธิ์ขายสินค้าบางรายการ กรุณานำสินค้าออกจากบิล',403);
     const products=await tx.product.findMany({where:{id:{in:input.items.map(line=>line.productId)}},include:{category:true,modifiers:true}});
     for(const line of input.items){const product=products.find(product=>product.id===line.productId);if(!product?.active||!product.available||!product.category.active)throw new AppError('สินค้าบางรายการไม่พร้อมขาย กรุณาตรวจสอบบิล');
       if(!terminalSellsCategory(terminal.config,product.categoryId))throw new AppError(`หมวด ${product.category.name} ไม่ได้เปิดขายใน ${terminal.name} กรุณานำสินค้าออกจากบิล`);
+      if(allowedCategories!==null&&!allowedCategories.includes(product.categoryId))throw new AppError('บัญชีนี้ไม่ได้รับสิทธิ์ขายหมวด '+product.category.name,403);
       const ids=[...new Set(line.modifiers)];if(ids.length!==line.modifiers.length)throw new AppError('ตัวเลือกสินค้าซ้ำ');
       const mods=ids.map(id=>product.modifiers.find(m=>m.id===id&&m.active));if(mods.some(m=>!m))throw new AppError('ตัวเลือกสินค้าไม่พร้อมใช้งาน');
       const unitPrice=product.price+mods.reduce((s,m)=>s+(m?.price??0),0);
